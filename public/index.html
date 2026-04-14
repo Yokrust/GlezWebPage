@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>glez. — Photography & Film</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Inter', sans-serif; background: #080808; color: #fff; }
+    .mono { font-family: 'Space Mono', monospace; }
+
+    /* ── Pages ──────────────────────────────────── */
+    .page { display: none; height: 100%; }
+    .page.active { display: flex; flex-direction: column; }
+
+    /* ── Thumbnails (Home) ─────────────────────── */
+    .thumb { transition: opacity 0.25s ease, outline-color 0.25s ease; cursor: pointer; }
+    .thumb:hover { opacity: 0.75 !important; }
+    .thumb.active { outline: 1.5px solid rgba(255,255,255,0.88); outline-offset: 2px; opacity: 1 !important; }
+    #mainPhoto { transition: opacity 0.45s ease; }
+
+    /* ── Scrollbar ─────────────────────────────── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+    /* ── Menu overlay ──────────────────────────── */
+    .menu-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(8,8,8,0.96);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .menu-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* ── Project cards ─────────────────────────── */
+    .project-card {
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .project-card:hover { transform: scale(1.015); }
+    .project-card:hover .card-img { transform: scale(1.06); }
+    .card-img {
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 100%; height: 100%; object-fit: cover;
+    }
+
+    /* ── Contact form ──────────────────────────── */
+    .form-input {
+      background: transparent; border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 12px 0; width: 100%;
+      color: #fff; font-size: 14px;
+      transition: border-color 0.3s; outline: none;
+    }
+    .form-input:focus { border-bottom-color: rgba(255,255,255,0.45); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    /* ── Scroll reveal animations ──────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* Hero title clip animation */
+    .hero-title-line {
+      overflow: hidden;
+    }
+    .hero-title-line span {
+      display: block;
+      transform: translateY(105%);
+      transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .hero-loaded .hero-title-line span {
+      transform: translateY(0);
+    }
+    .hero-title-line:nth-child(2) span { transition-delay: 0.12s; }
+
+    /* Hero image parallax */
+    .hero-featured-img {
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Scroll indicator pulse */
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: translateY(0); }
+      50% { opacity: 0.6; transform: translateY(4px); }
+    }
+    .scroll-indicator { animation: scrollPulse 2.5s ease-in-out infinite; }
+
+    /* ── Project detail page ────────────────────── */
+    .proj-thumb { transition: opacity 0.25s, outline-color 0.25s; cursor: pointer; }
+    .proj-thumb:hover { opacity: 0.8 !important; }
+    .proj-thumb.active { outline: 1px solid rgba(255,255,255,0.6); outline-offset: 2px; opacity: 1 !important; }
+
+    .proj-hero-img { transition: opacity 0.5s ease; }
+
+    .proj-fade-in {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .proj-fade-in.vis { opacity: 1; transform: translateY(0); }
+    .proj-fade-in:nth-child(2) { transition-delay: 0.08s; }
+    .proj-fade-in:nth-child(3) { transition-delay: 0.16s; }
+    .proj-fade-in:nth-child(4) { transition-delay: 0.24s; }
+
+  </style>
+</head>
+<body class="select-none">
+
+  <!-- ═══════════════════════════════════════════════
+       FULLSCREEN MENU OVERLAY
+  ════════════════════════════════════════════════ -->
+  <div class="menu-overlay" id="menuOverlay">
+    <button class="absolute top-6 right-6 p-2 text-white/50 hover:text-white transition-colors" id="menuClose">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
+      </svg>
+    </button>
+    <nav class="flex flex-col items-center gap-2">
+      <a href="#" class="menu-link text-[52px] font-bold text-white/80 hover:text-white transition-colors tracking-tight leading-tight"
+         data-page="home">Home</a>
+      <a href="#" class="menu-link text-[52px] font-bold text-white/80 hover:text-white transition-colors tracking-tight leading-tight"
+         data-page="portfolio">Portfolio</a>
+      <a href="#" class="menu-link text-[52px] font-bold text-white/80 hover:text-white transition-colors tracking-tight leading-tight"
+         data-page="contact">Contact</a>
+      <div class="mt-10 flex items-center gap-6 mono text-[11px] text-white/25">
+        <a href="https://www.instagram.com/glezweddings/" target="_blank" class="hover:text-white/60 transition-colors tracking-[0.2em]">Instagram</a>
+        <span>&middot;</span>
+        <a href="mailto:horebglez@gmail.com" class="hover:text-white/60 transition-colors tracking-[0.2em]">Email</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SHARED HEADER (untouched)
+  ════════════════════════════════════════════════ -->
+  <header class="flex items-center justify-between pl-4 pr-10 border-b border-white/[0.08] shrink-0 fixed top-0 left-0 right-0 z-50 bg-[#080808]"
+          style="height:64px;">
+    <div class="flex items-center gap-4">
+      <a href="#" data-page="home" class="menu-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1828.06 984.81"
+             class="h-[26px] w-auto" aria-label="glez.">
+          <g>
+            <path fill="#fff" d="M64.16,671.25c-36.69-42.7-58.78-100.32-58.78-165.39,0-136.69,99.02-242.17,226.02-242.17,68.88,0,124.85,31.21,163.6,82.87l11.84-72.11h82.88v330.42l8.61,18.3c18.3,41.97,29.06,89.33,29.06,129.15,0,138.84-109.78,232.48-268,232.48-94.71,0-185.12-31.21-259.39-94.71l50.59-71.04c63.5,52.74,132.39,80.72,205.57,80.72,105.48,0,175.44-62.43,175.44-152.84,0-32.28-6.46-61.35-23.68-95.79-37.67,59.2-100.1,96.87-176.51,96.87-67.02,0-126.24-29.07-167.24-76.78M130.39,600.66c25.83,37.58,67.54,61.26,117.15,61.26,86.1,0,152.83-63.5,152.83-148.53,0-91.49-66.73-162.52-152.83-162.52s-145.3,67.8-145.3,154.99c0,36.1,10.27,68.78,28.14,94.8"/>
+            <path fill="#fff" d="M702.81,758.79h-96.87V0h96.87v758.79Z"/>
+            <path fill="#fff" d="M1038.59,759.32c-149.6,0-257.24-108.71-257.24-252.93,0-144.22,105.48-252.93,244.32-252.93,134.54,0,234.63,108.71,234.63,251.85,0,10.76-1.07,20.45-3.23,30.14h-385.31c11.84,85.03,76.42,143.15,164.67,143.15M872.85,467.65h295.98c-11.84-78.57-66.73-134.54-145.3-134.54-77.49,0-135.61,54.89-150.68,134.54Z"/>
+            <path fill="#fff" d="M1696.24,759.32h-401.46v-69.96l269.07-329.35h-258.31v-85.03h379.93v67.81l-269.08,331.5h279.84v85.03Z"/>
+          </g>
+          <rect fill="#fff" x="1743.03" y="674.3" width="85.03" height="85.03"/>
+        </svg>
+      </a>
+    </div>
+    <span class="mono text-white/20 text-lg font-bold">+</span>
+    <div class="flex items-center gap-5 mono text-[13px]">
+      <a href="#" class="menu-link text-white/60 hover:text-white transition-colors underline underline-offset-2 decoration-white/20"
+         data-page="portfolio">View Work</a>
+      <span class="text-white/20">&middot;</span>
+      <span class="text-white/44" id="timer">00:00:00</span>
+      <button class="flex flex-col gap-[7px] ml-1 p-1 group" id="menuBtn">
+        <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
+        <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
+        <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Spacer for fixed header -->
+  <div style="height:64px;" class="shrink-0"></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PAGE 1: HOME (Photography) — unchanged
+  ═══════════════════════════════════════════════════════ -->
+  <div id="page-home" class="page active" style="height:calc(100vh - 64px);">
+    <div class="flex flex-1 overflow-hidden">
+      <aside class="shrink-0 flex flex-col gap-3 p-4 overflow-y-auto border-r border-white/[0.06]"
+             style="width:100px;">
+        <div class="thumb active" data-index="0">
+          <img src="/6F3A2084.jpg" class="w-full object-cover" draggable="false" alt="" />
+        </div>
+        <div class="thumb opacity-55" data-index="1">
+          <img src="/6F3A2362.jpg" class="w-full object-cover" draggable="false" alt="" />
+        </div>
+        <div class="thumb opacity-35" data-index="2">
+          <img src="/BCR64925.jpg" class="w-full object-cover" draggable="false" alt="" />
+        </div>
+        <div class="thumb opacity-35" data-index="3">
+          <img src="/BCR64968-Edit 2.jpg" class="w-full object-cover" draggable="false" alt="" />
+        </div>
+        <div class="thumb opacity-35" data-index="4">
+          <img src="/BCR65082.jpg" class="w-full object-cover" draggable="false" alt="" />
+        </div>
+        <div class="thumb opacity-35" data-index="5">
+          <img src="/BCR65142.jpg" class="w-full object-cover" draggable="false" alt="" />
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col items-center py-8">
+        <span class="mono text-white/15 text-2xl font-bold leading-none shrink-0">+</span>
+        <div class="flex-1 relative w-full">
+          <div class="absolute inset-0 flex items-center justify-center px-20">
+            <img id="mainPhoto" src="/6F3A2084.jpg"
+                 alt="Featured photograph" class="object-contain" style="width:320px; height:510px;" draggable="false" />
+          </div>
+        </div>
+        <div class="flex flex-col items-center gap-3 shrink-0">
+          <span class="mono text-white/15 text-2xl font-bold leading-none">+</span>
+          <a href="https://www.instagram.com/glezweddings/" target="_blank"
+             class="mono text-[12px] text-white/32 hover:text-white/70 transition-colors tracking-[0.2em]">Instagram</a>
+        </div>
+      </div>
+
+      <aside class="shrink-0 flex flex-col justify-between border-l border-white/[0.06] overflow-hidden"
+             style="width:230;">
+        <div class="px-10 pt-6 flex items-start justify-between">
+          <p id="photoCount" class="mono text-[9px] text-white/32 tracking-wide pt-1">(1 / 48)</p>
+          <span id="photoNum" class="mono font-bold text-white leading-none tracking-tight text-right"
+                style="font-size:60px; line-height:0.85; min-width:2.2ch;">01</span>
+        </div>
+
+        <div class="px-10 text-right space-y-8 mono">
+          <div>
+            <p class="text-[6px] text-white/35 tracking-wide mb-1.5">Camera</p>
+            <p id="metaCamera" class="text-[11px] text-white/82 leading-snug">Leica M6</p>
+          </div>
+          <div>
+            <p class="text-[6px] text-white/35 tracking-wide mb-1.5">Lens</p>
+            <p id="metaLens" class="text-[11px] text-white/82 leading-snug">Leica 50mm<br/>Noctilux f/1</p>
+          </div>
+          <div>
+            <p class="text-[6px] text-white/35 tracking-wide mb-1.5">Film Stock</p>
+            <p id="metaFilm" class="text-[11px] text-white/82 leading-snug">Kodak T-Max 400</p>
+          </div>
+        </div>
+
+        <div class="px-10 pb-8 text-right mono">
+          <p id="metaCoords" class="text-[7px] text-white/28 tracking-wide">34.0522&deg; N, 118.2437&deg; W</p>
+          <p class="text-[11px] text-white/35 tracking-wide mt-2">Location</p>
+          <p id="metaLocation" class="text-[12px] font-bold text-white/80 tracking-wide mt-1.5">Los Angeles</p>
+          <p class="text-[11px] text-white/18 mt-5">&copy;2025</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PAGE 2: PORTFOLIO — Redesigned (Winkeler hybrid)
+  ═══════════════════════════════════════════════════════ -->
+  <div id="page-portfolio" class="page" style="height:calc(100vh - 64px);">
+    <div class="flex flex-col h-full overflow-y-auto" id="portfolioScroller">
+
+      <!-- ──────────────────────────────────────────
+           HERO SECTION (full viewport, Winkeler-inspired)
+      ─────────────────────────────────────────── -->
+      <section class="relative min-h-[calc(100vh-64px)] flex flex-col" id="portfolioHero">
+
+        <!-- Top area: title + counter -->
+        <div class="flex-1 flex px-20 pt-24 pb-14">
+
+          <!-- Left: massive title -->
+          <div class="flex-1 flex flex-col justify-start pt-4">
+            <div id="heroTitleWrap">
+              <div class="hero-title-line">
+                <span class="text-[clamp(60px,11vw,120px)] font-black text-white leading-[0.92] tracking-[-0.04em]">Selected</span>
+              </div>
+              <div class="hero-title-line">
+                <span class="text-[clamp(80px,11vw,160px)] font-black text-white leading-[0.92] tracking-[-0.04em]">Cases</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: counter + featured image -->
+          <div class="flex flex-col items-end gap-8 w-[48%]">
+            <span class="text-[clamp(60px,8vw,120px)] font-black text-white/90 leading-none tracking-[-0.03em]">(12)</span>
+
+            <!-- Featured image -->
+            <div class="w-full flex-1 min-h-[320px] overflow-hidden relative">
+              <img src="https://picsum.photos/seed/filmA/900/600"
+                   class="hero-featured-img w-full h-full object-cover"
+                   draggable="false" alt="Featured project" />
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Bottom bar: tagline + scroll indicator -->
+        <div class="px-20 pb-16 flex items-end justify-between">
+          <div class="flex items-start gap-4">
+            <div class="w-[1px] h-10 bg-white/20 mt-1"></div>
+            <div>
+              <p class="text-[14px] text-white/60 font-light italic leading-snug">El acto de crear</p>
+              <p class="text-[14px] text-white/60 font-light italic leading-snug">merece ser contado.</p>
+            </div>
+          </div>
+          <div class="scroll-indicator flex flex-col items-center gap-2">
+            <span class="mono text-[9px] text-white/30 tracking-[0.2em]" style="writing-mode:vertical-rl;">Scroll</span>
+            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" class="text-white/25">
+              <path d="M6 2L6 18M6 18L2 14M6 18L10 14" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────
+           PROJECT GRID (scroll-animated)
+      ─────────────────────────────────────────── -->
+      <section class="px-20 pt-32 pb-16">
+
+        <!-- Section label -->
+        <div class="reveal flex items-center gap-4 mb-24 px-2">
+          <span class="mono text-[10px] text-white/25 tracking-[0.3em]">ALL PROJECTS</span>
+          <div class="flex-1 h-[1px] bg-white/[0.06]"></div>
+          <span class="mono text-[11px] text-white/20">12 works</span>
+        </div>
+
+        <!-- Row 1: 2 large cards -->
+        <div class="grid grid-cols-2 gap-10 mb-14">
+          <div class="project-card h-[340px] relative overflow-hidden reveal" data-project="0" onclick="openProject(0)">
+            <img src="https://picsum.photos/seed/filmA/900/520" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[26px] font-bold text-white/95 leading-tight tracking-tight">Film Project Alpha</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Director: glez. &middot; Featured at TIFF 2025</p>
+            </div>
+          </div>
+          <div class="project-card h-[340px] relative overflow-hidden reveal reveal-delay-1" data-project="1" onclick="openProject(1)">
+            <img src="https://picsum.photos/seed/campaign1/900/520" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Commercial</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[26px] font-bold text-white/95 leading-tight tracking-tight">Campaign Reel</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Client: Studio M &middot; Streamer: Netflix</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: 3 cards -->
+        <div class="grid grid-cols-3 gap-10 mb-14">
+          <div class="project-card h-[290px] relative overflow-hidden reveal" data-project="2" onclick="openProject(2)">
+            <img src="https://picsum.photos/seed/golden1/600/440" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">The Golden Hour</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: A. M&eacute;ndez &middot; HBO Max</p>
+            </div>
+          </div>
+          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-1" data-project="3" onclick="openProject(3)">
+            <img src="https://picsum.photos/seed/street1/600/440" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Documentary</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Street Stories</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: glez. &middot; Sundance</p>
+            </div>
+          </div>
+          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-2" data-project="4" onclick="openProject(4)">
+            <img src="https://picsum.photos/seed/neon1/600/440" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Neon Nights</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Director: C. Vega &middot; Amazon Prime</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: 3 cards -->
+        <div class="grid grid-cols-3 gap-10 mb-14">
+          <div class="project-card h-[290px] relative overflow-hidden reveal" data-project="5" onclick="openProject(5)">
+            <img src="https://picsum.photos/seed/quiet1/600/440" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Short Film</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Quiet Moments</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: L. Torres &middot; Venice</p>
+            </div>
+          </div>
+          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-1" data-project="6" onclick="openProject(6)">
+            <img src="https://picsum.photos/seed/urban1/600/440" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Commercial</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Urban Canvas</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: glez. &middot; Adidas Originals</p>
+            </div>
+          </div>
+          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-2" data-project="7" onclick="openProject(7)">
+            <img src="https://picsum.photos/seed/after1/600/440" class="card-img" draggable="false" alt="" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
+            <div class="absolute bottom-7 left-8">
+              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Afterglow</h3>
+              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Director: R. Park &middot; Apple TV+</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="reveal flex items-center justify-between py-20 px-2 border-t border-white/[0.06] mt-14">
+          <span class="mono text-[10px] text-white/20 tracking-[0.2em]">&copy;2025 glez.</span>
+          <div class="flex items-center gap-8">
+            <a href="https://www.instagram.com/glezweddings/" target="_blank" class="mono text-[10px] text-white/25 hover:text-white/60 transition-colors tracking-[0.2em]">Instagram</a>
+            <a href="mailto:horebglez@gmail.com" class="mono text-[10px] text-white/25 hover:text-white/60 transition-colors tracking-[0.2em]">Email</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PAGE 4: PROJECT DETAIL (Cereal-inspired)
+  ═══════════════════════════════════════════════════════ -->
+  <div id="page-project" class="page" style="height:calc(100vh - 64px);">
+    <div class="flex h-full overflow-hidden">
+
+      <!-- Left metadata column -->
+      <aside class="shrink-0 flex flex-col border-r border-white/[0.06] overflow-y-auto" style="width:270px;">
+        <div class="p-10 flex flex-col gap-9">
+
+          <!-- Back link -->
+          <button onclick="showPage('portfolio')"
+                  class="mono text-[11px] text-white/40 hover:text-white transition-colors text-left tracking-wide">
+            &larr; Back to projects
+          </button>
+
+          <!-- Nav: Previous / Next -->
+          <div class="flex gap-4 mono text-[11px]">
+            <button onclick="navigateProject(-1)" class="text-white/30 hover:text-white transition-colors">Previous</button>
+            <span class="text-white/12">/</span>
+            <button onclick="navigateProject(1)" class="text-white/30 hover:text-white transition-colors">Next</button>
+          </div>
+
+          <div class="h-[1px] bg-white/[0.06]"></div>
+
+          <!-- Project name -->
+          <div>
+            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">PROYECTO</p>
+            <p id="projName" class="text-[14px] font-bold text-white/85 leading-snug"></p>
+          </div>
+
+          <!-- Date -->
+          <div>
+            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">FECHA</p>
+            <p id="projDate" class="text-[13px] text-white/70 mono"></p>
+          </div>
+
+          <!-- Item number -->
+          <div>
+            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">ITEM</p>
+            <p id="projItem" class="text-[13px] text-white/50 mono"></p>
+          </div>
+
+          <div class="h-[1px] bg-white/[0.06]"></div>
+
+          <!-- Location -->
+          <div>
+            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">LUGAR</p>
+            <p id="projLocation" class="text-[13px] font-bold text-white/80"></p>
+          </div>
+
+          <!-- Equipment -->
+          <div>
+            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">EQUIPO</p>
+            <div class="mono text-[10px] text-white/50 space-y-1">
+              <p>Camara: <span id="projCamera" class="text-white/65"></span></p>
+              <p>Lente: <span id="projLens" class="text-white/65"></span></p>
+            </div>
+          </div>
+
+          <div class="h-[1px] bg-white/[0.06]"></div>
+
+          <!-- Keywords -->
+          <div>
+            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">KEYWORDS</p>
+            <p id="projKeywords" class="text-[11px] text-white/40 leading-relaxed"></p>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- Center: scrollable content -->
+      <main class="flex-1 overflow-y-auto" id="projectScroller">
+
+        <!-- Hero image section -->
+        <section class="flex items-center justify-center px-20 py-20 min-h-[calc(100vh-64px)]">
+          <img id="projHeroImg" src="" alt=""
+               class="proj-hero-img max-h-[80vh] max-w-full object-contain" draggable="false" />
+        </section>
+
+        <!-- Article section (Inspiración) -->
+        <section class="px-24 pt-16 pb-32">
+          <div class="max-w-[680px] mx-auto">
+
+            <!-- Section title -->
+            <div class="flex items-center gap-5 mb-20">
+              <div class="flex-1 h-[1px] bg-white/[0.06]"></div>
+              <h2 class="mono text-[12px] text-white/45 tracking-[0.25em]">INSPIRACI&Oacute;N</h2>
+              <div class="flex-1 h-[1px] bg-white/[0.06]"></div>
+            </div>
+
+            <!-- Article text -->
+            <div id="projDescription" class="space-y-10 text-[13px] text-white/45 leading-[1.9] font-light">
+            </div>
+
+          </div>
+        </section>
+      </main>
+
+      <!-- Right: thumbnail gallery -->
+      <aside class="shrink-0 border-l border-white/[0.06] overflow-y-auto flex flex-col" style="width:100px;">
+        <div id="projThumbnails" class="p-5 flex flex-col gap-5">
+        </div>
+        <div class="p-5 mt-auto border-t border-white/[0.06]">
+          <button class="mono text-[7.5px] text-white/30 hover:text-white/60 transition-colors tracking-[0.1em] w-full text-center py-2">
+            [View More]
+          </button>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PAGE 3: CONTACT — unchanged
+  ═══════════════════════════════════════════════════════ -->
+  <div id="page-contact" class="page" style="height:calc(100vh - 64px);">
+    <div class="flex h-full">
+
+      <!-- Left: Photo + intro + info -->
+      <div class="flex-1 flex flex-col justify-center px-24 border-r border-white/[0.06] overflow-y-auto">
+
+        <!-- Profile photo -->
+        <div class="mb-12">
+          <img src="/FotoHoreb.jpeg" alt="Horeb Glez"
+               class="w-[180px] h-[200px] object-cover" draggable="false" />
+        </div>
+
+        <!-- Name -->
+        <h1 class="text-[72px] font-bold leading-[0.95] tracking-tighter text-white mb-6">
+          I&rsquo;m Horeb Glez
+        </h1>
+
+        <!-- Description -->
+        <p class="mono text-[11px] text-white/35 leading-relaxed max-w-[380px] tracking-wide mb-12">
+          Gracias por llegar hasta aqu&iacute;. El acto de crear merece ser contado.
+          Retratos &iacute;ntimos para mentes que construyen sus propias realidades.
+        </p>
+
+        <div class="mono text-[11px] text-white/30 space-y-1.5 mb-12">
+          <p class="tracking-[0.15em]">Available worldwide</p>
+          <p class="tracking-[0.15em]">Based in Hermosillo</p>
+        </div>
+
+        <div class="flex items-center gap-8 mono text-[11px]">
+          <a href="mailto:horebglez@gmail.com"
+             class="text-white/45 hover:text-white transition-colors tracking-[0.1em] underline underline-offset-4 decoration-white/15">
+            horebglez@gmail.com
+          </a>
+          <a href="https://www.instagram.com/glezweddings/" target="_blank"
+             class="text-white/45 hover:text-white transition-colors tracking-[0.1em] underline underline-offset-4 decoration-white/15">
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Contact form -->
+      <div class="flex flex-col justify-center px-24" style="width:580px;">
+
+        <form class="space-y-10" onsubmit="event.preventDefault();">
+          <div>
+            <label class="mono text-[10px] text-white/30 tracking-wider block mb-1">Name</label>
+            <input type="text" class="form-input" placeholder="Your name" />
+          </div>
+          <div>
+            <label class="mono text-[10px] text-white/30 tracking-wider block mb-1">Email</label>
+            <input type="email" class="form-input" placeholder="your@email.com" />
+          </div>
+          <div>
+            <label class="mono text-[10px] text-white/30 tracking-wider block mb-1">Message</label>
+            <textarea class="form-input resize-none" rows="4" placeholder="Tell me about your project..."></textarea>
+          </div>
+          <button type="submit"
+                  class="mt-4 mono text-[12px] tracking-[0.2em] text-white/70 border border-white/20 px-8 py-3 hover:bg-white/10 hover:border-white/40 transition-all">
+            SEND MESSAGE
+          </button>
+        </form>
+
+        <p class="mono text-[9px] text-white/15 mt-16">&copy;2025 glez. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════════ -->
+  <script>
+    // ── Page navigation ───────────────────────────
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + name);
+      if (target) target.classList.add('active');
+      document.getElementById('menuOverlay').classList.remove('open');
+
+      // Re-trigger hero animation when switching to portfolio
+      if (name === 'portfolio') {
+        const hero = document.getElementById('heroTitleWrap');
+        if (hero) {
+          hero.parentElement.parentElement.classList.remove('hero-loaded');
+          // Reset reveal elements
+          document.querySelectorAll('#page-portfolio .reveal').forEach(el => el.classList.remove('visible'));
+          // Trigger hero after brief delay
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              hero.parentElement.parentElement.classList.add('hero-loaded');
+              initRevealObserver();
+            });
+          });
+        }
+      }
+    }
+
+    document.querySelectorAll('.menu-link').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        if (page) showPage(page);
+      });
+    });
+
+    // ── Menu toggle ──────────────────────────────
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('menuOverlay').classList.add('open');
+    });
+    document.getElementById('menuClose').addEventListener('click', () => {
+      document.getElementById('menuOverlay').classList.remove('open');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') document.getElementById('menuOverlay').classList.remove('open');
+    });
+
+    // ── Scroll reveal (IntersectionObserver) ─────
+    function initRevealObserver() {
+      const scroller = document.getElementById('portfolioScroller');
+      if (!scroller) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { root: scroller, threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      scroller.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+    }
+
+    // ── Hero featured image parallax on scroll ───
+    (function() {
+      const scroller = document.getElementById('portfolioScroller');
+      if (!scroller) return;
+      scroller.addEventListener('scroll', () => {
+        const img = scroller.querySelector('.hero-featured-img');
+        if (img) {
+          const scrollY = scroller.scrollTop;
+          img.style.transform = `translateY(${scrollY * 0.12}px) scale(1.02)`;
+        }
+      }, { passive: true });
+    })();
+
+    // ── Photography page data ────────────────────
+    const photos = [
+      {
+        src: '/6F3A2084.jpg',
+        num: '01', count: '(1 / 40)',
+        camera: 'Leica M6', lens: 'Leica 50mm<br/>Noctilux f/1', film: 'Kodak T-Max 400',
+        coords: '34.0522\u00b0 N, 118.2437\u00b0 W', location: 'Los Angeles'
+      },
+      {
+        src: '/6F3A2362.jpg',
+        num: '02', count: '(2 / 40)',
+        camera: 'Contax T2', lens: '38mm f/2.8', film: 'Fuji Pro 400H',
+        coords: '48.8566\u00b0 N, 2.3522\u00b0 E', location: 'Paris'
+      },
+      {
+        src: '/BCR64925.jpg',
+        num: '03', count: '(3 / 40)',
+        camera: 'Leica MP', lens: 'Leica 35mm<br/>Summilux Steel Rim', film: 'Ilford HP5 Plus 400',
+        coords: '1.2834\u00b0 N, 103.8607\u00b0 E', location: 'Singapore'
+      },
+      {
+        src: '/BCR64968-Edit 2.jpg',
+        num: '04', count: '(4 / 40)',
+        camera: 'Nikon F3', lens: 'Nikkor 28mm f/2.8', film: 'Kodak Portra 400',
+        coords: '35.6762\u00b0 N, 139.6503\u00b0 E', location: 'Tokyo'
+      },
+      {
+        src: '/BCR65082.jpg',
+        num: '05', count: '(5 / 40)',
+        camera: 'Hasselblad 500C/M', lens: 'Planar 80mm f/2.8', film: 'Kodak Ektar 100',
+        coords: '41.9028\u00b0 N, 12.4964\u00b0 E', location: 'Rome'
+      },
+      {
+        src: '/BCR65142.jpg',
+        num: '06', count: '(6 / 40)',
+        camera: 'Canon AE-1', lens: 'Canon 50mm f/1.4', film: 'Ilford Delta 400',
+        coords: '40.7128\u00b0 N, 74.0060\u00b0 W', location: 'New York'
+      },
+    ];
+
+    let current = 0;
+
+    function activate(index) {
+      document.querySelectorAll('.thumb').forEach((t, i) => {
+        t.classList.toggle('active', i === index);
+        t.classList.remove('opacity-35', 'opacity-55');
+        if (i !== index) {
+          t.classList.add(Math.abs(i - index) === 1 ? 'opacity-55' : 'opacity-35');
+        }
+      });
+      const p = photos[index];
+      const img = document.getElementById('mainPhoto');
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = p.src;
+        img.onload = () => { img.style.opacity = '1'; };
+      }, 220);
+      document.getElementById('photoNum').textContent   = p.num;
+      document.getElementById('photoCount').textContent = p.count;
+      document.getElementById('metaCamera').textContent = p.camera;
+      document.getElementById('metaLens').innerHTML     = p.lens;
+      document.getElementById('metaFilm').textContent   = p.film;
+      document.getElementById('metaCoords').textContent = p.coords;
+      document.getElementById('metaLocation').textContent = p.location;
+      current = index;
+    }
+
+    document.querySelectorAll('.thumb').forEach((t, i) => {
+      t.addEventListener('click', () => activate(i));
+    });
+
+
+    // ── Project data ───────────────────────────────
+    const projects = [
+      {
+        title: 'Film Project Alpha', category: 'Narrative', date: '15.01.26',
+        location: 'Los Angeles, CA', camera: 'ARRI Alexa Mini', lens: 'Cooke S4/i 32mm',
+        keywords: 'Narrative, Cinematic, Drama, Feature Film',
+        hero: 'https://picsum.photos/seed/filmA/900/1200',
+        gallery: ['filmA','filmA2','filmA3','filmA4','filmA5','filmA6'],
+        description: [
+          'Un proyecto cinematogr\u00e1fico que explora las tensiones invisibles entre generaciones. La pel\u00edcula captura momentos de vulnerabilidad cruda, filmados en locaciones reales a lo largo de Los \u00c1ngeles.',
+          'La direcci\u00f3n de fotograf\u00eda busc\u00f3 crear una est\u00e9tica naturalista, utilizando luz disponible siempre que fue posible. Cada escena fue compuesta para reflejar el estado emocional de los personajes.',
+          'Seleccionado oficialmente en TIFF 2025, el proyecto representa una colaboraci\u00f3n \u00edntima entre director y equipo, donde cada cuadro fue cuidadosamente construido para servir a la narrativa.'
+        ]
+      },
+      {
+        title: 'Campaign Reel', category: 'Commercial', date: '03.02.26',
+        location: 'Ciudad de M\u00e9xico', camera: 'RED V-Raptor', lens: 'Sigma Cine 24-70mm',
+        keywords: 'Commercial, Fashion, Advertising, Brand',
+        hero: 'https://picsum.photos/seed/campaign1/900/1200',
+        gallery: ['campaign1','campaign2','campaign3','campaign4','campaign5'],
+        description: [
+          'Una campa\u00f1a visual creada para Studio M, dise\u00f1ada para transmitir elegancia contempor\u00e1nea a trav\u00e9s de im\u00e1genes en movimiento.',
+          'El proyecto combin\u00f3 moda, arquitectura y narrativa visual en una serie de piezas que fueron distribuidas en plataformas digitales y televisivas a nivel internacional.',
+          'La paleta cromática fue cuidadosamente seleccionada para reflejar la identidad de la marca, manteniendo una coherencia visual a lo largo de toda la producci\u00f3n.'
+        ]
+      },
+      {
+        title: 'The Golden Hour', category: 'Narrative', date: '18.11.25',
+        location: 'Oaxaca, M\u00e9xico', camera: 'Sony Venice 2', lens: 'Zeiss Supreme Prime 35mm',
+        keywords: 'Narrative, Drama, Golden Hour, Portrait',
+        hero: 'https://picsum.photos/seed/golden1/900/1200',
+        gallery: ['golden1','golden2','golden3','golden4','golden5','golden6','golden7'],
+        description: [
+          'Una exploraci\u00f3n visual de la hora dorada en los valles de Oaxaca. Cada escena aprovecha la luz natural en su momento m\u00e1s expresivo.',
+          'El proyecto documenta historias personales de artesanos locales, capturando la intersecci\u00f3n entre tradici\u00f3n y modernidad en el M\u00e9xico contempor\u00e1neo.',
+          'La cinematograf\u00eda prioriza texturas y tonos c\u00e1lidos, creando un lenguaje visual que honra tanto a los sujetos como al paisaje que los rodea.'
+        ]
+      },
+      {
+        title: 'Street Stories', category: 'Documentary', date: '07.09.25',
+        location: 'Hermosillo, Sonora', camera: 'Sony Alpha 7 IV', lens: 'Sony FE 24-70mm f/2.8 GM II',
+        keywords: 'Documentary, Street, Urban, Real',
+        hero: 'https://picsum.photos/seed/street1/900/1200',
+        gallery: ['street1','street2','street3','street4','street5'],
+        description: [
+          'Un documental visual que captura la vida cotidiana en las calles de Hermosillo. Sin guiones, sin poses \u2014 solo momentos aut\u00e9nticos.',
+          'El proyecto se desarroll\u00f3 durante seis meses, visitando los mismos barrios repetidamente para construir confianza con la comunidad y capturar su esencia verdadera.',
+          'Cada imagen busca encontrar belleza en lo ordinario, revelando las historias que pasan desapercibidas en el ritmo diario de la ciudad.'
+        ]
+      },
+      {
+        title: 'Neon Nights', category: 'Narrative', date: '22.06.25',
+        location: 'Tokyo, Japan', camera: 'ARRI Alexa 35', lens: 'Leica Summicron-C 29mm',
+        keywords: 'Narrative, Night, Neon, Urban, Asia',
+        hero: 'https://picsum.photos/seed/neon1/900/1200',
+        gallery: ['neon1','neon2','neon3','neon4','neon5','neon6'],
+        description: [
+          'Una pieza visual que explora la est\u00e9tica nocturna de Tokyo, donde la luz artificial crea paisajes surreales entre callejones y avenidas.',
+          'La direcci\u00f3n de fotograf\u00eda jug\u00f3 con reflejos, ne\u00f3n y sombras profundas para construir un mundo visual que existe solo despu\u00e9s del atardecer.',
+          'El resultado es una meditaci\u00f3n sobre la soledad urbana y la belleza que emerge cuando una ciudad entera se transforma con la ca\u00edda de la noche.'
+        ]
+      },
+      {
+        title: 'Quiet Moments', category: 'Short Film', date: '14.04.25',
+        location: 'San Carlos, Sonora', camera: 'Sony Alpha 7 IV', lens: 'Sony FE 85mm f/1.4 GM',
+        keywords: 'Short Film, Intimate, Portrait, Silence',
+        hero: 'https://picsum.photos/seed/quiet1/900/1200',
+        gallery: ['quiet1','quiet2','quiet3','quiet4','quiet5'],
+        description: [
+          'Un cortometraje que celebra los silencios \u2014 esos momentos entre palabras donde sucede lo m\u00e1s importante.',
+          'Filmado enteramente en San Carlos, el proyecto utiliza el paisaje des\u00e9rtico y costero como met\u00e1fora visual del mundo interior de los personajes.',
+          'La intimidad fue clave: equipos peque\u00f1os, luz natural, y la paciencia necesaria para esperar a que los momentos reales se manifiesten.'
+        ]
+      },
+      {
+        title: 'Urban Canvas', category: 'Commercial', date: '08.03.25',
+        location: 'Barcelona, Espa\u00f1a', camera: 'RED Komodo', lens: 'Canon CN-E 35mm T1.5',
+        keywords: 'Commercial, Urban, Art, Street Art',
+        hero: 'https://picsum.photos/seed/urban1/900/1200',
+        gallery: ['urban1','urban2','urban3','urban4','urban5','urban6'],
+        description: [
+          'Una campa\u00f1a para Adidas Originals que fusiona arte callejero, moda y cultura urbana en las calles de Barcelona.',
+          'El proyecto captura la energ\u00eda de artistas locales interactuando con el espacio p\u00fablico, transformando muros y plazas en lienzos vivos.',
+          'La paleta visual combina la calidez mediterr\u00e1nea con la crudeza del concreto, creando un contraste que define la identidad de la campa\u00f1a.'
+        ]
+      },
+      {
+        title: 'Afterglow', category: 'Narrative', date: '29.01.25',
+        location: 'Guanajuato, M\u00e9xico', camera: 'ARRI Alexa Mini LF', lens: 'Panavision Primo 40mm',
+        keywords: 'Narrative, Drama, Romance, Period',
+        hero: 'https://picsum.photos/seed/after1/900/1200',
+        gallery: ['after1','after2','after3','after4','after5'],
+        description: [
+          'Un drama visual ambientado en los callejones coloridos de Guanajuato, donde la arquitectura colonial se convierte en personaje.',
+          'La historia sigue los \u00faltimos d\u00edas de un verano que transform\u00f3 todo. La fotograf\u00eda busca capturar esa nostalgia anticipada \u2014 saber que algo hermoso est\u00e1 terminando.',
+          'Premiada en Apple TV+, la pieza representa la madurez visual del estudio, combinando t\u00e9cnica impecable con sensibilidad emocional profunda.'
+        ]
+      }
+    ];
+
+    let currentProject = 0;
+
+    function openProject(index) {
+      currentProject = index;
+      const proj = projects[index];
+
+      // Fill metadata
+      document.getElementById('projName').textContent = proj.title;
+      document.getElementById('projDate').textContent = proj.date;
+      document.getElementById('projItem').textContent = `(${String(index+1).padStart(3,'0')}-25)`;
+      document.getElementById('projLocation').textContent = proj.location;
+      document.getElementById('projCamera').textContent = proj.camera;
+      document.getElementById('projLens').textContent = proj.lens;
+      document.getElementById('projKeywords').textContent = proj.keywords;
+
+      // Hero image
+      const heroImg = document.getElementById('projHeroImg');
+      heroImg.style.opacity = '0';
+      heroImg.src = proj.hero;
+      heroImg.onload = () => { heroImg.style.opacity = '1'; };
+
+      // Description paragraphs
+      document.getElementById('projDescription').innerHTML =
+        proj.description.map(p => `<p>${p}</p>`).join('');
+
+      // Thumbnails
+      const thumbContainer = document.getElementById('projThumbnails');
+      thumbContainer.innerHTML = proj.gallery.map((seed, i) =>
+        `<div class="proj-thumb ${i===0?'active':'opacity-50'}" onclick="changeProjImage(${index},${i})">
+          <img src="https://picsum.photos/seed/${seed}/200/116" class="w-full object-cover" draggable="false" alt="" />
+          <p class="mono text-[8px] text-white/22 mt-1 tracking-wide">(${String(index+1).padStart(3,'0')}-${String(i+1).padStart(2,'0')})</p>
+        </div>`
+      ).join('');
+
+      // Reset scroll
+      const scroller = document.getElementById('projectScroller');
+      if (scroller) scroller.scrollTop = 0;
+
+      // Show page
+      showPage('project');
+
+      // Trigger fade-in animations
+      requestAnimationFrame(() => {
+        document.querySelectorAll('#page-project .proj-fade-in').forEach(el => el.classList.add('vis'));
+      });
+    }
+
+    function changeProjImage(projIdx, imgIdx) {
+      const proj = projects[projIdx];
+      const heroImg = document.getElementById('projHeroImg');
+      heroImg.style.opacity = '0';
+      setTimeout(() => {
+        heroImg.src = `https://picsum.photos/seed/${proj.gallery[imgIdx]}/900/1200`;
+        heroImg.onload = () => { heroImg.style.opacity = '1'; };
+      }, 200);
+      document.querySelectorAll('.proj-thumb').forEach((t, i) => {
+        t.classList.toggle('active', i === imgIdx);
+        if (i !== imgIdx) { t.classList.remove('opacity-50'); t.classList.add('opacity-50'); }
+        else { t.classList.remove('opacity-50'); }
+      });
+    }
+
+    function navigateProject(dir) {
+      const next = (currentProject + dir + projects.length) % projects.length;
+      openProject(next);
+    }
+
+    // ── Timer ────────────────────────────────────
+    let secs = 0;
+    setInterval(() => {
+      secs++;
+      const hh = String(Math.floor(secs/3600)).padStart(2,'0');
+      const mm = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+      const ss = String(secs%60).padStart(2,'0');
+      document.getElementById('timer').textContent = `${hh}:${mm}:${ss}`;
+    }, 1000);
+
+    // ── Keyboard (Home page only) ────────────────
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('page-home').classList.contains('active')) return;
+      if (document.getElementById('menuOverlay').classList.contains('open')) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') activate((current+1) % photos.length);
+      if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  activate((current-1+photos.length) % photos.length);
+    });
+  </script>
+</body>
+</html>
