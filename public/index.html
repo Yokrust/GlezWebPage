@@ -5,11 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>glez. — Photography & Film</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter+Tight:wght@200;300;400;500;600;700;800&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet" />
   <style>
     html, body { height: 100%; overflow: hidden; }
-    body { font-family: 'Inter', sans-serif; background: #080808; color: #fff; }
+    body { font-family: 'Inter Tight', system-ui, sans-serif; background: #080808; color: #fff; -webkit-font-smoothing: antialiased; }
     .mono { font-family: 'Space Mono', monospace; }
+    .display { font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif; font-optical-sizing: auto; font-variation-settings: "wdth" 100; }
+    .display-tight { font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif; font-optical-sizing: auto; font-variation-settings: "wdth" 90; letter-spacing: -0.04em; }
+    .display-wide  { font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif; font-optical-sizing: auto; font-variation-settings: "wdth" 100; letter-spacing: -0.02em; }
+    /* legacy alias so any leftover .serif still resolves to display */
+    .serif { font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif; font-optical-sizing: auto; }
 
     /* ── Pages ──────────────────────────────────── */
     .page { display: none; height: 100%; }
@@ -102,6 +107,127 @@
     }
     .scroll-indicator { animation: scrollPulse 2.5s ease-in-out infinite; }
 
+    /* ── Portfolio: Editorial Gallery ────────────── */
+    .grain-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      opacity: 0.06; mix-blend-mode: overlay; z-index: 1;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.75'/></svg>");
+    }
+
+    /* Index rows */
+    .idx-row {
+      position: relative; display: grid;
+      grid-template-columns: 60px 1fr 180px 140px 40px;
+      align-items: baseline; gap: 24px;
+      padding: 22px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: padding-left 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .idx-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .idx-row:hover { padding-left: 28px; }
+    .idx-row:hover .idx-title { font-variation-settings: "wdth" 90; letter-spacing: -0.045em; color: rgba(255,255,255,0.98); }
+    .idx-row:hover .idx-arrow { transform: translateX(6px); color: rgba(255,255,255,0.9); }
+    .idx-row:hover .idx-num { color: rgba(255,255,255,0.4); }
+    .idx-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 34px; font-weight: 300;
+      letter-spacing: -0.035em;
+      color: rgba(255,255,255,0.85);
+      font-variation-settings: "wdth" 100;
+      transition: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .idx-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.22);
+      transition: color 0.5s;
+    }
+    .idx-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+    }
+    .idx-arrow {
+      color: rgba(255,255,255,0.25);
+      transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), color 0.5s;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 18px;
+    }
+
+    /* Floating hover preview */
+    #idxPreview {
+      position: fixed; top: 0; left: 0; z-index: 80;
+      width: 320px; height: 400px; pointer-events: none;
+      opacity: 0; transform: translate(-50%, -50%) scale(0.96);
+      transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+      overflow: hidden;
+    }
+    #idxPreview.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    #idxPreview img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.15); }
+
+    /* Spreads */
+    .spread {
+      position: relative;
+      padding: 180px 96px;
+      min-height: 110vh;
+      overflow: hidden;
+    }
+    .spread + .spread { border-top: 1px solid rgba(255,255,255,0.05); }
+    .spread-num {
+      position: absolute;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 200;
+      font-variation-settings: "wdth" 90;
+      font-size: clamp(200px, 28vw, 420px);
+      line-height: 0.8; letter-spacing: -0.06em;
+      color: rgba(255,255,255,0.045);
+      pointer-events: none; user-select: none;
+      z-index: 0;
+    }
+    .spread-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 300;
+      font-variation-settings: "wdth" 95;
+      letter-spacing: -0.045em; line-height: 0.92;
+    }
+    .spread-img-wrap {
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .spread-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 1.2s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.6s;
+    }
+    .spread-img-wrap:hover img { transform: scale(1.04); filter: brightness(1.08); }
+    .spread-img-wrap::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.2) 100%);
+      pointer-events: none;
+    }
+
+    /* Marginalia (rotated vertical text) */
+    .marginalia {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+
+    /* Ornament divider */
+    .ornament {
+      display: flex; align-items: center; justify-content: center;
+      gap: 24px; padding: 80px 0;
+    }
+    .ornament-line { flex: 1; height: 1px; background: rgba(255,255,255,0.1); max-width: 200px; }
+    .ornament-mark {
+      font-family: 'Bricolage Grotesque', sans-serif; font-weight: 300;
+      font-size: 18px; color: rgba(255,255,255,0.5); letter-spacing: 0.4em;
+    }
+
     /* ── Project detail page ────────────────────── */
     .proj-thumb { transition: opacity 0.25s, outline-color 0.25s; cursor: pointer; }
     .proj-thumb:hover { opacity: 0.8 !important; }
@@ -132,17 +258,18 @@
         <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
       </svg>
     </button>
-    <nav class="flex flex-col items-center gap-2">
-      <a href="#" class="menu-link text-[52px] font-bold text-white/80 hover:text-white transition-colors tracking-tight leading-tight"
-         data-page="home">Home</a>
-      <a href="#" class="menu-link text-[52px] font-bold text-white/80 hover:text-white transition-colors tracking-tight leading-tight"
-         data-page="portfolio">Portfolio</a>
-      <a href="#" class="menu-link text-[52px] font-bold text-white/80 hover:text-white transition-colors tracking-tight leading-tight"
-         data-page="contact">Contact</a>
-      <div class="mt-10 flex items-center gap-6 mono text-[11px] text-white/25">
-        <a href="https://www.instagram.com/glezweddings/" target="_blank" class="hover:text-white/60 transition-colors tracking-[0.2em]">Instagram</a>
-        <span>&middot;</span>
-        <a href="mailto:horebglez@gmail.com" class="hover:text-white/60 transition-colors tracking-[0.2em]">Email</a>
+    <nav class="flex flex-col items-center gap-1">
+      <p class="mono text-[10px] text-white/25 tracking-[0.4em] mb-8">&sect;&nbsp;&Iacute;NDICE GENERAL</p>
+      <a href="#" class="menu-link display text-white/85 hover:text-white transition-colors leading-[0.92] lowercase"
+         style="font-size:96px; letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 90;" data-page="home">home</a>
+      <a href="#" class="menu-link display text-white/85 hover:text-white transition-colors leading-[0.92] lowercase"
+         style="font-size:96px; letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 90;" data-page="portfolio">portfolio</a>
+      <a href="#" class="menu-link display text-white/85 hover:text-white transition-colors leading-[0.92] lowercase"
+         style="font-size:96px; letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 90;" data-page="contact">contact</a>
+      <div class="mt-12 flex items-center gap-5 mono text-[10px] text-white/30 tracking-[0.3em]">
+        <a href="https://www.instagram.com/glezweddings/" target="_blank" class="hover:text-white/70 transition-colors">Instagram</a>
+        <span class="text-white/15">&times;</span>
+        <a href="mailto:horebglez@gmail.com" class="hover:text-white/70 transition-colors">Email</a>
       </div>
     </nav>
   </div>
@@ -188,25 +315,25 @@
   ═══════════════════════════════════════════════════════ -->
   <div id="page-home" class="page active" style="height:calc(100vh - 64px);">
     <div class="flex flex-1 overflow-hidden">
-      <aside class="shrink-0 flex flex-col gap-3 p-4 overflow-y-auto border-r border-white/[0.06]"
+      <aside class="shrink-0 flex flex-col gap-2 p-4 overflow-y-auto border-r border-white/[0.06]"
              style="width:100px;">
-        <div class="thumb active" data-index="0">
-          <img src="/6F3A2084.jpg" class="w-full object-cover" draggable="false" alt="" />
+        <div class="thumb active overflow-hidden" data-index="0" style="height:72px;">
+          <img src="/Fotos/6F3A2084.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
         </div>
-        <div class="thumb opacity-55" data-index="1">
-          <img src="/6F3A2362.jpg" class="w-full object-cover" draggable="false" alt="" />
+        <div class="thumb opacity-55 overflow-hidden" data-index="1" style="height:72px;">
+          <img src="/Fotos/6F3A2362.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
         </div>
-        <div class="thumb opacity-35" data-index="2">
-          <img src="/BCR64925.jpg" class="w-full object-cover" draggable="false" alt="" />
+        <div class="thumb opacity-35 overflow-hidden" data-index="2" style="height:72px;">
+          <img src="/Fotos/BCR64925.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
         </div>
-        <div class="thumb opacity-35" data-index="3">
-          <img src="/BCR64968-Edit 2.jpg" class="w-full object-cover" draggable="false" alt="" />
+        <div class="thumb opacity-35 overflow-hidden" data-index="3" style="height:72px;">
+          <img src="/Fotos/BCR64968-Edit 2.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
         </div>
-        <div class="thumb opacity-35" data-index="4">
-          <img src="/BCR65082.jpg" class="w-full object-cover" draggable="false" alt="" />
+        <div class="thumb opacity-35 overflow-hidden" data-index="4" style="height:72px;">
+          <img src="/Fotos/BCR65082.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
         </div>
-        <div class="thumb opacity-35" data-index="5">
-          <img src="/BCR65142.jpg" class="w-full object-cover" draggable="false" alt="" />
+        <div class="thumb opacity-35 overflow-hidden" data-index="5" style="height:72px;">
+          <img src="/Fotos/BCR65142.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
         </div>
       </aside>
 
@@ -214,7 +341,7 @@
         <span class="mono text-white/15 text-2xl font-bold leading-none shrink-0">+</span>
         <div class="flex-1 relative w-full">
           <div class="absolute inset-0 flex items-center justify-center px-20">
-            <img id="mainPhoto" src="/6F3A2084.jpg"
+            <img id="mainPhoto" src="/Fotos/6F3A2084.jpg"
                  alt="Featured photograph" class="object-contain" style="width:320px; height:510px;" draggable="false" />
           </div>
         </div>
@@ -228,31 +355,31 @@
       <aside class="shrink-0 flex flex-col justify-between border-l border-white/[0.06] overflow-hidden"
              style="width:230;">
         <div class="px-10 pt-6 flex items-start justify-between">
-          <p id="photoCount" class="mono text-[9px] text-white/32 tracking-wide pt-1">(1 / 48)</p>
-          <span id="photoNum" class="mono font-bold text-white leading-none tracking-tight text-right"
-                style="font-size:60px; line-height:0.85; min-width:2.2ch;">01</span>
+          <p id="photoCount" class="mono text-[9px] text-white/35 tracking-[0.25em] pt-3">(1 / 48)</p>
+          <span id="photoNum" class="display font-light text-white leading-none text-right"
+                style="font-size:78px; line-height:0.82; letter-spacing:-0.04em; min-width:2.2ch;">01</span>
         </div>
 
-        <div class="px-10 text-right space-y-8 mono">
+        <div class="px-10 text-right space-y-8">
           <div>
-            <p class="text-[6px] text-white/35 tracking-wide mb-1.5">Camera</p>
-            <p id="metaCamera" class="text-[11px] text-white/82 leading-snug">Leica M6</p>
+            <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mb-2">Camera</p>
+            <p id="metaCamera" class="display text-white/85 leading-snug" style="font-size:15px;">Leica M6</p>
           </div>
           <div>
-            <p class="text-[6px] text-white/35 tracking-wide mb-1.5">Lens</p>
-            <p id="metaLens" class="text-[11px] text-white/82 leading-snug">Leica 50mm<br/>Noctilux f/1</p>
+            <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mb-2">Lens</p>
+            <p id="metaLens" class="display text-white/85 leading-snug" style="font-size:15px;">Leica 50mm<br/>Noctilux f/1</p>
           </div>
           <div>
-            <p class="text-[6px] text-white/35 tracking-wide mb-1.5">Film Stock</p>
-            <p id="metaFilm" class="text-[11px] text-white/82 leading-snug">Kodak T-Max 400</p>
+            <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mb-2">Film Stock</p>
+            <p id="metaFilm" class="display text-white/85 leading-snug" style="font-size:15px;">Kodak T-Max 400</p>
           </div>
         </div>
 
-        <div class="px-10 pb-8 text-right mono">
-          <p id="metaCoords" class="text-[7px] text-white/28 tracking-wide">34.0522&deg; N, 118.2437&deg; W</p>
-          <p class="text-[11px] text-white/35 tracking-wide mt-2">Location</p>
-          <p id="metaLocation" class="text-[12px] font-bold text-white/80 tracking-wide mt-1.5">Los Angeles</p>
-          <p class="text-[11px] text-white/18 mt-5">&copy;2025</p>
+        <div class="px-10 pb-8 text-right">
+          <p id="metaCoords" class="mono text-[8px] text-white/28 tracking-[0.22em]">34.0522&deg; N, 118.2437&deg; W</p>
+          <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mt-3">Location</p>
+          <p id="metaLocation" class="display text-white/90 mt-1.5 leading-none" style="font-size:22px; letter-spacing:-0.01em;">Los Angeles</p>
+          <p class="mono text-[9px] text-white/20 tracking-[0.25em] mt-6">&copy;&nbsp;2025</p>
         </div>
       </aside>
     </div>
@@ -262,163 +389,148 @@
        PAGE 2: PORTFOLIO — Redesigned (Winkeler hybrid)
   ═══════════════════════════════════════════════════════ -->
   <div id="page-portfolio" class="page" style="height:calc(100vh - 64px);">
-    <div class="flex flex-col h-full overflow-y-auto" id="portfolioScroller">
+    <div class="flex flex-col h-full overflow-y-auto relative" id="portfolioScroller">
+
+      <!-- Floating hover preview (index) -->
+      <div id="idxPreview"><img id="idxPreviewImg" src="" alt="" draggable="false" /></div>
 
       <!-- ──────────────────────────────────────────
-           HERO SECTION (full viewport, Winkeler-inspired)
+           HERO — Editorial cover
       ─────────────────────────────────────────── -->
-      <section class="relative min-h-[calc(100vh-64px)] flex flex-col" id="portfolioHero">
+      <section class="relative min-h-[calc(100vh-64px)] flex flex-col overflow-hidden" id="portfolioHero">
+        <div class="grain-overlay"></div>
 
-        <!-- Top area: title + counter -->
-        <div class="flex-1 flex px-20 pt-24 pb-14">
+        <!-- Top bar -->
+        <div class="relative z-10 flex justify-between items-start px-16 pt-10">
+          <div class="flex items-baseline gap-5">
+            <span class="mono text-[10px] tracking-[0.3em] text-white/50">VOLUMEN&nbsp;01</span>
+            <span class="text-white/20">¬</span>
+            <span class="mono text-[10px] tracking-[0.3em] text-white/40">PORTAFOLIO 2024&mdash;2025</span>
+          </div>
+          <div class="text-right">
+            <p class="mono text-[10px] tracking-[0.3em] text-white/50" id="heroCounter">(08) OBRAS</p>
+            <p class="mono text-[9px] tracking-[0.25em] text-white/25 mt-1">SELECCIONADAS</p>
+          </div>
+        </div>
 
-          <!-- Left: massive title -->
-          <div class="flex-1 flex flex-col justify-start pt-4">
-            <div id="heroTitleWrap">
-              <div class="hero-title-line">
-                <span class="text-[clamp(60px,11vw,120px)] font-black text-white leading-[0.92] tracking-[-0.04em]">Selected</span>
-              </div>
-              <div class="hero-title-line">
-                <span class="text-[clamp(80px,11vw,160px)] font-black text-white leading-[0.92] tracking-[-0.04em]">Cases</span>
-              </div>
+        <!-- Massive serif title -->
+        <div class="relative z-10 flex-1 flex flex-col justify-center px-16">
+          <div id="heroTitleWrap" class="relative">
+            <div class="hero-title-line">
+              <span class="display text-white block lowercase" style="font-size:clamp(100px,17vw,260px); line-height:0.86; letter-spacing:-0.06em; font-weight:200; font-variation-settings:'wdth' 90;">obras</span>
+            </div>
+            <div class="hero-title-line -mt-1 md:-mt-4">
+              <span class="display text-white/45 block lowercase" style="font-size:clamp(60px,9vw,140px); line-height:0.95; letter-spacing:-0.045em; font-weight:300; font-variation-settings:'wdth' 100;">seleccionadas</span>
             </div>
           </div>
 
-          <!-- Right: counter + featured image -->
-          <div class="flex flex-col items-end gap-8 w-[48%]">
-            <span class="text-[clamp(60px,8vw,120px)] font-black text-white/90 leading-none tracking-[-0.03em]">(12)</span>
-
-            <!-- Featured image -->
-            <div class="w-full flex-1 min-h-[320px] overflow-hidden relative">
-              <img src="https://picsum.photos/seed/filmA/900/600"
-                   class="hero-featured-img w-full h-full object-cover"
-                   draggable="false" alt="Featured project" />
+          <!-- Colophon quote -->
+          <div class="mt-16 max-w-[520px]">
+            <p class="display font-light text-white/60 leading-[1.3]" style="font-size:clamp(18px,1.4vw,22px);">
+              Un archivo &iacute;ntimo de imagen y silencio. Bodas, retratos y escenas vividas al margen del tiempo.
+            </p>
+            <div class="mt-5 flex items-center gap-4">
+              <div class="w-10 h-[1px] bg-white/30"></div>
+              <span class="mono text-[9px] tracking-[0.3em] text-white/35">GLEZ., HERMOSILLO</span>
             </div>
           </div>
         </div>
 
-
-        <!-- Bottom bar: tagline + scroll indicator -->
-        <div class="px-20 pb-16 flex items-end justify-between">
-          <div class="flex items-start gap-4">
-            <div class="w-[1px] h-10 bg-white/20 mt-1"></div>
-            <div>
-              <p class="text-[14px] text-white/60 font-light italic leading-snug">El acto de crear</p>
-              <p class="text-[14px] text-white/60 font-light italic leading-snug">merece ser contado.</p>
-            </div>
+        <!-- Bottom bar: scroll cue + featured crop -->
+        <div class="relative z-10 flex items-end justify-between px-16 pb-10">
+          <div class="flex items-center gap-3">
+            <span class="mono text-[9px] text-white/35 tracking-[0.35em]">DESCENDER &darr;</span>
+            <div class="w-[40px] h-[1px] bg-white/25"></div>
           </div>
-          <div class="scroll-indicator flex flex-col items-center gap-2">
-            <span class="mono text-[9px] text-white/30 tracking-[0.2em]" style="writing-mode:vertical-rl;">Scroll</span>
-            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" class="text-white/25">
-              <path d="M6 2L6 18M6 18L2 14M6 18L10 14" stroke="currentColor" stroke-width="1"/>
-            </svg>
+          <div class="flex items-end gap-5">
+            <div class="text-right pb-1">
+              <p class="mono text-[9px] tracking-[0.25em] text-white/30">OBRA DESTACADA</p>
+              <p id="heroFeaturedTitle" class="display text-white/85 text-[16px] mt-1 leading-tight">Film Project Alpha</p>
+            </div>
+            <div class="w-[88px] h-[112px] overflow-hidden relative">
+              <img id="heroFeaturedImg" src="https://picsum.photos/seed/filmA/400/520"
+                   class="hero-featured-img w-full h-full object-cover grayscale-[0.2]"
+                   draggable="false" alt="" />
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ──────────────────────────────────────────
-           PROJECT GRID (scroll-animated)
+           INDEX — Editorial list with hover preview
       ─────────────────────────────────────────── -->
-      <section class="px-20 pt-32 pb-16">
+      <section class="px-16 pt-40 pb-24 relative">
+        <div class="grain-overlay"></div>
 
-        <!-- Section label -->
-        <div class="reveal flex items-center gap-4 mb-24 px-2">
-          <span class="mono text-[10px] text-white/25 tracking-[0.3em]">ALL PROJECTS</span>
-          <div class="flex-1 h-[1px] bg-white/[0.06]"></div>
-          <span class="mono text-[11px] text-white/20">12 works</span>
+        <!-- Section marker -->
+        <div class="reveal flex items-baseline gap-6 mb-20">
+          <span class="mono text-[10px] text-white/35 tracking-[0.3em]">&sect;&nbsp;&Iacute;NDICE</span>
+          <div class="flex-1 h-[1px] bg-white/10"></div>
+          <span class="display text-white/45 text-[15px]">cat&aacute;logo completo</span>
+          <div class="flex-1 h-[1px] bg-white/10"></div>
+          <span class="mono text-[10px] text-white/35 tracking-[0.25em]" id="indexRange">01 &mdash; 08</span>
         </div>
 
-        <!-- Row 1: 2 large cards -->
-        <div class="grid grid-cols-2 gap-10 mb-14">
-          <div class="project-card h-[340px] relative overflow-hidden reveal" data-project="0" onclick="openProject(0)">
-            <img src="https://picsum.photos/seed/filmA/900/520" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[26px] font-bold text-white/95 leading-tight tracking-tight">Film Project Alpha</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Director: glez. &middot; Featured at TIFF 2025</p>
-            </div>
-          </div>
-          <div class="project-card h-[340px] relative overflow-hidden reveal reveal-delay-1" data-project="1" onclick="openProject(1)">
-            <img src="https://picsum.photos/seed/campaign1/900/520" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Commercial</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[26px] font-bold text-white/95 leading-tight tracking-tight">Campaign Reel</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Client: Studio M &middot; Streamer: Netflix</p>
-            </div>
-          </div>
+        <!-- Rows populated by JS -->
+        <div id="projectIndex" class="reveal"></div>
+      </section>
+
+      <!-- ──────────────────────────────────────────
+           ORNAMENT DIVIDER
+      ─────────────────────────────────────────── -->
+      <div class="reveal ornament">
+        <div class="ornament-line"></div>
+        <span class="ornament-mark">&times; &nbsp; &times; &nbsp; &times;</span>
+        <div class="ornament-line"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────
+           SPREADS — Editorial project spreads
+      ─────────────────────────────────────────── -->
+      <section id="projectSpreads"></section>
+
+      <!-- ──────────────────────────────────────────
+           COLOPHON — Editorial footer
+      ─────────────────────────────────────────── -->
+      <section class="relative px-16 pt-32 pb-16 min-h-[60vh] flex flex-col justify-between overflow-hidden">
+        <div class="grain-overlay"></div>
+
+        <!-- Top: big farewell -->
+        <div class="relative z-10 reveal">
+          <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-6">COLOPH&Oacute;N &mdash; FIN DEL VOLUMEN</p>
+          <h2 class="display text-white lowercase" style="font-size:clamp(80px,12vw,180px); line-height:0.88; letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 92;">
+            gracias<span class="text-white/40">.</span>
+          </h2>
+          <p class="display text-white/55 mt-10 max-w-[460px] leading-[1.4]" style="font-size:18px;">
+            Por habitar estas im&aacute;genes, aunque sea por un instante. Si algo aqu&iacute; te tom&oacute; el pecho, esc&iacute;beme.
+          </p>
         </div>
 
-        <!-- Row 2: 3 cards -->
-        <div class="grid grid-cols-3 gap-10 mb-14">
-          <div class="project-card h-[290px] relative overflow-hidden reveal" data-project="2" onclick="openProject(2)">
-            <img src="https://picsum.photos/seed/golden1/600/440" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">The Golden Hour</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: A. M&eacute;ndez &middot; HBO Max</p>
-            </div>
+        <!-- Bottom: editorial colophon details -->
+        <div class="relative z-10 reveal grid grid-cols-12 gap-6 mt-20 pt-10 border-t border-white/[0.08]">
+          <div class="col-span-3">
+            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; CONTACTO</p>
+            <a href="mailto:horebglez@gmail.com" class="display text-white/80 hover:text-white transition-colors block leading-tight" style="font-size:18px;">horebglez@gmail.com</a>
+            <a href="https://www.instagram.com/glezweddings/" target="_blank" class="display text-white/60 hover:text-white transition-colors block leading-tight mt-1" style="font-size:16px;">@glezweddings</a>
           </div>
-          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-1" data-project="3" onclick="openProject(3)">
-            <img src="https://picsum.photos/seed/street1/600/440" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Documentary</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Street Stories</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: glez. &middot; Sundance</p>
-            </div>
+          <div class="col-span-3">
+            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; ESTUDIO</p>
+            <p class="display text-white/70 leading-tight" style="font-size:16px;">Hermosillo, Sonora</p>
+            <p class="display text-white/50 leading-tight mt-1" style="font-size:14px;">M&eacute;xico &amp; el mundo</p>
           </div>
-          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-2" data-project="4" onclick="openProject(4)">
-            <img src="https://picsum.photos/seed/neon1/600/440" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Neon Nights</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Director: C. Vega &middot; Amazon Prime</p>
-            </div>
+          <div class="col-span-3">
+            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; CREDITOS</p>
+            <p class="mono text-[11px] text-white/55 leading-[1.7]">Typesetting: Bricolage Gr.<br/>Inter Tight / Space Mono<br/>Impreso digitalmente</p>
           </div>
-        </div>
-
-        <!-- Row 3: 3 cards -->
-        <div class="grid grid-cols-3 gap-10 mb-14">
-          <div class="project-card h-[290px] relative overflow-hidden reveal" data-project="5" onclick="openProject(5)">
-            <img src="https://picsum.photos/seed/quiet1/600/440" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Short Film</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Quiet Moments</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: L. Torres &middot; Venice</p>
-            </div>
-          </div>
-          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-1" data-project="6" onclick="openProject(6)">
-            <img src="https://picsum.photos/seed/urban1/600/440" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Commercial</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Urban Canvas</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Created by: glez. &middot; Adidas Originals</p>
-            </div>
-          </div>
-          <div class="project-card h-[290px] relative overflow-hidden reveal reveal-delay-2" data-project="7" onclick="openProject(7)">
-            <img src="https://picsum.photos/seed/after1/600/440" class="card-img" draggable="false" alt="" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-            <span class="absolute top-6 right-8 mono text-[10px] text-white/35 tracking-[0.15em]">Narrative</span>
-            <div class="absolute bottom-7 left-8">
-              <h3 class="text-[22px] font-bold text-white/95 leading-tight tracking-tight">Afterglow</h3>
-              <p class="text-[11px] text-white/45 mt-2 tracking-wide">Director: R. Park &middot; Apple TV+</p>
-            </div>
+          <div class="col-span-3 text-right">
+            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; COPYRIGHT</p>
+            <p class="mono text-[11px] text-white/55 leading-[1.7]">&copy; GLEZ. 2025<br/>Todos los derechos reservados<br/>Volumen 01</p>
           </div>
         </div>
 
-        <!-- Footer -->
-        <div class="reveal flex items-center justify-between py-20 px-2 border-t border-white/[0.06] mt-14">
-          <span class="mono text-[10px] text-white/20 tracking-[0.2em]">&copy;2025 glez.</span>
-          <div class="flex items-center gap-8">
-            <a href="https://www.instagram.com/glezweddings/" target="_blank" class="mono text-[10px] text-white/25 hover:text-white/60 transition-colors tracking-[0.2em]">Instagram</a>
-            <a href="mailto:horebglez@gmail.com" class="mono text-[10px] text-white/25 hover:text-white/60 transition-colors tracking-[0.2em]">Email</a>
-          </div>
+        <!-- Giant signature sign-off -->
+        <div class="relative z-10 mt-24 reveal">
+          <p class="display text-white/15 leading-none lowercase" style="font-size:clamp(140px,22vw,360px); letter-spacing:-0.075em; font-weight:200; font-variation-settings:'wdth' 88;">glez.</p>
         </div>
       </section>
 
@@ -549,13 +661,14 @@
 
         <!-- Profile photo -->
         <div class="mb-12">
-          <img src="/FotoHoreb.jpeg" alt="Horeb Glez"
+          <img src="/Fotos/FotoHoreb.jpeg" alt="Horeb Glez"
                class="w-[180px] h-[200px] object-cover" draggable="false" />
         </div>
 
         <!-- Name -->
-        <h1 class="text-[72px] font-bold leading-[0.95] tracking-tighter text-white mb-6">
-          I&rsquo;m Horeb Glez
+        <h1 class="display text-white mb-6 leading-[0.9] lowercase"
+            style="font-size:clamp(64px,7vw,108px); letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 92;">
+          i&rsquo;m horeb <span class="text-white/45">glez.</span>
         </h1>
 
         <!-- Description -->
@@ -692,37 +805,37 @@
     // ── Photography page data ────────────────────
     const photos = [
       {
-        src: '/6F3A2084.jpg',
+        src: '/Fotos/6F3A2084.jpg',
         num: '01', count: '(1 / 40)',
         camera: 'Leica M6', lens: 'Leica 50mm<br/>Noctilux f/1', film: 'Kodak T-Max 400',
         coords: '34.0522\u00b0 N, 118.2437\u00b0 W', location: 'Los Angeles'
       },
       {
-        src: '/6F3A2362.jpg',
+        src: '/Fotos/6F3A2362.jpg',
         num: '02', count: '(2 / 40)',
         camera: 'Contax T2', lens: '38mm f/2.8', film: 'Fuji Pro 400H',
         coords: '48.8566\u00b0 N, 2.3522\u00b0 E', location: 'Paris'
       },
       {
-        src: '/BCR64925.jpg',
+        src: '/Fotos/BCR64925.jpg',
         num: '03', count: '(3 / 40)',
         camera: 'Leica MP', lens: 'Leica 35mm<br/>Summilux Steel Rim', film: 'Ilford HP5 Plus 400',
         coords: '1.2834\u00b0 N, 103.8607\u00b0 E', location: 'Singapore'
       },
       {
-        src: '/BCR64968-Edit 2.jpg',
+        src: '/Fotos/BCR64968-Edit 2.jpg',
         num: '04', count: '(4 / 40)',
         camera: 'Nikon F3', lens: 'Nikkor 28mm f/2.8', film: 'Kodak Portra 400',
         coords: '35.6762\u00b0 N, 139.6503\u00b0 E', location: 'Tokyo'
       },
       {
-        src: '/BCR65082.jpg',
+        src: '/Fotos/BCR65082.jpg',
         num: '05', count: '(5 / 40)',
         camera: 'Hasselblad 500C/M', lens: 'Planar 80mm f/2.8', film: 'Kodak Ektar 100',
         coords: '41.9028\u00b0 N, 12.4964\u00b0 E', location: 'Rome'
       },
       {
-        src: '/BCR65142.jpg',
+        src: '/Fotos/BCR65142.jpg',
         num: '06', count: '(6 / 40)',
         camera: 'Canon AE-1', lens: 'Canon 50mm f/1.4', film: 'Ilford Delta 400',
         coords: '40.7128\u00b0 N, 74.0060\u00b0 W', location: 'New York'
@@ -760,6 +873,8 @@
       t.addEventListener('click', () => activate(i));
     });
 
+    // Initialize first photo on load
+    activate(0);
 
     // ── Project data ───────────────────────────────
     const projects = [
@@ -927,6 +1042,236 @@
       const next = (currentProject + dir + projects.length) % projects.length;
       openProject(next);
     }
+
+    // ═══════════════════════════════════════════════════════
+    // PORTFOLIO — Editorial builders (index + spreads)
+    // ═══════════════════════════════════════════════════════
+    (function buildPortfolio() {
+      const idxEl      = document.getElementById('projectIndex');
+      const spreadsEl  = document.getElementById('projectSpreads');
+      const preview    = document.getElementById('idxPreview');
+      const previewImg = document.getElementById('idxPreviewImg');
+      if (!idxEl || !spreadsEl) return;
+
+      // Counter + range updates
+      const countStr = String(projects.length).padStart(2, '0');
+      const counterEl = document.getElementById('heroCounter');
+      const rangeEl   = document.getElementById('indexRange');
+      if (counterEl) counterEl.textContent = `(${countStr}) OBRAS`;
+      if (rangeEl)   rangeEl.textContent   = `01 \u2014 ${countStr}`;
+
+      // Hero featured crop = first project
+      const feat = projects[0];
+      const featImg   = document.getElementById('heroFeaturedImg');
+      const featTitle = document.getElementById('heroFeaturedTitle');
+      if (featImg)   featImg.src = feat.hero;
+      if (featTitle) featTitle.textContent = feat.title;
+
+      // Preload all hero images so hover previews are instant
+      projects.forEach(p => { const im = new Image(); im.src = p.hero; });
+
+      const yearOf = d => '20' + (d.split('.')[2] || '25');
+      const city   = loc => loc.split(',')[0].trim();
+
+      // ─────────────────────────────────────────────────────
+      // INDEX — editorial list
+      // ─────────────────────────────────────────────────────
+      idxEl.innerHTML = projects.map((p, i) => {
+        const n = String(i + 1).padStart(2, '0');
+        return `
+          <div class="idx-row" data-index="${i}">
+            <span class="idx-num">N.\u00ba ${n}</span>
+            <span class="idx-title">${p.title}</span>
+            <span class="idx-meta">${p.category} \u00b7 ${city(p.location)}</span>
+            <span class="idx-meta">${yearOf(p.date)}</span>
+            <span class="idx-arrow">\u2192</span>
+          </div>`;
+      }).join('');
+
+      // Hover preview + click-open
+      idxEl.querySelectorAll('.idx-row').forEach(row => {
+        const i = +row.dataset.index;
+        row.addEventListener('mouseenter', () => {
+          previewImg.src = projects[i].hero;
+          preview.classList.add('active');
+        });
+        row.addEventListener('mouseleave', () => {
+          preview.classList.remove('active');
+        });
+        row.addEventListener('click', () => openProject(i));
+      });
+
+      // Cursor-following preview (viewport coords; #idxPreview is fixed)
+      document.addEventListener('mousemove', (e) => {
+        if (!preview.classList.contains('active')) return;
+        // Offset so preview sits to the right of cursor and doesn't overlap rows
+        preview.style.top  = e.clientY + 'px';
+        preview.style.left = (e.clientX + 180) + 'px';
+      }, { passive: true });
+
+      // ─────────────────────────────────────────────────────
+      // SPREADS — 4 cycling editorial layouts
+      // ─────────────────────────────────────────────────────
+      const layouts = ['A', 'B', 'C', 'D'];
+
+      spreadsEl.innerHTML = projects.map((p, i) => {
+        const n      = String(i + 1).padStart(2, '0');
+        const layout = layouts[i % 4];
+        const year   = yearOf(p.date);
+        const altSeed = p.gallery[1] || p.gallery[0];
+        const altImg  = `https://picsum.photos/seed/${altSeed}/700/900`;
+
+        // ─── LAYOUT A: text left, image right, number bleeds top-left
+        if (layout === 'A') {
+          return `
+          <section class="spread reveal" data-index="${i}">
+            <div class="grain-overlay"></div>
+            <div class="spread-num" style="top:40px; left:30px;">${n}</div>
+            <div class="relative z-10 grid grid-cols-12 gap-10 items-center">
+              <div class="col-span-5 pr-4">
+                <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-8">FRAGMENTO &nbsp;/&nbsp; ${n}</p>
+                <h3 class="spread-title text-white" style="font-size:clamp(54px,6.4vw,96px);">${p.title}</h3>
+                <div class="mt-8 flex items-center gap-4">
+                  <div class="w-12 h-[1px] bg-white/30"></div>
+                  <span class="mono text-[10px] text-white/55 tracking-[0.22em] uppercase">${p.category}</span>
+                </div>
+                <p class="mt-10 text-white/55 leading-[1.85] font-light max-w-[380px]" style="font-size:13.5px;">${p.description[0]}</p>
+                <div class="mt-12 flex items-end justify-between max-w-[380px]">
+                  <div>
+                    <p class="mono text-[9px] text-white/25 tracking-[0.3em] mb-1.5">LOCACI\u00d3N</p>
+                    <p class="display text-white/80" style="font-size:17px;">${p.location}</p>
+                  </div>
+                  <span class="mono text-[11px] text-white/40 tracking-[0.25em]">${year}</span>
+                </div>
+                <button onclick="openProject(${i})"
+                        class="mt-14 group inline-flex items-center gap-4 mono text-[11px] text-white/55 hover:text-white transition-colors tracking-[0.22em]">
+                  <span class="w-10 h-[1px] bg-white/30 group-hover:bg-white group-hover:w-14 transition-all duration-500"></span>
+                  VER OBRA COMPLETA
+                </button>
+              </div>
+              <div class="col-span-1 flex justify-center">
+                <span class="marginalia">${p.title} \u00b7 ${year}</span>
+              </div>
+              <div class="col-span-6 spread-img-wrap" style="aspect-ratio:4/5;" onclick="openProject(${i})">
+                <img src="${p.hero}" alt="${p.title}" draggable="false" />
+              </div>
+            </div>
+          </section>`;
+        }
+
+        // ─── LAYOUT B: image left dominant, text right, number bleeds top-right
+        if (layout === 'B') {
+          return `
+          <section class="spread reveal" data-index="${i}">
+            <div class="grain-overlay"></div>
+            <div class="spread-num" style="top:40px; right:30px;">${n}</div>
+            <div class="relative z-10 grid grid-cols-12 gap-10 items-center">
+              <div class="col-span-7 spread-img-wrap" style="aspect-ratio:4/3;" onclick="openProject(${i})">
+                <img src="${p.hero}" alt="${p.title}" draggable="false" />
+              </div>
+              <div class="col-span-1 flex justify-center">
+                <span class="marginalia">${p.category} \u2014 ${city(p.location).toUpperCase()}</span>
+              </div>
+              <div class="col-span-4">
+                <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-8">FRAGMENTO &nbsp;/&nbsp; ${n}</p>
+                <h3 class="spread-title text-white" style="font-size:clamp(54px,6.4vw,96px);">${p.title}</h3>
+                <div class="mt-8 flex items-center gap-4">
+                  <div class="w-12 h-[1px] bg-white/30"></div>
+                  <span class="mono text-[10px] text-white/55 tracking-[0.22em] uppercase">${p.category}</span>
+                </div>
+                <p class="mt-10 text-white/55 leading-[1.85] font-light" style="font-size:13.5px;">${p.description[0]}</p>
+                <div class="mt-12 flex items-end justify-between">
+                  <div>
+                    <p class="mono text-[9px] text-white/25 tracking-[0.3em] mb-1.5">LOCACI\u00d3N</p>
+                    <p class="display text-white/80" style="font-size:17px;">${p.location}</p>
+                  </div>
+                  <span class="mono text-[11px] text-white/40 tracking-[0.25em]">${year}</span>
+                </div>
+                <button onclick="openProject(${i})"
+                        class="mt-14 group inline-flex items-center gap-4 mono text-[11px] text-white/55 hover:text-white transition-colors tracking-[0.22em]">
+                  <span class="w-10 h-[1px] bg-white/30 group-hover:bg-white group-hover:w-14 transition-all duration-500"></span>
+                  VER OBRA COMPLETA
+                </button>
+              </div>
+            </div>
+          </section>`;
+        }
+
+        // ─── LAYOUT C: editorial diptych (two portrait images flanking centered text)
+        if (layout === 'C') {
+          return `
+          <section class="spread reveal" data-index="${i}">
+            <div class="grain-overlay"></div>
+            <div class="spread-num" style="bottom:40px; left:50%; transform:translateX(-50%);">${n}</div>
+            <div class="relative z-10 grid grid-cols-12 gap-8">
+              <div class="col-span-4 pt-24">
+                <div class="spread-img-wrap" style="aspect-ratio:3/4;" onclick="openProject(${i})">
+                  <img src="${p.hero}" alt="${p.title}" draggable="false" />
+                </div>
+                <p class="mono text-[9px] text-white/35 tracking-[0.25em] mt-3">PLACA \u2014 (${n}-a)</p>
+              </div>
+
+              <div class="col-span-4 flex flex-col justify-center items-center text-center px-4">
+                <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-8">FRAGMENTO &nbsp;/&nbsp; ${n}</p>
+                <h3 class="spread-title text-white" style="font-size:clamp(42px,5vw,76px);">${p.title}</h3>
+                <div class="mt-6 mono text-white/35 tracking-[0.5em]" style="font-size:11px;">&times;&nbsp;&times;&nbsp;&times;</div>
+                <p class="mt-6 display text-white/65 leading-[1.55] max-w-[320px]" style="font-size:16px;">${p.description[1] || p.description[0]}</p>
+                <div class="mt-10 flex items-center gap-4">
+                  <span class="mono text-[10px] text-white/50 tracking-[0.25em]">${year}</span>
+                  <span class="text-white/20">\u00b7</span>
+                  <span class="mono text-[10px] text-white/50 tracking-[0.25em]">${city(p.location).toUpperCase()}</span>
+                </div>
+                <button onclick="openProject(${i})"
+                        class="mt-12 group inline-flex items-center gap-4 mono text-[11px] text-white/55 hover:text-white transition-colors tracking-[0.22em]">
+                  <span class="w-10 h-[1px] bg-white/30 group-hover:bg-white group-hover:w-14 transition-all duration-500"></span>
+                  ABRIR LAMINARIO
+                </button>
+              </div>
+
+              <div class="col-span-4 pb-24 flex flex-col justify-end">
+                <div class="spread-img-wrap" style="aspect-ratio:3/4;" onclick="openProject(${i})">
+                  <img src="${altImg}" alt="${p.title}" draggable="false" />
+                </div>
+                <p class="mono text-[9px] text-white/35 tracking-[0.25em] mt-3 text-right">PLACA \u2014 (${n}-b)</p>
+              </div>
+            </div>
+          </section>`;
+        }
+
+        // ─── LAYOUT D: full-bleed cinematic spread
+        return `
+        <section class="spread reveal" style="padding:0;" data-index="${i}">
+          <div class="relative w-full overflow-hidden" style="min-height:95vh; cursor:pointer;" onclick="openProject(${i})">
+            <img src="${p.hero}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover" style="filter:grayscale(0.08) brightness(0.92);" draggable="false" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/40"></div>
+            <div class="grain-overlay" style="opacity:0.14;"></div>
+
+            <div class="absolute top-10 left-16 right-16 flex justify-between items-start z-10">
+              <span class="mono text-[10px] text-white/75 tracking-[0.32em]">FRAGMENTO &nbsp;/&nbsp; ${n}</span>
+              <span class="mono text-[10px] text-white/65 tracking-[0.3em]">${year}</span>
+            </div>
+
+            <div class="spread-num absolute" style="top:12%; right:4%; color:rgba(255,255,255,0.09);">${n}</div>
+
+            <div class="absolute bottom-14 left-16 right-16 z-10">
+              <div class="max-w-[720px]">
+                <h3 class="spread-title text-white" style="font-size:clamp(64px,7.4vw,120px);">${p.title}</h3>
+                <div class="mt-8 flex flex-wrap items-center gap-5">
+                  <div class="w-16 h-[1px] bg-white/70"></div>
+                  <span class="mono text-[11px] text-white/85 tracking-[0.25em] uppercase">${p.category}</span>
+                  <span class="text-white/40">\u00b7</span>
+                  <span class="display text-white/80" style="font-size:18px;">${p.location}</span>
+                </div>
+                <p class="mt-8 text-white/85 leading-[1.65] max-w-[560px] font-light" style="font-size:15px;">${p.description[0]}</p>
+              </div>
+            </div>
+          </div>
+        </section>`;
+      }).join('');
+
+      // Re-run reveal observer now that dynamic sections are in the DOM
+      if (typeof initRevealObserver === 'function') initRevealObserver();
+    })();
 
     // ── Timer ────────────────────────────────────
     let secs = 0;
