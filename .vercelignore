@@ -1,0 +1,74 @@
+# ─────────────────────────────────────────────
+# Dependencias y build artifacts (no necesarios para deploy estático)
+# ─────────────────────────────────────────────
+node_modules
+dist
+
+# ─────────────────────────────────────────────
+# Código fuente NestJS — solo se usa en dev local (npm run start:dev)
+# ─────────────────────────────────────────────
+src
+nest-cli.json
+tsconfig.json
+postcss.config.js
+tailwind.config.js
+*.ts
+*.tsbuildinfo
+
+# ─────────────────────────────────────────────
+# Archivos en la raíz no servidos (existen los oficiales en public/)
+# ─────────────────────────────────────────────
+FotoHoreb.jpeg
+Logowhite.svg
+
+# ─────────────────────────────────────────────
+# Archivos RAW de cámara — los navegadores no pueden mostrarlos
+# y rompen el límite de 25MB/archivo de Vercel Hobby
+# ─────────────────────────────────────────────
+*.RAF
+*.raf
+*.raw
+*.RAW
+*.cr2
+*.CR2
+*.nef
+*.NEF
+*.arw
+*.ARW
+*.dng
+*.DNG
+*.orf
+*.ORF
+
+# ─────────────────────────────────────────────
+# Duplicados creados por Finder de macOS ("foto 2.jpg" = copia de "foto.jpg")
+# ─────────────────────────────────────────────
+* 2.jpg
+* 2.jpeg
+* 2.png
+* 2.JPG
+* 2.JPEG
+* 2.PNG
+* 2.webp
+* 2.avif
+* copy.jpg
+* copy.jpeg
+* copy.png
+
+# ─────────────────────────────────────────────
+# Sistema / editor
+# ─────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+.claude
+.vscode
+.idea
+*.log
+npm-debug.log*
+
+# ─────────────────────────────────────────────
+# Lockfiles innecesarios para deploy estático
+# ─────────────────────────────────────────────
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
