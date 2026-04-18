@@ -245,9 +245,279 @@
     .proj-fade-in:nth-child(3) { transition-delay: 0.16s; }
     .proj-fade-in:nth-child(4) { transition-delay: 0.24s; }
 
+    /* ═══════════════════════════════════════════════════════
+       INTERACTIVE MOTION SYSTEM (Awwwards-grade)
+    ═══════════════════════════════════════════════════════ */
+
+    /* ── Custom cursor ─────────────────────────────────── */
+    @media (hover: hover) and (pointer: fine) {
+      *, *::before, *::after { cursor: none !important; }
+    }
+    .cursor {
+      position: fixed; top: 0; left: 0;
+      width: 1px; height: 1px;
+      pointer-events: none; z-index: 9999;
+      mix-blend-mode: difference;
+      will-change: transform;
+    }
+    .cursor-dot {
+      position: absolute; top: 50%; left: 50%;
+      width: 4px; height: 4px;
+      background: #fff; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.25s, transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .cursor-ring {
+      position: absolute; top: 50%; left: 50%;
+      width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.85);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transition: width 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                  height 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                  background 0.3s, border-color 0.3s, opacity 0.3s,
+                  transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .cursor-label {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.18em;
+      color: #080808; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.25s;
+      white-space: nowrap; pointer-events: none;
+    }
+    .cursor.is-hover .cursor-ring   { width: 56px; height: 56px; background: rgba(255,255,255,0.0); border-color: rgba(255,255,255,1); }
+    .cursor.is-hover .cursor-dot    { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+    .cursor.is-img   .cursor-ring   { width: 92px; height: 92px; background: #fff; border-color: #fff; }
+    .cursor.is-img   .cursor-dot    { opacity: 0; }
+    .cursor.is-img   .cursor-label  { opacity: 1; }
+    .cursor.is-text  .cursor-ring   { width: 2px; height: 24px; border-radius: 1px; background: #fff; border-color: transparent; }
+    .cursor.is-text  .cursor-dot    { opacity: 0; }
+    .cursor.is-down  .cursor-ring   { transform: translate(-50%, -50%) scale(0.8); background: rgba(255,255,255,0.2); }
+
+    /* ── Scroll progress bar (portfolio) ───────────────── */
+    .scroll-progress {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px; background: rgba(255,255,255,0.06); z-index: 40;
+      pointer-events: none;
+    }
+    .scroll-progress-bar {
+      height: 100%; background: #fff;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.1s linear;
+    }
+
+    /* ── Page transition overlay (curtain) ─────────────── */
+    .page-transition {
+      position: fixed; inset: 0; z-index: 200;
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .page-transition .panel {
+      flex: 1; background: #080808;
+      transform: scaleY(0); transform-origin: bottom;
+      transition: transform 0.55s cubic-bezier(0.86,0,0.07,1);
+    }
+    .page-transition.in .panel  { transform: scaleY(1); }
+    .page-transition.out .panel {
+      transform-origin: top;
+      transform: scaleY(0);
+      transition: transform 0.55s cubic-bezier(0.86,0,0.07,1);
+    }
+    .page-transition .label {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 200; font-size: 88px;
+      letter-spacing: -0.055em; color: #fff;
+      text-transform: lowercase;
+      opacity: 0; transition: opacity 0.3s 0.15s;
+      font-variation-settings: 'wdth' 90;
+    }
+    .page-transition.in .label { opacity: 1; }
+    .page-transition.out .label { opacity: 0; transition: opacity 0.2s; }
+
+    /* ── Initial loader curtain ────────────────────────── */
+    .loader {
+      position: fixed; inset: 0; z-index: 300;
+      background: #080808;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 40px;
+      transition: transform 1.1s cubic-bezier(0.86,0,0.07,1) 0.2s,
+                  opacity 0.3s 1.1s;
+    }
+    .loader.done { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+    .loader-mark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 200; font-size: clamp(80px, 14vw, 200px);
+      letter-spacing: -0.075em;
+      font-variation-settings: 'wdth' 88;
+      color: #fff; text-transform: lowercase;
+      overflow: hidden;
+    }
+    .loader-mark span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: loaderRise 0.9s cubic-bezier(0.25,0.46,0.45,0.94) 0.15s forwards;
+    }
+    .loader-bar {
+      width: 240px; height: 1px; background: rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+    .loader-bar-fill {
+      height: 100%; background: #fff;
+      transform: scaleX(0); transform-origin: left;
+      animation: loaderFill 1.1s cubic-bezier(0.65,0,0.35,1) 0.15s forwards;
+    }
+    .loader-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); display: flex; gap: 20px;
+      opacity: 0; animation: loaderFade 0.6s ease 0.25s forwards;
+    }
+    @keyframes loaderRise { to { transform: translateY(0); } }
+    @keyframes loaderFill { to { transform: scaleX(1); } }
+    @keyframes loaderFade { to { opacity: 1; } }
+
+    /* ── Split-text reveal (word stagger) ──────────────── */
+    .split-word {
+      display: inline-block; overflow: hidden;
+      vertical-align: bottom; line-height: inherit;
+      padding-bottom: 0.08em;
+    }
+    .split-word > span {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform 0.95s cubic-bezier(0.86,0,0.07,1);
+    }
+    .split.in .split-word > span { transform: translateY(0); }
+
+    /* ── Magnetic targets ──────────────────────────────── */
+    .magnetic { transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94); will-change: transform; display: inline-block; }
+    .magnetic-inner { display: inline-block; transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94); will-change: transform; }
+
+    /* ── Marquee ticker (auto-scroll band) ─────────────── */
+    .marquee {
+      position: relative; overflow: hidden;
+      padding: 32px 0;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: linear-gradient(180deg, rgba(255,255,255,0.012), transparent);
+    }
+    .marquee::before, .marquee::after {
+      content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2; pointer-events: none;
+    }
+    .marquee::before { left: 0;  background: linear-gradient(90deg, #080808, transparent); }
+    .marquee::after  { right: 0; background: linear-gradient(-90deg, #080808, transparent); }
+    .marquee-track {
+      display: flex; gap: 5rem; width: max-content;
+      animation: marqueeScroll 38s linear infinite;
+      will-change: transform;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .marquee-item {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 200; font-size: clamp(34px, 4.5vw, 64px);
+      letter-spacing: -0.04em; color: rgba(255,255,255,0.5);
+      text-transform: lowercase; white-space: nowrap;
+      font-variation-settings: 'wdth' 90;
+      display: inline-flex; align-items: center; gap: 5rem;
+    }
+    .marquee-item::before {
+      content: '\2715'; font-family: 'Space Mono', monospace;
+      font-size: 0.5em; color: rgba(255,255,255,0.25);
+    }
+    @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ── Image clip-path scroll reveal ─────────────────── */
+    .clip-reveal {
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 1.4s cubic-bezier(0.86,0,0.07,1) 0.05s;
+      will-change: clip-path;
+    }
+    .clip-reveal.in { clip-path: inset(0 0 0 0); }
+
+    /* ── Spread image: clip + ken-burns reveal, snappy hover ─ */
+    .spread-img-wrap img {
+      transform: scale(1.1);
+      transition: transform 1.8s cubic-bezier(0.86,0,0.07,1), filter 0.6s;
+      filter: grayscale(0.05) brightness(0.95);
+    }
+    .spread-img-wrap.in img { transform: scale(1.0); }
+    .spread-img-wrap:hover img {
+      transform: scale(1.05);
+      filter: grayscale(0) brightness(1.05);
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s;
+    }
+    .spread-img-wrap {
+      clip-path: inset(8% 8% 8% 8%);
+      transition: clip-path 1.4s cubic-bezier(0.86,0,0.07,1);
+    }
+    .spread-img-wrap.in { clip-path: inset(0 0 0 0); }
+
+    /* ── Index row: sweeping highlight on hover ────────── */
+    .idx-row::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+      background: #fff; transform: scaleX(0); transform-origin: left;
+      transition: transform 0.7s cubic-bezier(0.86,0,0.07,1);
+    }
+    .idx-row:hover::after { transform: scaleX(1); }
+
+    /* ── Featured hero crop: subtle parallax wrapper ───── */
+    .hero-featured-img { will-change: transform; }
+
+    /* ── Subtle thumb hover lift (Home) ────────────────── */
+    .thumb { transition: opacity 0.25s ease, outline-color 0.25s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .thumb:hover { transform: translateX(4px); }
+
+    /* ── Spread fade-in baseline (covers reveal entrance) ─ */
+    .spread.reveal { opacity: 0; transform: translateY(60px); transition: opacity 1.1s cubic-bezier(0.25,0.46,0.45,0.94), transform 1.1s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .spread.reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Portfolio scroller smooth scroll fallback ─────── */
+    #portfolioScroller, #projectScroller { scroll-behavior: smooth; }
+
+    /* ── Reduce motion for users who prefer it ─────────── */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+      .cursor { display: none; }
+      *, *::before, *::after { cursor: auto !important; }
+      .marquee-track { animation: none; }
+    }
+
   </style>
 </head>
 <body class="select-none">
+
+  <!-- ═══════════════════════════════════════════════
+       INITIAL LOADER CURTAIN
+  ════════════════════════════════════════════════ -->
+  <div class="loader" id="loader">
+    <div class="loader-mark"><span>glez.</span></div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    <div class="loader-meta">
+      <span>Volumen 01</span>
+      <span>&middot;</span>
+      <span>2024 &mdash; 2025</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       PAGE TRANSITION CURTAIN
+  ════════════════════════════════════════════════ -->
+  <div class="page-transition" id="pageTransition">
+    <div class="panel"></div>
+    <span class="label" id="pageTransitionLabel"></span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       CUSTOM CURSOR
+  ════════════════════════════════════════════════ -->
+  <div class="cursor" id="cursor">
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+    <span class="cursor-label" id="cursorLabel">Ver</span>
+  </div>
 
   <!-- ═══════════════════════════════════════════════
        FULLSCREEN MENU OVERLAY
@@ -295,11 +565,11 @@
     </div>
     <span class="mono text-white/20 text-lg font-bold">+</span>
     <div class="flex items-center gap-5 mono text-[13px]">
-      <a href="#" class="menu-link text-white/60 hover:text-white transition-colors underline underline-offset-2 decoration-white/20"
-         data-page="portfolio">View Work</a>
+      <a href="#" class="menu-link text-white/60 hover:text-white transition-colors underline underline-offset-2 decoration-white/20 magnetic"
+         data-magnetic-strength="0.35" data-cursor="hover" data-page="portfolio">View Work</a>
       <span class="text-white/20">&middot;</span>
       <span class="text-white/44" id="timer">00:00:00</span>
-      <button class="flex flex-col gap-[7px] ml-1 p-1 group" id="menuBtn">
+      <button class="flex flex-col gap-[7px] ml-1 p-1 group magnetic" data-magnetic-strength="0.45" id="menuBtn" data-cursor="hover">
         <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
         <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
         <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
@@ -389,6 +659,9 @@
        PAGE 2: PORTFOLIO — Redesigned (Winkeler hybrid)
   ═══════════════════════════════════════════════════════ -->
   <div id="page-portfolio" class="page" style="height:calc(100vh - 64px);">
+    <!-- Scroll progress (relative to header bottom) -->
+    <div class="scroll-progress"><div class="scroll-progress-bar" id="portfolioProgress"></div></div>
+
     <div class="flex flex-col h-full overflow-y-auto relative" id="portfolioScroller">
 
       <!-- Floating hover preview (index) -->
@@ -447,7 +720,7 @@
               <p class="mono text-[9px] tracking-[0.25em] text-white/30">OBRA DESTACADA</p>
               <p id="heroFeaturedTitle" class="display text-white/85 text-[16px] mt-1 leading-tight">Film Project Alpha</p>
             </div>
-            <div class="w-[88px] h-[112px] overflow-hidden relative">
+            <div class="w-[88px] h-[112px] overflow-hidden relative magnetic clip-reveal" data-magnetic-strength="0.5" data-cursor="img">
               <img id="heroFeaturedImg" src="https://picsum.photos/seed/filmA/400/520"
                    class="hero-featured-img w-full h-full object-cover grayscale-[0.2]"
                    draggable="false" alt="" />
@@ -474,6 +747,15 @@
         <!-- Rows populated by JS -->
         <div id="projectIndex" class="reveal"></div>
       </section>
+
+      <!-- ──────────────────────────────────────────
+           MARQUEE TICKER — auto-scroll editorial band
+      ─────────────────────────────────────────── -->
+      <div class="marquee reveal" id="portfolioMarquee">
+        <div class="marquee-track" id="marqueeTrack">
+          <!-- populated by JS so the loop is seamless -->
+        </div>
+      </div>
 
       <!-- ──────────────────────────────────────────
            ORNAMENT DIVIDER
@@ -711,7 +993,8 @@
             <textarea class="form-input resize-none" rows="4" placeholder="Tell me about your project..."></textarea>
           </div>
           <button type="submit"
-                  class="mt-4 mono text-[12px] tracking-[0.2em] text-white/70 border border-white/20 px-8 py-3 hover:bg-white/10 hover:border-white/40 transition-all">
+                  class="mt-4 mono text-[12px] tracking-[0.2em] text-white/70 border border-white/20 px-8 py-3 hover:bg-white/10 hover:border-white/40 transition-all magnetic"
+                  data-magnetic-strength="0.4" data-cursor="hover">
             SEND MESSAGE
           </button>
         </form>
@@ -1272,6 +1555,319 @@
       // Re-run reveal observer now that dynamic sections are in the DOM
       if (typeof initRevealObserver === 'function') initRevealObserver();
     })();
+
+    // ═══════════════════════════════════════════════════════
+    // MOTION SYSTEM — Awwwards-grade interactions
+    // ═══════════════════════════════════════════════════════
+
+    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ───────────────────────────────────────────────
+    // 1. CUSTOM CURSOR (lerp-smoothed, multi-state)
+    // ───────────────────────────────────────────────
+    (function customCursor() {
+      if (!isFinePointer || reducedMotion) {
+        document.getElementById('cursor').style.display = 'none';
+        return;
+      }
+      const cursor = document.getElementById('cursor');
+      const label  = document.getElementById('cursorLabel');
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let cx = mx, cy = my;
+
+      window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+      window.addEventListener('mousedown', () => cursor.classList.add('is-down'));
+      window.addEventListener('mouseup',   () => cursor.classList.remove('is-down'));
+
+      function tick() {
+        cx += (mx - cx) * 0.22;
+        cy += (my - cy) * 0.22;
+        cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      // State delegation: hover any [data-cursor] element
+      function setState(type, text) {
+        cursor.classList.remove('is-hover','is-img','is-text');
+        if (type === 'hover') cursor.classList.add('is-hover');
+        else if (type === 'img')  { cursor.classList.add('is-img'); label.textContent = text || 'Ver'; }
+        else if (type === 'text') cursor.classList.add('is-text');
+      }
+      function clearState() { cursor.classList.remove('is-hover','is-img','is-text'); }
+
+      document.addEventListener('mouseover', e => {
+        // Explicit override
+        const explicit = e.target.closest('[data-cursor]');
+        if (explicit) { setState(explicit.dataset.cursor, explicit.dataset.cursorLabel); return; }
+        // Image-like
+        if (e.target.closest('.spread-img-wrap, .thumb, .proj-thumb, .project-card, #idxPreview')) {
+          setState('img', 'Abrir'); return;
+        }
+        // Inputs
+        if (e.target.closest('input, textarea')) { setState('text'); return; }
+        // Anything clickable
+        if (e.target.closest('a, button, .menu-link, .idx-row, [role="button"]')) {
+          setState('hover'); return;
+        }
+        clearState();
+      });
+      window.addEventListener('mouseout', e => {
+        if (!e.relatedTarget) clearState();
+      });
+    })();
+
+    // ───────────────────────────────────────────────
+    // 2. MAGNETIC HOVER (cursor-attracted elements)
+    // ───────────────────────────────────────────────
+    (function magnetic() {
+      if (!isFinePointer || reducedMotion) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        const strength = parseFloat(el.dataset.magneticStrength) || 0.3;
+        const inner = el.querySelector('.magnetic-inner') || el;
+        el.addEventListener('mousemove', e => {
+          const r = el.getBoundingClientRect();
+          const x = e.clientX - r.left - r.width / 2;
+          const y = e.clientY - r.top  - r.height / 2;
+          inner.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          inner.style.transform = '';
+        });
+      });
+    })();
+
+    // ───────────────────────────────────────────────
+    // 3. SPLIT TEXT REVEAL (auto-injects word spans)
+    // ───────────────────────────────────────────────
+    (function splitText() {
+      function splitEl(el) {
+        if (el.dataset.split === 'done') return;
+        const words = el.textContent.trim().split(/\s+/);
+        el.innerHTML = words
+          .map(w => `<span class="split-word"><span>${w}</span></span>`)
+          .join(' ');
+        el.classList.add('split');
+        el.dataset.split = 'done';
+        // Stagger
+        el.querySelectorAll('.split-word > span').forEach((s, i) => {
+          s.style.transitionDelay = (i * 0.07) + 's';
+        });
+      }
+      document.querySelectorAll('[data-split-text]').forEach(splitEl);
+
+      // Reveal via observer (or immediately if no observer / on load element)
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.split').forEach(el => observer.observe(el));
+
+      // Expose for showPage
+      window.__triggerSplit = (root) => {
+        (root || document).querySelectorAll('.split').forEach(el => {
+          el.classList.remove('in');
+          requestAnimationFrame(() => el.classList.add('in'));
+        });
+      };
+    })();
+
+    // ───────────────────────────────────────────────
+    // 4. CLIP-PATH IMAGE REVEAL on scroll
+    // ───────────────────────────────────────────────
+    (function clipReveal() {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      function scan() {
+        document.querySelectorAll('.clip-reveal:not(.in), .spread-img-wrap:not(.in)').forEach(el => observer.observe(el));
+      }
+      scan();
+      window.__rescanClipReveal = scan;
+    })();
+
+    // ───────────────────────────────────────────────
+    // 5. MARQUEE TICKER (seamless infinite)
+    // ───────────────────────────────────────────────
+    (function marquee() {
+      const track = document.getElementById('marqueeTrack');
+      if (!track) return;
+      const items = [
+        'fotograf\u00eda',
+        'cinematograf\u00eda',
+        'bodas',
+        'retrato',
+        'direcci\u00f3n',
+        'hermosillo \u2014 m\u00e9xico',
+        'volumen 01',
+        'archivo 2024 \u2014 2025'
+      ];
+      // Duplicate the set so the loop is seamless
+      const set = items.map(t => `<span class="marquee-item">${t}</span>`).join('');
+      track.innerHTML = set + set;
+    })();
+
+    // ───────────────────────────────────────────────
+    // 6. SCROLL PROGRESS BAR (portfolio)
+    // ───────────────────────────────────────────────
+    (function scrollProgress() {
+      const scroller = document.getElementById('portfolioScroller');
+      const bar = document.getElementById('portfolioProgress');
+      if (!scroller || !bar) return;
+      let ticking = false;
+      scroller.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const max = scroller.scrollHeight - scroller.clientHeight;
+          const ratio = max > 0 ? scroller.scrollTop / max : 0;
+          bar.style.transform = `scaleX(${ratio})`;
+          ticking = false;
+        });
+      }, { passive: true });
+    })();
+
+    // ───────────────────────────────────────────────
+    // 7. PARALLAX on portfolio scroll (spread images)
+    // ───────────────────────────────────────────────
+    (function parallax() {
+      const scroller = document.getElementById('portfolioScroller');
+      if (!scroller || reducedMotion) return;
+      let ticking = false;
+      scroller.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const sy = scroller.scrollTop;
+          const vh = scroller.clientHeight;
+          scroller.querySelectorAll('.spread-img-wrap').forEach(el => {
+            const r = el.getBoundingClientRect();
+            const center = r.top + r.height / 2 - 64; // 64 = header
+            const offset = (center - vh / 2) * -0.05;
+            const img = el.querySelector('img');
+            if (img) img.style.translate = `0 ${offset}px`;
+          });
+          ticking = false;
+        });
+      }, { passive: true });
+    })();
+
+    // ───────────────────────────────────────────────
+    // 8. PAGE TRANSITION (curtain reveal)
+    // ───────────────────────────────────────────────
+    const pageTransition = document.getElementById('pageTransition');
+    const pageLabel = document.getElementById('pageTransitionLabel');
+    function transitionToPage(name, label) {
+      if (reducedMotion) { showPage(name); return; }
+      pageLabel.textContent = label || name;
+      pageTransition.classList.remove('out');
+      pageTransition.classList.add('in');
+      setTimeout(() => {
+        showPage(name);
+        // Re-trigger split text on the new page
+        if (window.__triggerSplit) window.__triggerSplit(document.getElementById('page-' + name));
+        if (window.__rescanClipReveal) window.__rescanClipReveal();
+        pageTransition.classList.remove('in');
+        pageTransition.classList.add('out');
+        setTimeout(() => pageTransition.classList.remove('out'), 700);
+      }, 600);
+    }
+    // Replace existing menu-link handlers with transition-aware versions
+    // (clone strips prior listeners; data-attrs + class survive)
+    document.querySelectorAll('.menu-link').forEach(link => {
+      const fresh = link.cloneNode(true);
+      link.parentNode.replaceChild(fresh, link);
+      fresh.addEventListener('click', e => {
+        const page = fresh.dataset.page;
+        if (!page) return;
+        e.preventDefault();
+        transitionToPage(page, (fresh.textContent || '').trim().toLowerCase() || page);
+      });
+    });
+    // Make openProject use the transition too
+    const _openProject = window.openProject;
+    window.openProject = function(i) {
+      const proj = projects[i];
+      if (reducedMotion) { _openProject(i); return; }
+      pageLabel.textContent = proj.title.toLowerCase();
+      pageTransition.classList.remove('out');
+      pageTransition.classList.add('in');
+      setTimeout(() => {
+        _openProject(i);
+        if (window.__rescanClipReveal) window.__rescanClipReveal();
+        pageTransition.classList.remove('in');
+        pageTransition.classList.add('out');
+        setTimeout(() => pageTransition.classList.remove('out'), 700);
+      }, 600);
+    };
+
+    // ───────────────────────────────────────────────
+    // 9. INITIAL LOADER (dismiss after assets warm)
+    // ───────────────────────────────────────────────
+    (function loader() {
+      const loader = document.getElementById('loader');
+      if (!loader) return;
+      const dismiss = () => {
+        loader.classList.add('done');
+        // After loader leaves, kick the in-view splits + clip reveals
+        setTimeout(() => {
+          if (window.__triggerSplit) window.__triggerSplit(document.querySelector('.page.active'));
+        }, 400);
+      };
+      // Min 1.4s for brand presence; max 2.4s if assets slow
+      window.addEventListener('load', () => {
+        setTimeout(dismiss, 1100);
+      });
+      // Hard fallback
+      setTimeout(dismiss, 2400);
+    })();
+
+    // ───────────────────────────────────────────────
+    // 10. THUMB hover preview swap on Home (image swap on hover)
+    // ───────────────────────────────────────────────
+    (function thumbHoverPeek() {
+      const main = document.getElementById('mainPhoto');
+      if (!main) return;
+      let restoreSrc = null;
+      document.querySelectorAll('.thumb').forEach((t, i) => {
+        const img = t.querySelector('img');
+        if (!img) return;
+        t.addEventListener('mouseenter', () => {
+          if (i === current) return;
+          restoreSrc = main.src;
+          main.style.opacity = '0.55';
+          main.src = img.src;
+          main.style.transition = 'opacity 0.25s ease';
+          requestAnimationFrame(() => main.style.opacity = '0.92');
+        });
+        t.addEventListener('mouseleave', () => {
+          if (restoreSrc && i !== current) {
+            main.src = restoreSrc;
+            main.style.opacity = '1';
+            restoreSrc = null;
+          }
+        });
+      });
+    })();
+
+    // ───────────────────────────────────────────────
+    // 11. KEYBOARD-aware focus visible nicety
+    // ───────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Tab') document.body.classList.add('using-keyboard');
+    });
+    document.addEventListener('mousedown', () => document.body.classList.remove('using-keyboard'));
 
     // ── Timer ────────────────────────────────────
     let secs = 0;
