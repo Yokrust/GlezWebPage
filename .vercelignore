@@ -16,12 +16,12 @@ tailwind.config.js
 *.tsbuildinfo
 
 # ─────────────────────────────────────────────
-# Archivos en la raíz no servidos (existen los oficiales en public/).
-# IMPORTANTE: los patrones empiezan con "/" para anclarlos al root —
-# si no, también excluirían los archivos buenos dentro de public/.
+# Archivos huérfanos en la raíz del repo (los oficiales viven en public/
+# con nombres distintos: glez-logo.svg y horeb-portrait.jpeg, así que
+# excluir estos por nombre simple ya no afecta a los servidos).
 # ─────────────────────────────────────────────
-/FotoHoreb.jpeg
-/Logowhite.svg
+FotoHoreb.jpeg
+Logowhite.svg
 
 # ─────────────────────────────────────────────
 # Originales pesados de /Landingpage (5–16 MB cada uno).
