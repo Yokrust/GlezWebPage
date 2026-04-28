@@ -16,10 +16,36 @@ tailwind.config.js
 *.tsbuildinfo
 
 # ─────────────────────────────────────────────
-# Archivos en la raíz no servidos (existen los oficiales en public/)
+# Archivos en la raíz no servidos (existen los oficiales en public/).
+# IMPORTANTE: los patrones empiezan con "/" para anclarlos al root —
+# si no, también excluirían los archivos buenos dentro de public/.
 # ─────────────────────────────────────────────
-FotoHoreb.jpeg
-Logowhite.svg
+/FotoHoreb.jpeg
+/Logowhite.svg
+
+# ─────────────────────────────────────────────
+# Originales pesados de /Landingpage (5–16 MB cada uno).
+# Solo se sirven las versiones optimizadas en /Landingpage/web/.
+# ─────────────────────────────────────────────
+public/Landingpage/*.jpg
+public/Landingpage/*.jpeg
+public/Landingpage/*.JPG
+public/Landingpage/*.JPEG
+public/Landingpage/*.png
+public/Landingpage/*.PNG
+!public/Landingpage/web/
+
+# ─────────────────────────────────────────────
+# Originales pesados de /SofiayJose (2–7 MB cada uno).
+# Solo se sirven las versiones optimizadas en /SofiayJose/web/.
+# ─────────────────────────────────────────────
+public/SofiayJose/*.jpg
+public/SofiayJose/*.jpeg
+public/SofiayJose/*.JPG
+public/SofiayJose/*.JPEG
+public/SofiayJose/*.png
+public/SofiayJose/*.PNG
+!public/SofiayJose/web/
 
 # ─────────────────────────────────────────────
 # Archivos RAW de cámara — los navegadores no pueden mostrarlos

@@ -1391,22 +1391,22 @@
              style="width:90px; border-color:var(--rule);">
         <div class="flex-1 flex flex-col gap-2 p-3 overflow-y-auto">
           <div class="thumb active overflow-hidden" data-index="0" style="aspect-ratio:3/4;">
-            <img src="/Fotos/6F3A2084.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+            <img src="/Landingpage/web/home-01.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
           <div class="thumb opacity-55 overflow-hidden" data-index="1" style="aspect-ratio:3/4;">
-            <img src="/Fotos/6F3A2362.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+            <img src="/Landingpage/web/home-02.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
           <div class="thumb opacity-35 overflow-hidden" data-index="2" style="aspect-ratio:3/4;">
-            <img src="/Fotos/BCR64925.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+            <img src="/Landingpage/web/home-03.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
           <div class="thumb opacity-35 overflow-hidden" data-index="3" style="aspect-ratio:3/4;">
-            <img src="/Fotos/BCR64968-Edit.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+            <img src="/Landingpage/web/home-04.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
           <div class="thumb opacity-35 overflow-hidden" data-index="4" style="aspect-ratio:3/4;">
-            <img src="/Fotos/BCR65082.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+            <img src="/Landingpage/web/home-05.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
           <div class="thumb opacity-35 overflow-hidden" data-index="5" style="aspect-ratio:3/4;">
-            <img src="/Fotos/BCR65142.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+            <img src="/Landingpage/web/home-06.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
         </div>
         <div class="px-4 py-3 flex items-center justify-center" style="border-top:1px solid var(--rule);">
@@ -1419,7 +1419,7 @@
         <span class="plus-mark shrink-0" style="color:var(--ink-22);"></span>
         <div class="flex-1 relative w-full">
           <div class="absolute inset-0 flex items-center justify-center px-16">
-            <img id="mainPhoto" src="/Fotos/6F3A2084.jpg"
+            <img id="mainPhoto" src="/Landingpage/web/home-01.jpg"
                  alt="Featured photograph" class="object-contain" style="width:320px; height:510px;" draggable="false" />
           </div>
         </div>
@@ -1790,7 +1790,7 @@
         <div id="projThumbnails" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2"></div>
         <div class="px-4 py-3 flex items-center justify-center" style="border-top:1px solid var(--rule);">
           <button class="mono hover:text-white/60 transition-colors"
-                  style="font-size:8px; letter-spacing:var(--tr-wider); color:var(--ink-32); text-transform:uppercase;">
+                  style="font-size:6px; letter-spacing:var(--tr-wider); color:var(--ink-32); text-transform:uppercase;">
             Ver más&nbsp;&darr;
           </button>
         </div>
@@ -1883,19 +1883,20 @@
         <!-- Form body -->
         <div class="flex-1 flex flex-col justify-center" style="padding:clamp(48px,6vw,96px) clamp(40px,4vw,64px);">
 
-          <form class="flex flex-col" style="gap:36px;" onsubmit="event.preventDefault();">
+          <form id="contactForm" class="flex flex-col" style="gap:36px;" onsubmit="return sendContactMail(event);" novalidate>
             <div>
-              <label class="eyebrow block mb-2">Nombre</label>
-              <input type="text" class="form-input" placeholder="Tu nombre" />
+              <label for="cName" class="eyebrow block mb-2">Nombre</label>
+              <input type="text" id="cName" name="name" class="form-input" placeholder="Tu nombre" required autocomplete="name" />
             </div>
             <div>
-              <label class="eyebrow block mb-2">Correo</label>
-              <input type="email" class="form-input" placeholder="tu@correo.com" />
+              <label for="cEmail" class="eyebrow block mb-2">Correo</label>
+              <input type="email" id="cEmail" name="email" class="form-input" placeholder="tu@correo.com" required autocomplete="email" />
             </div>
             <div>
-              <label class="eyebrow block mb-2">Mensaje</label>
-              <textarea class="form-input resize-none" rows="4" placeholder="Cuéntame sobre tu proyecto..."></textarea>
+              <label for="cMessage" class="eyebrow block mb-2">Mensaje</label>
+              <textarea id="cMessage" name="message" class="form-input resize-none" rows="4" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
             </div>
+            <p id="cFeedback" class="mono" style="font-size:10px; letter-spacing:var(--tr-wider); color:var(--brass); text-transform:uppercase; min-height:14px; margin-top:-12px;" aria-live="polite"></p>
             <button type="submit"
                     class="mono hover:bg-white/5 transition-all magnetic inline-flex items-center justify-center gap-4"
                     data-magnetic-strength="0.4" data-cursor="hover"
@@ -2003,37 +2004,37 @@
     // ── Photography page data ────────────────────
     const photos = [
       {
-        src: '/Fotos/6F3A2084.jpg',
+        src: '/Landingpage/web/home-01.jpg',
         num: '01', count: '(1 / 40)',
         camera: 'Leica M6', lens: 'Leica 50mm<br/>Noctilux f/1', film: 'Kodak T-Max 400',
         coords: '34.0522\u00b0 N, 118.2437\u00b0 W', location: 'Los Angeles'
       },
       {
-        src: '/Fotos/6F3A2362.jpg',
+        src: '/Landingpage/web/home-02.jpg',
         num: '02', count: '(2 / 40)',
         camera: 'Contax T2', lens: '38mm f/2.8', film: 'Fuji Pro 400H',
         coords: '48.8566\u00b0 N, 2.3522\u00b0 E', location: 'Paris'
       },
       {
-        src: '/Fotos/BCR64925.jpg',
+        src: '/Landingpage/web/home-03.jpg',
         num: '03', count: '(3 / 40)',
         camera: 'Leica MP', lens: 'Leica 35mm<br/>Summilux Steel Rim', film: 'Ilford HP5 Plus 400',
         coords: '1.2834\u00b0 N, 103.8607\u00b0 E', location: 'Singapore'
       },
       {
-        src: '/Fotos/BCR64968-Edit.jpg',
+        src: '/Landingpage/web/home-04.jpg',
         num: '04', count: '(4 / 40)',
         camera: 'Nikon F3', lens: 'Nikkor 28mm f/2.8', film: 'Kodak Portra 400',
         coords: '35.6762\u00b0 N, 139.6503\u00b0 E', location: 'Tokyo'
       },
       {
-        src: '/Fotos/BCR65082.jpg',
+        src: '/Landingpage/web/home-05.jpg',
         num: '05', count: '(5 / 40)',
         camera: 'Hasselblad 500C/M', lens: 'Planar 80mm f/2.8', film: 'Kodak Ektar 100',
         coords: '41.9028\u00b0 N, 12.4964\u00b0 E', location: 'Rome'
       },
       {
-        src: '/Fotos/BCR65142.jpg',
+        src: '/Landingpage/web/home-06.jpg',
         num: '06', count: '(6 / 40)',
         camera: 'Canon AE-1', lens: 'Canon 50mm f/1.4', film: 'Ilford Delta 400',
         coords: '40.7128\u00b0 N, 74.0060\u00b0 W', location: 'New York'
@@ -2082,20 +2083,22 @@
 
     const projects = [
       {
-        title: 'Valentina & Mateo', category: 'Boda Editorial', date: '15.03.26',
-        location: 'Hermosillo, Sonora', camera: 'Canon EOS R5', lens: 'RF 50mm f/1.2 L',
+        title: 'Sofia & José', category: 'Boda Editorial', date: '15.03.24',
+        location: 'Hermosillo, Mexico', camera: 'Canon EOS R5', lens: 'RF 50mm f/1.2 L',
         keywords: 'Boda, Editorial, \u00cdntimo, Analog Feel',
-        hero: '/Fotos/6F3A2084.jpg',
+        hero: '/SofiayJose/web/sj-01.jpg',
         gallery: [
-          '/Fotos/6F3A2084.jpg',
-          '/Fotos/6F3A2362.jpg',
-          '/Fotos/BCR64925.jpg',
-          UNSPLASH('1519741497674-611481863552'),
-          UNSPLASH('1606800052052-a08af7148866'),
-          UNSPLASH('1583939003579-730e3918a45a')
+          '/SofiayJose/web/sj-01.jpg',
+          '/SofiayJose/web/sj-02.jpg',
+          '/SofiayJose/web/sj-03.jpg',
+          '/SofiayJose/web/sj-04.jpg',
+          '/SofiayJose/web/sj-05.jpg',
+          '/SofiayJose/web/sj-06.jpg',
+          '/SofiayJose/web/sj-07.jpg',
+          '/SofiayJose/web/sj-08.jpg'
         ],
         description: [
-          'Una boda contada como editorial. Valentina y Mateo se dieron el s\u00ed en una ceremonia \u00edntima donde cada gesto fue m\u00e1s importante que cualquier protocolo. El objetivo fue documentar la verdad del d\u00eda sin intervenirla.',
+          'Una boda contada como editorial. Sofia y José se dieron el s\u00ed en una ceremonia \u00edntima donde cada gesto fue m\u00e1s importante que cualquier protocolo. El objetivo fue documentar la verdad del d\u00eda sin intervenirla.',
           'La direcci\u00f3n visual se sostuvo en luz natural, retratos respirados y pausas largas entre escenas. Buscamos una narrativa pausada \u2014 pausas, miradas, manos \u2014 antes que la coreograf\u00eda tradicional.',
           'Un archivo \u00edntimo pensado para perdurar como objeto impreso: papel mate, tonos fr\u00edos, y el silencio que s\u00f3lo existe entre dos personas cuando todo lo dem\u00e1s se detiene.'
         ]
@@ -3068,6 +3071,59 @@
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight') activate((current+1) % photos.length);
       if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  activate((current-1+photos.length) % photos.length);
     });
+
+    // ═══════════════════════════════════════════════════════
+    // CONTACT FORM — opens user's mail app prefilled (mailto:)
+    // ═══════════════════════════════════════════════════════
+    const CONTACT_INBOX = 'horebglez@gmail.com';
+
+    function sendContactMail(event) {
+      if (event && event.preventDefault) event.preventDefault();
+
+      const name    = (document.getElementById('cName')   .value || '').trim();
+      const email   = (document.getElementById('cEmail')  .value || '').trim();
+      const message = (document.getElementById('cMessage').value || '').trim();
+      const feedback = document.getElementById('cFeedback');
+
+      // ── Validate ──────────────────────────────────────────
+      const setError = (msg) => { if (feedback) { feedback.style.color = '#e8b27a'; feedback.textContent = msg; } };
+      const setOk    = (msg) => { if (feedback) { feedback.style.color = 'var(--brass)'; feedback.textContent = msg; } };
+
+      if (!name)    { setError('Por favor escribe tu nombre.');   document.getElementById('cName').focus();    return false; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                      setError('Correo inválido — revisa el formato.'); document.getElementById('cEmail').focus(); return false; }
+      if (!message) { setError('Cuéntame algo del proyecto.');     document.getElementById('cMessage').focus(); return false; }
+
+      // ── Build mailto URL ─────────────────────────────────
+      const subject = `Nuevo mensaje de ${name} — Glez. Weddings`;
+      const body =
+`Hola Horeb,
+
+${message}
+
+—
+${name}
+${email}`;
+
+      const mailto =
+        'mailto:' + encodeURIComponent(CONTACT_INBOX) +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body='    + encodeURIComponent(body);
+
+      setOk('Abriendo tu aplicación de correo…');
+      // Use a real link click so iOS / desktop mail apps fire reliably
+      const anchor = document.createElement('a');
+      anchor.href = mailto;
+      anchor.rel = 'noopener';
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+
+      // Reset feedback after a short delay
+      setTimeout(() => { if (feedback) feedback.textContent = ''; }, 5000);
+      return false;
+    }
+    window.sendContactMail = sendContactMail;
   </script>
 </body>
 </html>
