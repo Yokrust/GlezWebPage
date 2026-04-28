@@ -37,7 +37,8 @@ public/Landingpage/*.PNG
 
 # ─────────────────────────────────────────────
 # Originales pesados de /SofiayJose (2–7 MB cada uno).
-# Solo se sirven las versiones optimizadas en /SofiayJose/web/.
+# Solo se sirven las versiones optimizadas en /SofiayJose/v2/.
+# (renombrado desde /web/ para bustear cache inmutable de Vercel)
 # ─────────────────────────────────────────────
 public/SofiayJose/*.jpg
 public/SofiayJose/*.jpeg
@@ -45,7 +46,7 @@ public/SofiayJose/*.JPG
 public/SofiayJose/*.JPEG
 public/SofiayJose/*.png
 public/SofiayJose/*.PNG
-!public/SofiayJose/web/
+!public/SofiayJose/v2/
 
 # ─────────────────────────────────────────────
 # Archivos RAW de cámara — los navegadores no pueden mostrarlos
