@@ -1388,7 +1388,7 @@
 
       <!-- LEFT COLUMN — thumbnail contact sheet -->
       <aside class="shrink-0 flex flex-col overflow-hidden border-r"
-             style="width:90px; border-color:var(--rule);">
+             style="width:113px; border-color:var(--rule);">
         <div class="flex-1 flex flex-col gap-2 p-3 overflow-y-auto">
           <div class="thumb active overflow-hidden" data-index="0" style="aspect-ratio:3/4;">
             <img src="/Landingpage/web/home-01.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
@@ -1408,6 +1408,21 @@
           <div class="thumb opacity-35 overflow-hidden" data-index="5" style="aspect-ratio:3/4;">
             <img src="/Landingpage/web/home-06.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
           </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="6" style="aspect-ratio:3/4;">
+            <img src="/Landingpage/web/home-07.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="7" style="aspect-ratio:3/4;">
+            <img src="/Landingpage/web/home-08.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="8" style="aspect-ratio:3/4;">
+            <img src="/Landingpage/web/home-09.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="9" style="aspect-ratio:3/4;">
+            <img src="/Landingpage/web/home-10.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="10" style="aspect-ratio:3/4;">
+            <img src="/Landingpage/web/home-11.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
         </div>
         <div class="px-4 py-3 flex items-center justify-center" style="border-top:1px solid var(--rule);">
           <span class="plus-mark" style="color:var(--ink-22);"></span>
@@ -1420,7 +1435,7 @@
         <div class="flex-1 relative w-full">
           <div class="absolute inset-0 flex items-center justify-center px-16">
             <img id="mainPhoto" src="/Landingpage/web/home-01.jpg"
-                 alt="Featured photograph" class="object-contain" style="width:320px; height:510px;" draggable="false" />
+                 alt="Featured photograph" class="object-contain" style="width:400px; height:638px;" draggable="false" />
           </div>
         </div>
         <div class="flex flex-col items-center gap-5 shrink-0 mt-2">
@@ -1441,7 +1456,7 @@
         <div class="px-8 pt-5 pb-6 flex items-start justify-between" style="border-bottom:1px solid var(--rule);">
           <div class="flex flex-col gap-1">
             <span class="eyebrow-tight" style="color:var(--ink-22);">Folio</span>
-            <p id="photoCount" class="mono" style="font-size:9px; letter-spacing:var(--tr-wider); color:var(--ink-45);">(1 / 48)</p>
+            <p id="photoCount" class="mono" style="font-size:9px; letter-spacing:var(--tr-wider); color:var(--ink-45);">(1 / 11)</p>
           </div>
           <span id="photoNum" class="display font-light text-white leading-none"
                 style="font-size:72px; line-height:0.82; letter-spacing:-0.04em; min-width:2.2ch; text-align:right; font-variation-settings:'wdth' 90;">01</span>
@@ -2005,39 +2020,69 @@
     const photos = [
       {
         src: '/Landingpage/web/home-01.jpg',
-        num: '01', count: '(1 / 40)',
+        num: '01', count: '(1 / 11)',
         camera: 'Leica M6', lens: 'Leica 50mm<br/>Noctilux f/1', film: 'Kodak T-Max 400',
         coords: '34.0522\u00b0 N, 118.2437\u00b0 W', location: 'Los Angeles'
       },
       {
         src: '/Landingpage/web/home-02.jpg',
-        num: '02', count: '(2 / 40)',
+        num: '02', count: '(2 / 11)',
         camera: 'Contax T2', lens: '38mm f/2.8', film: 'Fuji Pro 400H',
         coords: '48.8566\u00b0 N, 2.3522\u00b0 E', location: 'Paris'
       },
       {
         src: '/Landingpage/web/home-03.jpg',
-        num: '03', count: '(3 / 40)',
+        num: '03', count: '(3 / 11)',
         camera: 'Leica MP', lens: 'Leica 35mm<br/>Summilux Steel Rim', film: 'Ilford HP5 Plus 400',
         coords: '1.2834\u00b0 N, 103.8607\u00b0 E', location: 'Singapore'
       },
       {
         src: '/Landingpage/web/home-04.jpg',
-        num: '04', count: '(4 / 40)',
+        num: '04', count: '(4 / 11)',
         camera: 'Nikon F3', lens: 'Nikkor 28mm f/2.8', film: 'Kodak Portra 400',
         coords: '35.6762\u00b0 N, 139.6503\u00b0 E', location: 'Tokyo'
       },
       {
         src: '/Landingpage/web/home-05.jpg',
-        num: '05', count: '(5 / 40)',
+        num: '05', count: '(5 / 11)',
         camera: 'Hasselblad 500C/M', lens: 'Planar 80mm f/2.8', film: 'Kodak Ektar 100',
         coords: '41.9028\u00b0 N, 12.4964\u00b0 E', location: 'Rome'
       },
       {
         src: '/Landingpage/web/home-06.jpg',
-        num: '06', count: '(6 / 40)',
+        num: '06', count: '(6 / 11)',
         camera: 'Canon AE-1', lens: 'Canon 50mm f/1.4', film: 'Ilford Delta 400',
         coords: '40.7128\u00b0 N, 74.0060\u00b0 W', location: 'New York'
+      },
+      {
+        src: '/Landingpage/web/home-07.jpg',
+        num: '07', count: '(7 / 11)',
+        camera: 'Pentax 67', lens: 'SMC 105mm f/2.4', film: 'Kodak Gold 200',
+        coords: '20.2114\u00b0 N, 87.4654\u00b0 W', location: 'Tulum'
+      },
+      {
+        src: '/Landingpage/web/home-08.jpg',
+        num: '08', count: '(8 / 11)',
+        camera: 'Mamiya 7II', lens: 'N 80mm f/4 L', film: 'Cinestill 800T',
+        coords: '27.9528\u00b0 N, 111.0613\u00b0 W', location: 'San Carlos'
+      },
+      {
+        src: '/Landingpage/web/home-09.jpg',
+        num: '09', count: '(9 / 11)',
+        camera: 'Leica Q2', lens: 'Summilux 28mm f/1.7', film: 'Digital \u00b7 Mono',
+        coords: '26.0103\u00b0 N, 111.3424\u00b0 W', location: 'Loreto'
+      },
+      {
+        src: '/Landingpage/web/home-10.jpg',
+        num: '10', count: '(10 / 11)',
+        camera: 'Fujifilm GFX 100', lens: 'GF 110mm f/2', film: 'Digital \u00b7 16-bit',
+        coords: '24.1426\u00b0 N, 110.3128\u00b0 W', location: 'La Paz'
+      },
+      {
+        src: '/Landingpage/web/home-11.jpg',
+        num: '11', count: '(11 / 11)',
+        camera: 'Nikon FM2', lens: 'Nikkor 50mm f/1.4', film: 'Ilford FP4 Plus 125',
+        coords: '29.0729\u00b0 N, 110.9559\u00b0 W', location: 'Hermosillo'
       },
     ];
 
@@ -2095,7 +2140,26 @@
           '/SofiayJose/web/sj-05.jpg',
           '/SofiayJose/web/sj-06.jpg',
           '/SofiayJose/web/sj-07.jpg',
-          '/SofiayJose/web/sj-08.jpg'
+          '/SofiayJose/web/sj-08.jpg',
+          '/SofiayJose/web/sj-09.jpg',
+          '/SofiayJose/web/sj-10.jpg',
+          '/SofiayJose/web/sj-11.jpg',
+          '/SofiayJose/web/sj-12.jpg',
+          '/SofiayJose/web/sj-13.jpg',
+          '/SofiayJose/web/sj-14.jpg',
+          '/SofiayJose/web/sj-15.jpg',
+          '/SofiayJose/web/sj-16.jpg',
+          '/SofiayJose/web/sj-17.jpg',
+          '/SofiayJose/web/sj-18.jpg',
+          '/SofiayJose/web/sj-19.jpg',
+          '/SofiayJose/web/sj-20.jpg',
+          '/SofiayJose/web/sj-21.jpg',
+          '/SofiayJose/web/sj-22.jpg',
+          '/SofiayJose/web/sj-23.jpg',
+          '/SofiayJose/web/sj-24.jpg',
+          '/SofiayJose/web/sj-25.jpg',
+          '/SofiayJose/web/sj-26.jpg',
+          '/SofiayJose/web/sj-27.jpg'
         ],
         description: [
           'Una boda contada como editorial. Sofia y José se dieron el s\u00ed en una ceremonia \u00edntima donde cada gesto fue m\u00e1s importante que cualquier protocolo. El objetivo fue documentar la verdad del d\u00eda sin intervenirla.',
