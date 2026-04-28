@@ -7,8 +7,45 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter+Tight:wght@200;300;400;500;600;700;800&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet" />
   <style>
+    /* ═══════════════════════════════════════════════════════
+       EDITORIAL DESIGN TOKENS
+       Unified spacing, ink scale, tracking, and type rhythm.
+    ═══════════════════════════════════════════════════════ */
+    :root {
+      /* ink scale — whites on #080808 */
+      --ink-98: rgba(255,255,255,0.98);
+      --ink-90: rgba(255,255,255,0.90);
+      --ink-78: rgba(255,255,255,0.78);
+      --ink-60: rgba(255,255,255,0.60);
+      --ink-45: rgba(255,255,255,0.45);
+      --ink-32: rgba(255,255,255,0.32);
+      --ink-22: rgba(255,255,255,0.22);
+      --ink-14: rgba(255,255,255,0.14);
+      --ink-08: rgba(255,255,255,0.08);
+      --ink-04: rgba(255,255,255,0.04);
+
+      /* editorial rules (borders/lines) */
+      --rule: rgba(255,255,255,0.08);
+      --rule-strong: rgba(255,255,255,0.14);
+
+      /* page margins */
+      --mx: clamp(40px, 5vw, 72px);   /* horizontal editorial margin */
+      --my: clamp(48px, 7vw, 112px);  /* vertical editorial rhythm */
+      --gutter: clamp(24px, 3vw, 40px);
+
+      /* tracking scale */
+      --tr-tight: -0.045em;
+      --tr-wide: 0.15em;
+      --tr-wider: 0.25em;
+      --tr-widest: 0.35em;
+
+      /* bg */
+      --bg: #080808;
+      --bg-raised: #0b0b0b;
+    }
+
     html, body { height: 100%; overflow: hidden; }
-    body { font-family: 'Inter Tight', system-ui, sans-serif; background: #080808; color: #fff; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Inter Tight', system-ui, sans-serif; background: var(--bg); color: #fff; -webkit-font-smoothing: antialiased; }
     .mono { font-family: 'Space Mono', monospace; }
     .display { font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif; font-optical-sizing: auto; font-variation-settings: "wdth" 100; }
     .display-tight { font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif; font-optical-sizing: auto; font-variation-settings: "wdth" 90; letter-spacing: -0.04em; }
@@ -114,46 +151,49 @@
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.75'/></svg>");
     }
 
-    /* Index rows */
+    /* Index rows — 5-column grid, baseline-aligned */
     .idx-row {
       position: relative; display: grid;
-      grid-template-columns: 60px 1fr 180px 140px 40px;
-      align-items: baseline; gap: 24px;
-      padding: 22px 0;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      grid-template-columns: 64px minmax(0,1fr) 200px 120px 32px;
+      align-items: baseline; gap: 32px;
+      padding: 26px 0;
+      border-top: 1px solid var(--rule);
       cursor: pointer;
-      transition: padding-left 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+      transition: padding-left 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
     }
-    .idx-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .idx-row:hover { padding-left: 28px; }
-    .idx-row:hover .idx-title { font-variation-settings: "wdth" 90; letter-spacing: -0.045em; color: rgba(255,255,255,0.98); }
-    .idx-row:hover .idx-arrow { transform: translateX(6px); color: rgba(255,255,255,0.9); }
-    .idx-row:hover .idx-num { color: rgba(255,255,255,0.4); }
+    .idx-row:last-child { border-bottom: 1px solid var(--rule); }
+    .idx-row:hover { padding-left: 20px; }
+    .idx-row:hover .idx-title { font-variation-settings: "wdth" 90; letter-spacing: -0.045em; color: var(--ink-98); }
+    .idx-row:hover .idx-arrow { transform: translateX(8px); color: var(--ink-90); }
+    .idx-row:hover .idx-num { color: var(--ink-45); }
     .idx-title {
       font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 34px; font-weight: 300;
+      font-size: 32px; font-weight: 300;
       letter-spacing: -0.035em;
-      color: rgba(255,255,255,0.85);
+      color: var(--ink-78);
       font-variation-settings: "wdth" 100;
-      transition: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+      transition: all 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+      line-height: 1.05;
     }
     .idx-num {
       font-family: 'Space Mono', monospace;
-      font-size: 11px; letter-spacing: 0.15em;
-      color: rgba(255,255,255,0.22);
+      font-size: 10px; letter-spacing: var(--tr-wider);
+      color: var(--ink-22);
       transition: color 0.5s;
+      text-transform: uppercase;
     }
     .idx-meta {
       font-family: 'Space Mono', monospace;
-      font-size: 10px; letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.35);
+      font-size: 9.5px; letter-spacing: var(--tr-wide);
+      color: var(--ink-32);
       text-transform: uppercase;
     }
     .idx-arrow {
-      color: rgba(255,255,255,0.25);
+      color: var(--ink-22);
       transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), color 0.5s;
       font-family: 'Bricolage Grotesque', sans-serif;
-      font-size: 18px;
+      font-size: 16px;
+      justify-self: end;
     }
 
     /* Floating hover preview */
@@ -167,22 +207,22 @@
     #idxPreview.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     #idxPreview img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.15); }
 
-    /* Spreads */
+    /* Spreads — editorial page rhythm */
     .spread {
       position: relative;
-      padding: 180px 96px;
-      min-height: 110vh;
+      padding: clamp(120px,14vw,200px) var(--mx);
+      min-height: 100vh;
       overflow: hidden;
     }
-    .spread + .spread { border-top: 1px solid rgba(255,255,255,0.05); }
+    .spread + .spread { border-top: 1px solid var(--rule); }
     .spread-num {
       position: absolute;
       font-family: 'Bricolage Grotesque', sans-serif;
       font-weight: 200;
       font-variation-settings: "wdth" 90;
-      font-size: clamp(200px, 28vw, 420px);
+      font-size: clamp(180px, 24vw, 360px);
       line-height: 0.8; letter-spacing: -0.06em;
-      color: rgba(255,255,255,0.045);
+      color: rgba(255,255,255,0.04);
       pointer-events: none; user-select: none;
       z-index: 0;
     }
@@ -227,6 +267,646 @@
       font-family: 'Bricolage Grotesque', sans-serif; font-weight: 300;
       font-size: 18px; color: rgba(255,255,255,0.5); letter-spacing: 0.4em;
     }
+
+    /* ══════════════════════════════════════════════════════════
+       GALLERY — "La Muestra" (art-gallery experience tokens)
+    ══════════════════════════════════════════════════════════ */
+    :root {
+      --brass:      rgba(196,160,110,0.88);
+      --brass-mid:  rgba(196,160,110,0.55);
+      --brass-dim:  rgba(196,160,110,0.28);
+      --brass-hair: rgba(196,160,110,0.14);
+      --wall-1:     #0a0a0a;
+      --wall-2:     #070707;
+      --plaque-bg:  rgba(12,10,8,0.72);
+      --frame-bg:   rgba(6,5,4,0.78);
+    }
+
+    /* Wall atmosphere */
+    .gallery-wall {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255,245,225,0.028), transparent 62%),
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(196,160,110,0.02), transparent 70%),
+        linear-gradient(180deg, var(--wall-1) 0%, var(--wall-2) 100%);
+    }
+    .foyer-backlight {
+      position: absolute; top: -12%; left: 50%; width: 72vw; height: 72vw;
+      transform: translateX(-50%); pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at center, rgba(255,245,220,0.045), transparent 62%);
+    }
+
+    /* Brass plaque label */
+    .plaque-bronze {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--brass);
+    }
+    .plaque-bronze::before {
+      content: ''; width: 5px; height: 5px;
+      background: var(--brass); border-radius: 50%;
+      box-shadow: 0 0 6px rgba(196,160,110,0.5);
+    }
+    .plaque-bronze.no-dot::before { display: none; }
+
+    /* Italic serif helper */
+    .italic-serif {
+      font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-optical-sizing: auto;
+    }
+
+    /* ── FOYER: gallery entrance ─────────────────────────── */
+    .gallery-foyer {
+      position: relative;
+      min-height: calc(100vh - 64px);
+      padding: clamp(36px, 4vw, 64px) var(--mx) clamp(40px, 4vw, 72px);
+      overflow: hidden;
+      display: flex; flex-direction: column; gap: clamp(32px, 3vw, 48px);
+    }
+
+    /* Triptych — three works hanging on the gallery wall */
+    .triptych {
+      position: relative; flex: 1;
+      display: grid;
+      grid-template-columns: 0.85fr 1.25fr 0.75fr;
+      gap: clamp(28px, 3.5vw, 64px);
+      align-items: end;
+      padding: clamp(32px, 5vw, 72px) 0 clamp(16px, 2vw, 32px);
+      z-index: 2;
+    }
+    .triptych-work {
+      position: relative; cursor: pointer;
+      transform: translateY(0);
+      transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .triptych-work:hover { transform: translateY(-6px); }
+    .triptych-work:nth-child(1) { align-self: center; }
+    .triptych-work:nth-child(3) { align-self: start; margin-top: clamp(48px, 6vw, 96px); }
+    .triptych-work .hang {
+      position: absolute; top: -44px; left: 50%;
+      width: 1px; height: 44px;
+      background: linear-gradient(180deg, transparent, var(--brass-mid));
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+    .triptych-work .hang::after {
+      content: ''; position: absolute; top: -3px; left: 50%;
+      width: 7px; height: 7px;
+      background: var(--brass); border-radius: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 6px rgba(196,160,110,0.6);
+    }
+    .triptych-work .frame {
+      position: relative;
+      background: var(--frame-bg);
+      padding: clamp(10px, 1vw, 14px);
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow:
+        0 40px 100px -50px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(196,160,110,0.04) inset;
+    }
+    .triptych-work .frame-inner {
+      position: relative; width: 100%; overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+    .triptych-work:nth-child(2) .frame-inner { aspect-ratio: 4/5; }
+    .triptych-work .frame img {
+      display: block; width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(0.28) contrast(1.04) brightness(0.94);
+      transition: filter 0.8s, transform 1.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .triptych-work:hover .frame img {
+      filter: grayscale(0) contrast(1.05) brightness(1.02);
+      transform: scale(1.03);
+    }
+    .triptych-work .plate-card {
+      margin-top: 12px; padding-top: 10px;
+      border-top: 1px solid var(--brass-hair);
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+    }
+    .triptych-work .pc-no {
+      font-family: 'Space Mono', monospace;
+      font-size: 8.5px; letter-spacing: 0.38em;
+      color: var(--brass); text-transform: uppercase;
+    }
+    .triptych-work .pc-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: 13px; letter-spacing: 0.002em;
+      color: var(--ink-78);
+    }
+
+    /* Curator's note */
+    .curator-card {
+      display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 5vw, 72px);
+      align-items: end;
+      position: relative; z-index: 2;
+    }
+    .curator-note {
+      font-family: 'Bricolage Grotesque', 'Inter Tight', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(16px, 1.2vw, 19px);
+      color: var(--ink-60); line-height: 1.6;
+      letter-spacing: 0.002em;
+      padding-left: 20px;
+      border-left: 1px solid var(--brass-hair);
+    }
+    .curator-sig {
+      display: flex; align-items: center; gap: 12px; margin-top: 16px;
+    }
+    .curator-sig .dash { width: 32px; height: 1px; background: var(--brass-dim); }
+    .curator-sig .name {
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.35em;
+      color: var(--brass); text-transform: uppercase;
+    }
+
+    /* Floor plan — mini room map */
+    .floor-plan {
+      position: relative; display: inline-flex; align-items: center; gap: 12px;
+      padding: 14px 22px;
+      background: rgba(10,8,6,0.55);
+      border: 1px solid var(--brass-hair);
+    }
+    .floor-plan .fp-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8.5px; letter-spacing: 0.35em;
+      color: var(--ink-45); text-transform: uppercase;
+    }
+    .floor-plan .fp-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(196,160,110,0.22);
+      transition: background 0.4s, transform 0.4s, box-shadow 0.4s;
+      cursor: pointer;
+    }
+    .floor-plan .fp-dot:hover,
+    .floor-plan .fp-dot.active {
+      background: var(--brass);
+      transform: scale(1.4);
+      box-shadow: 0 0 8px rgba(196,160,110,0.5);
+    }
+    .floor-plan .fp-sep { width: 8px; height: 1px; background: var(--brass-hair); }
+
+    /* ── CATÁLOGO: plate wall ───────────────────────────── */
+    .catalogue {
+      position: relative;
+      padding: clamp(100px, 12vw, 160px) var(--mx) clamp(96px, 10vw, 144px);
+      background: linear-gradient(180deg, var(--wall-2) 0%, var(--wall-1) 30%, var(--wall-2) 100%);
+    }
+    .catalogue-header {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: end; gap: clamp(32px, 4vw, 64px);
+      padding-bottom: 28px; margin-bottom: clamp(72px, 8vw, 112px);
+      border-bottom: 1px solid var(--brass-hair);
+    }
+    .catalogue-title {
+      font-family: 'Bricolage Grotesque', serif;
+      font-style: italic; font-weight: 200;
+      font-size: clamp(52px, 7vw, 104px);
+      letter-spacing: -0.045em; line-height: 0.92;
+      font-variation-settings: 'wdth' 88;
+      color: var(--ink-98);
+      text-align: center;
+    }
+    .catalogue-title .accent { color: var(--brass); font-size: 0.58em; letter-spacing: -0.02em; }
+    .catalogue-range { justify-self: end; text-align: right; }
+
+    .plate-wall {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(44px, 5vw, 80px) clamp(24px, 2.5vw, 40px);
+    }
+    .plate {
+      position: relative; cursor: pointer;
+      transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .plate:hover { transform: translateY(-6px); }
+    .plate-frame {
+      position: relative;
+      background: var(--frame-bg);
+      padding: clamp(8px, 0.8vw, 12px);
+      border: 1px solid rgba(255,255,255,0.04);
+      overflow: hidden;
+      transition: border-color 0.6s, box-shadow 0.6s;
+    }
+    .plate:hover .plate-frame {
+      border-color: rgba(196,160,110,0.22);
+      box-shadow: 0 40px 90px -50px rgba(0,0,0,0.9);
+    }
+    .plate-frame-inner {
+      position: relative; overflow: hidden; aspect-ratio: 3/4;
+    }
+    .plate.format-landscape .plate-frame-inner { aspect-ratio: 4/3; }
+    .plate.format-square    .plate-frame-inner { aspect-ratio: 1/1; }
+    .plate-frame img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(0.32) brightness(0.9);
+      transition: filter 0.9s, transform 1.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .plate:hover .plate-frame img {
+      filter: grayscale(0) brightness(1.04);
+      transform: scale(1.05);
+    }
+    .plate-tag {
+      position: absolute; top: 14px; left: 14px; z-index: 3;
+      padding: 5px 10px;
+      background: rgba(8,6,4,0.85);
+      border: 1px solid rgba(196,160,110,0.28);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.38em;
+      color: var(--brass); text-transform: uppercase;
+    }
+    .plate-caption {
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: baseline; gap: 16px;
+    }
+    .plate-caption .ct {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(16px, 1.3vw, 20px);
+      color: var(--ink-90); line-height: 1.2;
+      letter-spacing: 0.003em;
+    }
+    .plate-caption .cy {
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.3em;
+      color: var(--brass); text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .plate-submeta {
+      margin-top: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 8.5px; letter-spacing: 0.28em;
+      color: var(--ink-32); text-transform: uppercase;
+      display: flex; gap: 10px; align-items: center;
+    }
+    .plate-submeta .sep { color: rgba(255,255,255,0.08); }
+
+    /* Staircase plate spans */
+    .plate.span-3 { grid-column: span 3; }
+    .plate.span-4 { grid-column: span 4; }
+    .plate.span-5 { grid-column: span 5; }
+    .plate.span-6 { grid-column: span 6; }
+    .plate.offset-1 { margin-top: clamp(32px, 4vw, 64px); }
+    .plate.offset-2 { margin-top: clamp(64px, 8vw, 128px); }
+    .plate.offset-3 { margin-top: clamp(96px, 12vw, 192px); }
+
+    @media (max-width: 1024px) {
+      .plate-wall { grid-template-columns: repeat(6, 1fr); }
+      .plate.span-3, .plate.span-4 { grid-column: span 3; }
+      .plate.span-5, .plate.span-6 { grid-column: span 6; }
+      .plate.offset-2, .plate.offset-3 { margin-top: 48px; }
+    }
+
+    /* ── SALA: individual exhibition rooms ──────────────── */
+    .sala {
+      position: relative;
+      padding: clamp(140px, 16vw, 220px) var(--mx);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .sala + .sala { border-top: 1px solid var(--brass-hair); }
+    .sala-roman {
+      position: absolute;
+      font-family: 'Bricolage Grotesque', serif;
+      font-style: italic; font-weight: 200;
+      font-size: clamp(220px, 32vw, 480px);
+      line-height: 0.8; letter-spacing: -0.06em;
+      color: rgba(196,160,110,0.055);
+      font-variation-settings: 'wdth' 82;
+      pointer-events: none; user-select: none; z-index: 0;
+    }
+    .sala-header {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: end; gap: 32px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--brass-hair);
+      margin-bottom: clamp(64px, 7vw, 112px);
+    }
+    .sala-header .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.4em;
+      color: var(--brass); text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .sala-header .tag::before {
+      content: ''; width: 18px; height: 1px; background: var(--brass-mid);
+    }
+    .sala-header .name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(22px, 2vw, 30px);
+      color: var(--ink-90); letter-spacing: 0.005em;
+      text-align: center;
+    }
+    .sala-header .meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.35em;
+      color: var(--ink-45); text-transform: uppercase;
+      text-align: right; justify-self: end;
+    }
+
+    /* Museum plaque — caption card */
+    .plaque {
+      position: relative;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 22px; align-items: start;
+      padding: 24px 28px;
+      background: var(--plaque-bg);
+      border: 1px solid rgba(196,160,110,0.18);
+      backdrop-filter: blur(6px);
+    }
+    .plaque::before {
+      content: ''; position: absolute; top: -1px; left: -1px;
+      width: 11px; height: 11px;
+      border-top: 1px solid var(--brass);
+      border-left: 1px solid var(--brass);
+    }
+    .plaque::after {
+      content: ''; position: absolute; bottom: -1px; right: -1px;
+      width: 11px; height: 11px;
+      border-bottom: 1px solid var(--brass);
+      border-right: 1px solid var(--brass);
+    }
+    .plaque .pl-no {
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.4em;
+      color: var(--brass); text-transform: uppercase;
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      padding: 6px 10px 6px 0;
+      border-right: 1px solid rgba(196,160,110,0.18);
+    }
+    .plaque .pl-body h4 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(22px, 2vw, 28px);
+      color: var(--ink-98);
+      letter-spacing: 0.003em; line-height: 1.12;
+    }
+    .plaque .pl-body .artist {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.32em;
+      color: var(--ink-45); text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .plaque .pl-body dl {
+      margin-top: 18px;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 7px 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px;
+    }
+    .plaque .pl-body dt { color: var(--ink-32); text-transform: uppercase; letter-spacing: 0.26em; }
+    .plaque .pl-body dd { color: var(--ink-78); letter-spacing: 0.02em; }
+    .plaque .pl-view {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-top: 20px; padding-top: 16px;
+      border-top: 1px solid rgba(196,160,110,0.14);
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.35em;
+      color: var(--brass); text-transform: uppercase;
+      cursor: pointer; background: none; border-left: none; border-right: none; border-bottom: none;
+      width: 100%; justify-content: flex-start;
+    }
+    .plaque .pl-view .arr {
+      display: inline-block; transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .plaque:hover .pl-view .arr { transform: translateX(10px); }
+
+    /* Work frame (passe-partout) — shared across sala layouts */
+    .work-frame {
+      position: relative;
+      background: var(--frame-bg);
+      padding: clamp(10px, 1vw, 16px);
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      box-shadow: 0 50px 140px -60px rgba(0,0,0,0.95);
+      transition: border-color 0.6s, box-shadow 0.6s, transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .work-frame:hover {
+      border-color: rgba(196,160,110,0.22);
+      transform: translateY(-4px);
+    }
+    .work-frame-inner {
+      position: relative; width: 100%; overflow: hidden;
+    }
+    .work-frame img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(0.2) brightness(0.93);
+      transition: filter 0.9s, transform 1.6s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .work-frame:hover img {
+      filter: grayscale(0) brightness(1.03);
+      transform: scale(1.04);
+    }
+    .work-frame .tag-corner {
+      position: absolute; top: 16px; right: 16px; z-index: 3;
+      padding: 5px 10px;
+      background: rgba(8,6,4,0.88);
+      border: 1px solid rgba(196,160,110,0.3);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px; letter-spacing: 0.35em;
+      color: var(--brass); text-transform: uppercase;
+    }
+
+    /* Aperture reveal (curtain-open) — visible by default; opt-in via .preload */
+    .aperture-reveal {
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 1.3s cubic-bezier(0.77,0,0.175,1);
+    }
+    .aperture-reveal.preload { clip-path: inset(0 50% 0 50%); }
+    .aperture-reveal.in      { clip-path: inset(0 0 0 0); }
+
+    /* Layout A — "La Pared" (wall arrangement) */
+    .sala-wall {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(12, 1fr);
+      gap: clamp(32px, 4vw, 56px) clamp(24px, 3vw, 40px);
+      align-items: start;
+    }
+    .sala-wall .wm  { grid-column: 1 / span 7; }
+    .sala-wall .wa  { grid-column: 9 / span 4; margin-top: clamp(56px, 8vw, 128px); }
+    .sala-wall .wp  { grid-column: 1 / span 5; margin-top: clamp(16px, 2vw, 24px); }
+    .sala-wall .wn  {
+      grid-column: 9 / span 4;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.6; color: var(--ink-60);
+      padding-left: 20px; border-left: 1px solid var(--brass-hair);
+    }
+
+    /* Layout B — "La Vitrina" (pedestal) */
+    .sala-pedestal {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr clamp(320px, 36vw, 480px) 1fr;
+      gap: clamp(32px, 4vw, 64px); align-items: center;
+    }
+    .sala-pedestal .vit-col { display: flex; flex-direction: column; gap: 32px; }
+    .sala-pedestal .vit-marg {
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.4em;
+      color: var(--brass-mid); text-transform: uppercase;
+      align-self: end; padding: 12px 0;
+    }
+
+    /* Layout C — "El Díptico" (pair) */
+    .sala-diptych {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(20px, 2vw, 32px);
+    }
+    .sala-diptych .dp-sep {
+      grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 24px;
+      margin-top: clamp(32px, 4vw, 48px);
+    }
+    .sala-diptych .dp-sep .line { height: 1px; background: var(--brass-hair); }
+    .sala-diptych .dp-sep .mark {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.5em;
+      color: var(--brass); text-transform: uppercase;
+    }
+    .sala-diptych .dp-plaque {
+      grid-column: 1 / -1; justify-self: center; max-width: 640px;
+      margin-top: clamp(24px, 3vw, 40px);
+    }
+
+    /* Layout D — "El Cuadro Mayor" (cinematic) */
+    .sala-mural {
+      position: relative; z-index: 1;
+      padding: clamp(16px, 1.5vw, 24px);
+      background: var(--frame-bg);
+      border: 1px solid rgba(196,160,110,0.12);
+      box-shadow: 0 80px 200px -80px rgba(0,0,0,0.95);
+    }
+    .sala-mural .mur-inner {
+      position: relative; overflow: hidden;
+      aspect-ratio: 16/9;
+    }
+    .sala-mural .mur-inner img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(0.1) brightness(0.9);
+      transition: filter 1s, transform 2s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .sala-mural:hover .mur-inner img {
+      filter: grayscale(0) brightness(1.02);
+      transform: scale(1.03);
+    }
+    .sala-mural .mur-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.55) 85%, rgba(0,0,0,0.85) 100%);
+      pointer-events: none;
+    }
+    .sala-mural .mur-caption {
+      position: absolute; bottom: 32px; left: 32px; right: 32px;
+      z-index: 3; display: grid; grid-template-columns: 1fr auto;
+      align-items: end; gap: 40px;
+    }
+    .sala-mural .mur-caption h4 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(36px, 4.5vw, 68px);
+      color: #fff; letter-spacing: -0.02em; line-height: 0.98;
+      font-variation-settings: 'wdth' 92;
+    }
+    .sala-mural .mur-caption .mur-meta {
+      text-align: right; display: flex; flex-direction: column; gap: 6px;
+    }
+    .sala-mural .mur-caption .mur-meta .m1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.38em;
+      color: var(--brass); text-transform: uppercase;
+    }
+    .sala-mural .mur-caption .mur-meta .m2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.72); text-transform: uppercase;
+    }
+    .sala-plus-cta {
+      margin-top: clamp(32px, 4vw, 48px); display: grid;
+      grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
+    }
+    .sala-plus-cta .line { height: 1px; background: var(--brass-hair); }
+    .sala-plus-cta .cta {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.4em;
+      color: var(--brass); text-transform: uppercase;
+      cursor: pointer; background: none; border: none; padding: 0;
+    }
+    .sala-plus-cta .cta .arr {
+      display: inline-block;
+      transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .sala-plus-cta .cta:hover .arr { transform: translateX(10px); }
+
+    /* Responsive breakdowns */
+    @media (max-width: 1024px) {
+      .sala-wall { grid-template-columns: 1fr; gap: 40px; }
+      .sala-wall .wm, .sala-wall .wa, .sala-wall .wp, .sala-wall .wn { grid-column: 1 / -1; margin-top: 0; }
+      .sala-pedestal { grid-template-columns: 1fr; }
+      .sala-pedestal .vit-marg { writing-mode: horizontal-tb; transform: none; }
+      .sala-diptych { grid-template-columns: 1fr; }
+      .triptych { grid-template-columns: 1fr; gap: 40px; }
+      .triptych-work:nth-child(3) { margin-top: 0; }
+      .curator-card { grid-template-columns: 1fr; }
+    }
+
+    /* Visitor position indicator */
+    .visitor-indicator {
+      position: fixed; top: 50%; right: 18px;
+      transform: translateY(-50%); z-index: 30;
+      display: flex; flex-direction: column; gap: 12px; align-items: center;
+      padding: 18px 10px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.6s;
+    }
+    .visitor-indicator.visible { opacity: 1; pointer-events: auto; }
+    .visitor-indicator .vi-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 7.5px; letter-spacing: 0.4em;
+      color: var(--brass); text-transform: uppercase;
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      padding: 6px 0 10px;
+    }
+    .visitor-indicator .vi-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      cursor: pointer;
+      transition: background 0.4s, transform 0.4s, box-shadow 0.4s;
+      position: relative;
+    }
+    .visitor-indicator .vi-dot:hover { background: var(--brass-mid); }
+    .visitor-indicator .vi-dot.active {
+      background: var(--brass); transform: scale(1.45);
+      box-shadow: 0 0 10px rgba(196,160,110,0.55);
+    }
+    .visitor-indicator .vi-dot .vi-tooltip {
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 8.5px; letter-spacing: 0.3em;
+      color: var(--brass); text-transform: uppercase; white-space: nowrap;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .visitor-indicator .vi-dot:hover .vi-tooltip,
+    .visitor-indicator .vi-dot.active .vi-tooltip { opacity: 1; }
+
+    /* Fade-up reveal for gallery elements */
+    .g-reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 1s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 1s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .g-reveal.in { opacity: 1; transform: translateY(0); }
+    .g-reveal.delay-1 { transition-delay: 0.1s; }
+    .g-reveal.delay-2 { transition-delay: 0.2s; }
+    .g-reveal.delay-3 { transition-delay: 0.3s; }
 
     /* ── Project detail page ────────────────────── */
     .proj-thumb { transition: opacity 0.25s, outline-color 0.25s; cursor: pointer; }
@@ -342,37 +1022,40 @@
       position: fixed; inset: 0; z-index: 300;
       background: #080808;
       display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 40px;
+      flex-direction: column; gap: 28px;
       transition: transform 1.1s cubic-bezier(0.86,0,0.07,1) 0.2s,
                   opacity 0.3s 1.1s;
     }
     .loader.done { transform: translateY(-100%); opacity: 0; pointer-events: none; }
     .loader-mark {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      font-weight: 200; font-size: clamp(80px, 14vw, 200px);
-      letter-spacing: -0.075em;
-      font-variation-settings: 'wdth' 88;
-      color: #fff; text-transform: lowercase;
       overflow: hidden;
+      line-height: 0;
     }
     .loader-mark span {
       display: inline-block;
       transform: translateY(110%);
       animation: loaderRise 0.9s cubic-bezier(0.25,0.46,0.45,0.94) 0.15s forwards;
     }
+    .loader-logo {
+      display: block;
+      width: clamp(120px, 11vw, 170px);
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
     .loader-bar {
-      width: 240px; height: 1px; background: rgba(255,255,255,0.12);
+      width: 140px; height: 1px; background: rgba(255,255,255,0.10);
       overflow: hidden;
     }
     .loader-bar-fill {
-      height: 100%; background: #fff;
+      height: 100%; background: rgba(255,255,255,0.85);
       transform: scaleX(0); transform-origin: left;
       animation: loaderFill 1.1s cubic-bezier(0.65,0,0.35,1) 0.15s forwards;
     }
     .loader-meta {
       font-family: 'Space Mono', monospace;
-      font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
-      color: rgba(255,255,255,0.4); display: flex; gap: 20px;
+      font-size: 8.5px; letter-spacing: 0.4em; text-transform: uppercase;
+      color: rgba(255,255,255,0.32); display: flex; gap: 16px;
       opacity: 0; animation: loaderFade 0.6s ease 0.25s forwards;
     }
     @keyframes loaderRise { to { transform: translateY(0); } }
@@ -399,33 +1082,33 @@
     /* ── Marquee ticker (auto-scroll band) ─────────────── */
     .marquee {
       position: relative; overflow: hidden;
-      padding: 32px 0;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), transparent);
+      padding: 28px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
     }
     .marquee::before, .marquee::after {
-      content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2; pointer-events: none;
+      content: ''; position: absolute; top: 0; bottom: 0; width: 140px; z-index: 2; pointer-events: none;
     }
-    .marquee::before { left: 0;  background: linear-gradient(90deg, #080808, transparent); }
-    .marquee::after  { right: 0; background: linear-gradient(-90deg, #080808, transparent); }
+    .marquee::before { left: 0;  background: linear-gradient(90deg, var(--bg), transparent); }
+    .marquee::after  { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
     .marquee-track {
-      display: flex; gap: 5rem; width: max-content;
-      animation: marqueeScroll 38s linear infinite;
+      display: flex; gap: 4rem; width: max-content;
+      animation: marqueeScroll 42s linear infinite;
       will-change: transform;
     }
     .marquee:hover .marquee-track { animation-play-state: paused; }
     .marquee-item {
       font-family: 'Bricolage Grotesque', sans-serif;
-      font-weight: 200; font-size: clamp(34px, 4.5vw, 64px);
-      letter-spacing: -0.04em; color: rgba(255,255,255,0.5);
+      font-weight: 200; font-size: clamp(30px, 4vw, 56px);
+      letter-spacing: -0.04em; color: var(--ink-45);
       text-transform: lowercase; white-space: nowrap;
       font-variation-settings: 'wdth' 90;
-      display: inline-flex; align-items: center; gap: 5rem;
+      display: inline-flex; align-items: center; gap: 4rem;
     }
     .marquee-item::before {
       content: '\2715'; font-family: 'Space Mono', monospace;
-      font-size: 0.5em; color: rgba(255,255,255,0.25);
+      font-size: 0.38em; color: var(--ink-22);
+      position: relative; top: -0.15em;
     }
     @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
@@ -485,6 +1168,101 @@
       .marquee-track { animation: none; }
     }
 
+    /* ═══════════════════════════════════════════════════════
+       EDITORIAL UTILITY CLASSES
+    ═══════════════════════════════════════════════════════ */
+
+    /* Eyebrow label (small mono caps) — used for section markers */
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: var(--tr-widest);
+      color: var(--ink-32); text-transform: uppercase;
+      line-height: 1;
+    }
+    .eyebrow-tight {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: var(--tr-wider);
+      color: var(--ink-32); text-transform: uppercase;
+      line-height: 1;
+    }
+
+    /* Editorial section rule — symmetric split divider with centered label */
+    .rule-row {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 28px;
+    }
+    .rule-row::before, .rule-row::after {
+      content: ''; height: 1px; background: var(--rule);
+    }
+    .rule-row .rule-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9.5px; letter-spacing: var(--tr-widest);
+      color: var(--ink-45); text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Centered ornament (×·×·×) — equal arms guaranteed */
+    .orn {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 28px;
+      padding: clamp(60px, 8vw, 112px) var(--mx);
+    }
+    .orn::before, .orn::after {
+      content: ''; height: 1px; background: var(--rule);
+      max-width: 160px; justify-self: center; width: 100%;
+    }
+    .orn::before { justify-self: end; }
+    .orn::after  { justify-self: start; }
+    .orn-mark {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 1.2em;
+      color: var(--ink-45);
+      padding-left: 1.2em; /* optical balance for trailing letter-spacing */
+    }
+
+    /* Folio corners — small L-shaped registration ticks on page corners */
+    .folio-tick {
+      position: absolute; width: 14px; height: 14px;
+      pointer-events: none; opacity: 0.35;
+    }
+    .folio-tick::before, .folio-tick::after {
+      content: ''; position: absolute; background: var(--ink-22);
+    }
+    .folio-tick::before { width: 14px; height: 1px; top: 0; left: 0; }
+    .folio-tick::after  { width: 1px; height: 14px; top: 0; left: 0; }
+    .folio-tick.tr { transform: scaleX(-1); }
+    .folio-tick.bl { transform: scaleY(-1); }
+    .folio-tick.br { transform: scale(-1,-1); }
+
+    /* Stat block (label over value) — shared across pages */
+    .stat { display: flex; flex-direction: column; gap: 6px; }
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: var(--tr-wider);
+      color: var(--ink-32); text-transform: uppercase; line-height: 1;
+    }
+    .stat-value {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 300; font-size: 14.5px; color: var(--ink-78);
+      letter-spacing: -0.01em; line-height: 1.35;
+      font-variation-settings: 'wdth' 95;
+    }
+
+    /* Hairline: generic editorial divider */
+    .hair { height: 1px; width: 100%; background: var(--rule); }
+    .hair-strong { height: 1px; width: 100%; background: var(--rule-strong); }
+
+    /* Plus-mark: decorative crosshair centered */
+    .plus-mark {
+      position: relative; width: 14px; height: 14px; display: inline-block;
+      opacity: 0.4;
+    }
+    .plus-mark::before, .plus-mark::after {
+      content: ''; position: absolute; background: currentColor;
+    }
+    .plus-mark::before { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+    .plus-mark::after  { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+
   </style>
 </head>
 <body class="select-none">
@@ -493,7 +1271,9 @@
        INITIAL LOADER CURTAIN
   ════════════════════════════════════════════════ -->
   <div class="loader" id="loader">
-    <div class="loader-mark"><span>glez.</span></div>
+    <div class="loader-mark">
+      <span><img src="/Logowhite.svg" alt="glez." class="loader-logo" draggable="false" /></span>
+    </div>
     <div class="loader-bar"><div class="loader-bar-fill"></div></div>
     <div class="loader-meta">
       <span>Volumen 01</span>
@@ -545,35 +1325,51 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════
-       SHARED HEADER (untouched)
+       SHARED HEADER — 3-zone editorial masthead
   ════════════════════════════════════════════════ -->
-  <header class="flex items-center justify-between pl-4 pr-10 border-b border-white/[0.08] shrink-0 fixed top-0 left-0 right-0 z-50 bg-[#080808]"
-          style="height:64px;">
-    <div class="flex items-center gap-4">
-      <a href="#" data-page="home" class="menu-link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1828.06 984.81"
-             class="h-[26px] w-auto" aria-label="glez.">
-          <g>
-            <path fill="#fff" d="M64.16,671.25c-36.69-42.7-58.78-100.32-58.78-165.39,0-136.69,99.02-242.17,226.02-242.17,68.88,0,124.85,31.21,163.6,82.87l11.84-72.11h82.88v330.42l8.61,18.3c18.3,41.97,29.06,89.33,29.06,129.15,0,138.84-109.78,232.48-268,232.48-94.71,0-185.12-31.21-259.39-94.71l50.59-71.04c63.5,52.74,132.39,80.72,205.57,80.72,105.48,0,175.44-62.43,175.44-152.84,0-32.28-6.46-61.35-23.68-95.79-37.67,59.2-100.1,96.87-176.51,96.87-67.02,0-126.24-29.07-167.24-76.78M130.39,600.66c25.83,37.58,67.54,61.26,117.15,61.26,86.1,0,152.83-63.5,152.83-148.53,0-91.49-66.73-162.52-152.83-162.52s-145.3,67.8-145.3,154.99c0,36.1,10.27,68.78,28.14,94.8"/>
-            <path fill="#fff" d="M702.81,758.79h-96.87V0h96.87v758.79Z"/>
-            <path fill="#fff" d="M1038.59,759.32c-149.6,0-257.24-108.71-257.24-252.93,0-144.22,105.48-252.93,244.32-252.93,134.54,0,234.63,108.71,234.63,251.85,0,10.76-1.07,20.45-3.23,30.14h-385.31c11.84,85.03,76.42,143.15,164.67,143.15M872.85,467.65h295.98c-11.84-78.57-66.73-134.54-145.3-134.54-77.49,0-135.61,54.89-150.68,134.54Z"/>
-            <path fill="#fff" d="M1696.24,759.32h-401.46v-69.96l269.07-329.35h-258.31v-85.03h379.93v67.81l-269.08,331.5h279.84v85.03Z"/>
-          </g>
-          <rect fill="#fff" x="1743.03" y="674.3" width="85.03" height="85.03"/>
-        </svg>
-      </a>
-    </div>
-    <span class="mono text-white/20 text-lg font-bold">+</span>
-    <div class="flex items-center gap-5 mono text-[13px]">
-      <a href="#" class="menu-link text-white/60 hover:text-white transition-colors underline underline-offset-2 decoration-white/20 magnetic"
-         data-magnetic-strength="0.35" data-cursor="hover" data-page="portfolio">View Work</a>
-      <span class="text-white/20">&middot;</span>
-      <span class="text-white/44" id="timer">00:00:00</span>
-      <button class="flex flex-col gap-[7px] ml-1 p-1 group magnetic" data-magnetic-strength="0.45" id="menuBtn" data-cursor="hover">
-        <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
-        <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
-        <span class="block w-[22px] bg-white/70 group-hover:bg-white/40 transition-colors" style="height:1.5px;"></span>
-      </button>
+  <header class="shrink-0 fixed top-0 left-0 right-0 z-50"
+          style="height:64px; background:var(--bg); border-bottom:1px solid var(--rule);">
+    <div class="h-full grid items-center" style="grid-template-columns:1fr auto 1fr; padding:0 24px;">
+
+      <!-- Left: logo -->
+      <div class="flex items-center">
+        <a href="#" data-page="home" class="menu-link inline-flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1828.06 984.81"
+               class="h-[22px] w-auto block" aria-label="glez.">
+            <g>
+              <path fill="#fff" d="M64.16,671.25c-36.69-42.7-58.78-100.32-58.78-165.39,0-136.69,99.02-242.17,226.02-242.17,68.88,0,124.85,31.21,163.6,82.87l11.84-72.11h82.88v330.42l8.61,18.3c18.3,41.97,29.06,89.33,29.06,129.15,0,138.84-109.78,232.48-268,232.48-94.71,0-185.12-31.21-259.39-94.71l50.59-71.04c63.5,52.74,132.39,80.72,205.57,80.72,105.48,0,175.44-62.43,175.44-152.84,0-32.28-6.46-61.35-23.68-95.79-37.67,59.2-100.1,96.87-176.51,96.87-67.02,0-126.24-29.07-167.24-76.78M130.39,600.66c25.83,37.58,67.54,61.26,117.15,61.26,86.1,0,152.83-63.5,152.83-148.53,0-91.49-66.73-162.52-152.83-162.52s-145.3,67.8-145.3,154.99c0,36.1,10.27,68.78,28.14,94.8"/>
+              <path fill="#fff" d="M702.81,758.79h-96.87V0h96.87v758.79Z"/>
+              <path fill="#fff" d="M1038.59,759.32c-149.6,0-257.24-108.71-257.24-252.93,0-144.22,105.48-252.93,244.32-252.93,134.54,0,234.63,108.71,234.63,251.85,0,10.76-1.07,20.45-3.23,30.14h-385.31c11.84,85.03,76.42,143.15,164.67,143.15M872.85,467.65h295.98c-11.84-78.57-66.73-134.54-145.3-134.54-77.49,0-135.61,54.89-150.68,134.54Z"/>
+              <path fill="#fff" d="M1696.24,759.32h-401.46v-69.96l269.07-329.35h-258.31v-85.03h379.93v67.81l-269.08,331.5h279.84v85.03Z"/>
+            </g>
+            <rect fill="#fff" x="1743.03" y="674.3" width="85.03" height="85.03"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Center: folio ornament -->
+      <div class="flex items-center gap-3">
+        <span class="block" style="width:20px; height:1px; background:var(--ink-14);"></span>
+        <span class="plus-mark" style="color:var(--ink-32);"></span>
+        <span class="block" style="width:20px; height:1px; background:var(--ink-14);"></span>
+      </div>
+
+      <!-- Right: nav cluster -->
+      <div class="flex items-center gap-5 justify-end mono text-[12px]" style="letter-spacing:0.05em;">
+        <a href="#" class="menu-link transition-colors magnetic"
+           data-magnetic-strength="0.35" data-cursor="hover" data-page="portfolio"
+           style="color:var(--ink-60); text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--ink-14);">
+          View&nbsp;Work
+        </a>
+        <span style="color:var(--ink-14);">/</span>
+        <span id="timer" class="tabular-nums" style="color:var(--ink-45); font-variant-numeric:tabular-nums; letter-spacing:0.12em;">00:00:00</span>
+        <button class="flex flex-col gap-[6px] p-1 group magnetic" data-magnetic-strength="0.45" id="menuBtn" data-cursor="hover" aria-label="Menu">
+          <span class="block" style="width:20px; height:1px; background:var(--ink-78); transition:background .3s;"></span>
+          <span class="block" style="width:20px; height:1px; background:var(--ink-78); transition:background .3s;"></span>
+          <span class="block" style="width:14px; height:1px; background:var(--ink-78); transition:background .3s; align-self:flex-end;"></span>
+        </button>
+      </div>
+
     </div>
   </header>
 
@@ -584,73 +1380,113 @@
        PAGE 1: HOME (Photography) — unchanged
   ═══════════════════════════════════════════════════════ -->
   <div id="page-home" class="page active" style="height:calc(100vh - 64px);">
-    <div class="flex flex-1 overflow-hidden">
-      <aside class="shrink-0 flex flex-col gap-2 p-4 overflow-y-auto border-r border-white/[0.06]"
-             style="width:100px;">
-        <div class="thumb active overflow-hidden" data-index="0" style="height:72px;">
-          <img src="/Fotos/6F3A2084.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+    <div class="flex flex-1 overflow-hidden relative">
+
+      <!-- Corner registration ticks -->
+      <span class="folio-tick" style="top:14px; left:14px;"></span>
+      <span class="folio-tick tr" style="top:14px; right:14px;"></span>
+      <span class="folio-tick bl" style="bottom:14px; left:14px;"></span>
+      <span class="folio-tick br" style="bottom:14px; right:14px;"></span>
+
+      <!-- LEFT COLUMN — thumbnail contact sheet -->
+      <aside class="shrink-0 flex flex-col overflow-hidden border-r"
+             style="width:112px; border-color:var(--rule);">
+        <div class="px-4 pt-5 pb-3 flex items-center justify-between" style="border-bottom:1px solid var(--rule);">
+          <span class="eyebrow-tight">Hoja</span>
+          <span class="eyebrow-tight" style="color:var(--ink-22);">06</span>
         </div>
-        <div class="thumb opacity-55 overflow-hidden" data-index="1" style="height:72px;">
-          <img src="/Fotos/6F3A2362.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+        <div class="flex-1 flex flex-col gap-2 p-3 overflow-y-auto">
+          <div class="thumb active overflow-hidden" data-index="0" style="aspect-ratio:3/4;">
+            <img src="/Fotos/6F3A2084.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-55 overflow-hidden" data-index="1" style="aspect-ratio:3/4;">
+            <img src="/Fotos/6F3A2362.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="2" style="aspect-ratio:3/4;">
+            <img src="/Fotos/BCR64925.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="3" style="aspect-ratio:3/4;">
+            <img src="/Fotos/BCR64968-Edit.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="4" style="aspect-ratio:3/4;">
+            <img src="/Fotos/BCR65082.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <div class="thumb opacity-35 overflow-hidden" data-index="5" style="aspect-ratio:3/4;">
+            <img src="/Fotos/BCR65142.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
         </div>
-        <div class="thumb opacity-35 overflow-hidden" data-index="2" style="height:72px;">
-          <img src="/Fotos/BCR64925.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
-        </div>
-        <div class="thumb opacity-35 overflow-hidden" data-index="3" style="height:72px;">
-          <img src="/Fotos/BCR64968-Edit.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
-        </div>
-        <div class="thumb opacity-35 overflow-hidden" data-index="4" style="height:72px;">
-          <img src="/Fotos/BCR65082.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
-        </div>
-        <div class="thumb opacity-35 overflow-hidden" data-index="5" style="height:72px;">
-          <img src="/Fotos/BCR65142.jpg" class="w-full h-full object-cover" draggable="false" alt="" />
+        <div class="px-4 py-3 flex items-center justify-center" style="border-top:1px solid var(--rule);">
+          <span class="plus-mark" style="color:var(--ink-22);"></span>
         </div>
       </aside>
 
-      <div class="flex-1 flex flex-col items-center py-8">
-        <span class="mono text-white/15 text-2xl font-bold leading-none shrink-0">+</span>
+      <!-- CENTER COLUMN — main photograph -->
+      <div class="flex-1 flex flex-col items-center py-10 relative">
+        <span class="plus-mark shrink-0" style="color:var(--ink-22);"></span>
         <div class="flex-1 relative w-full">
-          <div class="absolute inset-0 flex items-center justify-center px-20">
+          <div class="absolute inset-0 flex items-center justify-center px-16">
             <img id="mainPhoto" src="/Fotos/6F3A2084.jpg"
                  alt="Featured photograph" class="object-contain" style="width:320px; height:510px;" draggable="false" />
           </div>
+          <!-- Caption left marginalia -->
+          <div class="absolute left-10 top-1/2" style="transform:translateY(-50%);">
+            <span class="marginalia" style="color:var(--ink-22);">plate &mdash; selected work</span>
+          </div>
         </div>
-        <div class="flex flex-col items-center gap-3 shrink-0">
-          <span class="mono text-white/15 text-2xl font-bold leading-none">+</span>
+        <div class="flex flex-col items-center gap-5 shrink-0 mt-2">
+          <span class="plus-mark" style="color:var(--ink-22);"></span>
           <a href="https://www.instagram.com/glezweddings/" target="_blank"
-             class="mono text-[12px] text-white/32 hover:text-white/70 transition-colors tracking-[0.2em]">Instagram</a>
+             class="mono hover:text-white/70 transition-colors"
+             style="font-size:10.5px; letter-spacing:var(--tr-widest); color:var(--ink-32); text-transform:uppercase;">
+            @glezweddings &nbsp;&#8599;
+          </a>
         </div>
       </div>
 
-      <aside class="shrink-0 flex flex-col justify-between border-l border-white/[0.06] overflow-hidden"
-             style="width:230;">
-        <div class="px-10 pt-6 flex items-start justify-between">
-          <p id="photoCount" class="mono text-[9px] text-white/35 tracking-[0.25em] pt-3">(1 / 48)</p>
-          <span id="photoNum" class="display font-light text-white leading-none text-right"
-                style="font-size:78px; line-height:0.82; letter-spacing:-0.04em; min-width:2.2ch;">01</span>
+      <!-- RIGHT COLUMN — metadata panel -->
+      <aside class="shrink-0 flex flex-col overflow-hidden border-l"
+             style="width:260px; border-color:var(--rule);">
+
+        <!-- Top: folio count + big number -->
+        <div class="px-8 pt-5 pb-6 flex items-start justify-between" style="border-bottom:1px solid var(--rule);">
+          <div class="flex flex-col gap-1">
+            <span class="eyebrow-tight" style="color:var(--ink-22);">Folio</span>
+            <p id="photoCount" class="mono" style="font-size:9px; letter-spacing:var(--tr-wider); color:var(--ink-45);">(1 / 48)</p>
+          </div>
+          <span id="photoNum" class="display font-light text-white leading-none"
+                style="font-size:72px; line-height:0.82; letter-spacing:-0.04em; min-width:2.2ch; text-align:right; font-variation-settings:'wdth' 90;">01</span>
         </div>
 
-        <div class="px-10 text-right space-y-8">
-          <div>
-            <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mb-2">Camera</p>
-            <p id="metaCamera" class="display text-white/85 leading-snug" style="font-size:15px;">Leica M6</p>
+        <!-- Middle: editorial specs (stat stack) -->
+        <div class="flex-1 px-8 py-10 flex flex-col gap-8 overflow-y-auto">
+          <div class="stat">
+            <span class="stat-label">Cámara</span>
+            <p id="metaCamera" class="stat-value">Leica M6</p>
           </div>
-          <div>
-            <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mb-2">Lens</p>
-            <p id="metaLens" class="display text-white/85 leading-snug" style="font-size:15px;">Leica 50mm<br/>Noctilux f/1</p>
+          <div class="hair"></div>
+          <div class="stat">
+            <span class="stat-label">Lente</span>
+            <p id="metaLens" class="stat-value">Leica 50mm<br/>Noctilux f/1</p>
           </div>
-          <div>
-            <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mb-2">Film Stock</p>
-            <p id="metaFilm" class="display text-white/85 leading-snug" style="font-size:15px;">Kodak T-Max 400</p>
+          <div class="hair"></div>
+          <div class="stat">
+            <span class="stat-label">Pelíc.</span>
+            <p id="metaFilm" class="stat-value">Kodak T-Max 400</p>
+          </div>
+          <div class="hair"></div>
+          <div class="stat">
+            <span class="stat-label">Locación</span>
+            <p id="metaLocation" class="display" style="font-size:22px; line-height:1.05; letter-spacing:-0.025em; color:var(--ink-90); font-variation-settings:'wdth' 92; font-weight:300;">Los Angeles</p>
+            <p id="metaCoords" class="mono" style="font-size:8.5px; letter-spacing:var(--tr-wider); color:var(--ink-32); margin-top:4px;">34.0522° N, 118.2437° W</p>
           </div>
         </div>
 
-        <div class="px-10 pb-8 text-right">
-          <p id="metaCoords" class="mono text-[8px] text-white/28 tracking-[0.22em]">34.0522&deg; N, 118.2437&deg; W</p>
-          <p class="mono text-[8px] text-white/30 tracking-[0.3em] uppercase mt-3">Location</p>
-          <p id="metaLocation" class="display text-white/90 mt-1.5 leading-none" style="font-size:22px; letter-spacing:-0.01em;">Los Angeles</p>
-          <p class="mono text-[9px] text-white/20 tracking-[0.25em] mt-6">&copy;&nbsp;2025</p>
+        <!-- Bottom: copyright bar -->
+        <div class="px-8 py-4 flex items-center justify-between" style="border-top:1px solid var(--rule);">
+          <span class="eyebrow-tight" style="color:var(--ink-22);">© 2025</span>
+          <span class="eyebrow-tight" style="color:var(--ink-22);">Vol. 01</span>
         </div>
+
       </aside>
     </div>
   </div>
@@ -667,152 +1503,187 @@
       <!-- Floating hover preview (index) -->
       <div id="idxPreview"><img id="idxPreviewImg" src="" alt="" draggable="false" /></div>
 
-      <!-- ──────────────────────────────────────────
-           HERO — Editorial cover
-      ─────────────────────────────────────────── -->
-      <section class="relative min-h-[calc(100vh-64px)] flex flex-col overflow-hidden" id="portfolioHero">
+      <!-- Visitor position indicator (ambient, right-edge) -->
+      <nav class="visitor-indicator" id="visitorIndicator" aria-label="Recorrido de salas"></nav>
+
+      <!-- ══════════════════════════════════════════
+           FOYER — Entrance to the gallery
+      ═══════════════════════════════════════════ -->
+      <section id="portfolioHero" class="gallery-foyer gallery-wall">
+        <div class="foyer-backlight"></div>
         <div class="grain-overlay"></div>
 
-        <!-- Top bar -->
-        <div class="relative z-10 flex justify-between items-start px-16 pt-10">
-          <div class="flex items-baseline gap-5">
-            <span class="mono text-[10px] tracking-[0.3em] text-white/50">VOLUMEN&nbsp;01</span>
-            <span class="text-white/20">¬</span>
-            <span class="mono text-[10px] tracking-[0.3em] text-white/40">PORTAFOLIO 2024&mdash;2025</span>
+        <!-- Corner registration ticks -->
+        <span class="folio-tick" style="top:22px; left:22px;"></span>
+        <span class="folio-tick tr" style="top:22px; right:22px;"></span>
+        <span class="folio-tick bl" style="bottom:22px; left:22px;"></span>
+        <span class="folio-tick br" style="bottom:22px; right:22px;"></span>
+
+        <!-- Masthead: balanced 3-zone brass plaque -->
+        <div class="relative z-10 grid items-center g-reveal" style="grid-template-columns:1fr auto 1fr; gap:32px;">
+          <span class="plaque-bronze">Muestra&nbsp;&middot;&nbsp;Volumen&nbsp;01</span>
+          <span class="eyebrow" style="color:var(--ink-22); letter-spacing:0.45em;">&mdash;&nbsp;GLEZ&nbsp;&mdash;</span>
+          <span class="plaque-bronze" id="heroCounter" style="justify-self:end;">(08)&nbsp;Obras&nbsp;seleccionadas</span>
+        </div>
+
+        <!-- Triptych — three works hanging from the wall -->
+        <div class="triptych" id="triptych">
+          <!-- populated by JS -->
+        </div>
+
+        <!-- Title + curator's note -->
+        <div class="curator-card g-reveal delay-1">
+          <div>
+            <div class="plaque-bronze no-dot" style="color:var(--brass-mid); margin-bottom:18px;">
+              <span style="width:28px; height:1px; background:var(--brass-mid); display:inline-block;"></span>
+              Hermosillo&nbsp;&middot;&nbsp;2024&ndash;2025
+            </div>
+            <h1 class="italic-serif text-white lowercase" style="font-size:clamp(56px,9vw,148px); line-height:0.9; letter-spacing:-0.045em; font-weight:200; font-variation-settings:'wdth' 86;">
+              la&nbsp;muestra<span style="color:var(--brass);">.</span>
+            </h1>
           </div>
-          <div class="text-right">
-            <p class="mono text-[10px] tracking-[0.3em] text-white/50" id="heroCounter">(08) OBRAS</p>
-            <p class="mono text-[9px] tracking-[0.25em] text-white/25 mt-1">SELECCIONADAS</p>
+          <div class="curator-note">
+            <p>&laquo;Fotografiar una boda como quien restaura un retrato al &oacute;leo &mdash; con tiempo, con silencio, con el cuidado de quien entiende que cada imagen es archivo del alma.&raquo;</p>
+            <div class="curator-sig">
+              <span class="dash"></span>
+              <span class="name">Horeb&nbsp;Glez.,&nbsp;curador</span>
+            </div>
           </div>
         </div>
 
-        <!-- Massive serif title -->
-        <div class="relative z-10 flex-1 flex flex-col justify-center px-16">
-          <div id="heroTitleWrap" class="relative">
-            <div class="hero-title-line">
-              <span class="display text-white block lowercase" style="font-size:clamp(100px,17vw,260px); line-height:0.86; letter-spacing:-0.06em; font-weight:200; font-variation-settings:'wdth' 90;">obras</span>
-            </div>
-            <div class="hero-title-line -mt-1 md:-mt-4">
-              <span class="display text-white/45 block lowercase" style="font-size:clamp(60px,9vw,140px); line-height:0.95; letter-spacing:-0.045em; font-weight:300; font-variation-settings:'wdth' 100;">seleccionadas</span>
-            </div>
+        <!-- Floor plan + scroll cue -->
+        <div class="relative z-10 grid items-center g-reveal delay-2" style="grid-template-columns:auto 1fr auto; gap:clamp(24px,3vw,48px);">
+          <div class="floor-plan" id="floorPlan">
+            <!-- populated by JS -->
           </div>
+          <span class="eyebrow" style="color:var(--ink-22); letter-spacing:0.45em; text-align:center;">&mdash;&nbsp;Recorrido&nbsp;&mdash;</span>
+          <div class="flex items-center gap-3 justify-end">
+            <span class="eyebrow" style="color:var(--brass);">Descender a sala 01</span>
+            <span style="width:44px; height:1px; background:var(--brass-mid);"></span>
+            <span style="color:var(--brass); font-size:12px;">&darr;</span>
+          </div>
+        </div>
 
-          <!-- Colophon quote -->
-          <div class="mt-16 max-w-[520px]">
-            <p class="display font-light text-white/60 leading-[1.3]" style="font-size:clamp(18px,1.4vw,22px);">
-              Un archivo &iacute;ntimo de imagen y silencio. Bodas, retratos y escenas vividas al margen del tiempo.
+        <!-- Hidden hero-featured legacy targets (compat for parallax/magnetic hooks) -->
+        <div style="display:none;">
+          <img id="heroFeaturedImg" class="hero-featured-img" src="/Fotos/6F3A2084.jpg" alt="" />
+          <span id="heroFeaturedTitle">&nbsp;</span>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           CATÁLOGO — Plate wall
+      ═══════════════════════════════════════════ -->
+      <section class="catalogue">
+        <div class="grain-overlay"></div>
+
+        <!-- Catalogue masthead -->
+        <header class="catalogue-header g-reveal">
+          <div>
+            <span class="plaque-bronze">§&nbsp;Catálogo&nbsp;razonado</span>
+            <p class="italic-serif mt-3" style="font-size:14px; color:var(--ink-45); letter-spacing:0.005em;">
+              Ocho obras seleccionadas del archivo 2024&ndash;2025.<br/>
+              Cada placa corresponde a una sala de la muestra.
             </p>
-            <div class="mt-5 flex items-center gap-4">
-              <div class="w-10 h-[1px] bg-white/30"></div>
-              <span class="mono text-[9px] tracking-[0.3em] text-white/35">GLEZ., HERMOSILLO</span>
-            </div>
           </div>
-        </div>
+          <h2 class="catalogue-title">
+            obras<br/>
+            <span class="accent">selectas</span>
+          </h2>
+          <div class="catalogue-range">
+            <span class="plaque-bronze no-dot" id="indexRange" style="color:var(--brass-mid); justify-content:flex-end;">
+              <span style="width:28px; height:1px; background:var(--brass-mid); display:inline-block;"></span>
+              Placas&nbsp;I&ndash;VIII
+            </span>
+            <p class="italic-serif mt-3" style="font-size:14px; color:var(--ink-45); letter-spacing:0.005em; text-align:right;">
+              Impreso en papel mate.<br/>
+              Pase el cursor sobre cada placa.
+            </p>
+          </div>
+        </header>
 
-        <!-- Bottom bar: scroll cue + featured crop -->
-        <div class="relative z-10 flex items-end justify-between px-16 pb-10">
-          <div class="flex items-center gap-3">
-            <span class="mono text-[9px] text-white/35 tracking-[0.35em]">DESCENDER &darr;</span>
-            <div class="w-[40px] h-[1px] bg-white/25"></div>
-          </div>
-          <div class="flex items-end gap-5">
-            <div class="text-right pb-1">
-              <p class="mono text-[9px] tracking-[0.25em] text-white/30">OBRA DESTACADA</p>
-              <p id="heroFeaturedTitle" class="display text-white/85 text-[16px] mt-1 leading-tight">Film Project Alpha</p>
-            </div>
-            <div class="w-[88px] h-[112px] overflow-hidden relative magnetic clip-reveal" data-magnetic-strength="0.5" data-cursor="img">
-              <img id="heroFeaturedImg" src="https://picsum.photos/seed/filmA/400/520"
-                   class="hero-featured-img w-full h-full object-cover grayscale-[0.2]"
-                   draggable="false" alt="" />
-            </div>
-          </div>
-        </div>
+        <!-- Plate wall: populated by JS -->
+        <div id="projectIndex" class="plate-wall"></div>
       </section>
 
-      <!-- ──────────────────────────────────────────
-           INDEX — Editorial list with hover preview
-      ─────────────────────────────────────────── -->
-      <section class="px-16 pt-40 pb-24 relative">
-        <div class="grain-overlay"></div>
-
-        <!-- Section marker -->
-        <div class="reveal flex items-baseline gap-6 mb-20">
-          <span class="mono text-[10px] text-white/35 tracking-[0.3em]">&sect;&nbsp;&Iacute;NDICE</span>
-          <div class="flex-1 h-[1px] bg-white/10"></div>
-          <span class="display text-white/45 text-[15px]">cat&aacute;logo completo</span>
-          <div class="flex-1 h-[1px] bg-white/10"></div>
-          <span class="mono text-[10px] text-white/35 tracking-[0.25em]" id="indexRange">01 &mdash; 08</span>
-        </div>
-
-        <!-- Rows populated by JS -->
-        <div id="projectIndex" class="reveal"></div>
-      </section>
-
-      <!-- ──────────────────────────────────────────
-           MARQUEE TICKER — auto-scroll editorial band
-      ─────────────────────────────────────────── -->
+      <!-- ══════════════════════════════════════════
+           MARQUEE — Exhibition banner
+      ═══════════════════════════════════════════ -->
       <div class="marquee reveal" id="portfolioMarquee">
-        <div class="marquee-track" id="marqueeTrack">
-          <!-- populated by JS so the loop is seamless -->
-        </div>
+        <div class="marquee-track" id="marqueeTrack"></div>
       </div>
 
-      <!-- ──────────────────────────────────────────
-           ORNAMENT DIVIDER
-      ─────────────────────────────────────────── -->
-      <div class="reveal ornament">
-        <div class="ornament-line"></div>
-        <span class="ornament-mark">&times; &nbsp; &times; &nbsp; &times;</span>
-        <div class="ornament-line"></div>
+      <!-- ══════════════════════════════════════════
+           ORNAMENT — entry to the salas
+      ═══════════════════════════════════════════ -->
+      <div class="g-reveal" style="display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:32px; padding:clamp(64px,8vw,112px) var(--mx);">
+        <span style="height:1px; background:var(--brass-hair);"></span>
+        <span class="plaque-bronze no-dot" style="color:var(--brass); letter-spacing:0.5em;">
+          <span style="width:10px; height:10px; border:1px solid var(--brass); transform:rotate(45deg); display:inline-block;"></span>
+          Salas&nbsp;de&nbsp;exhibición
+          <span style="width:10px; height:10px; border:1px solid var(--brass); transform:rotate(45deg); display:inline-block;"></span>
+        </span>
+        <span style="height:1px; background:var(--brass-hair);"></span>
       </div>
 
-      <!-- ──────────────────────────────────────────
-           SPREADS — Editorial project spreads
-      ─────────────────────────────────────────── -->
+      <!-- ══════════════════════════════════════════
+           SALAS — exhibition rooms
+      ═══════════════════════════════════════════ -->
       <section id="projectSpreads"></section>
 
       <!-- ──────────────────────────────────────────
            COLOPHON — Editorial footer
       ─────────────────────────────────────────── -->
-      <section class="relative px-16 pt-32 pb-16 min-h-[60vh] flex flex-col justify-between overflow-hidden">
+      <section class="relative overflow-hidden"
+               style="padding:clamp(100px,12vw,160px) var(--mx) clamp(48px,6vw,72px); min-height:68vh; display:flex; flex-direction:column; justify-content:space-between;">
         <div class="grain-overlay"></div>
 
         <!-- Top: big farewell -->
         <div class="relative z-10 reveal">
-          <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-6">COLOPH&Oacute;N &mdash; FIN DEL VOLUMEN</p>
+          <div class="flex items-center gap-3 mb-10">
+            <span class="eyebrow">Colofón</span>
+            <span style="width:24px; height:1px; background:var(--ink-14);"></span>
+            <span class="eyebrow" style="color:var(--ink-22);">Fin del volumen</span>
+          </div>
           <h2 class="display text-white lowercase" style="font-size:clamp(80px,12vw,180px); line-height:0.88; letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 92;">
-            gracias<span class="text-white/40">.</span>
+            gracias<span style="color:var(--ink-32);">.</span>
           </h2>
-          <p class="display text-white/55 mt-10 max-w-[460px] leading-[1.4]" style="font-size:18px;">
-            Por habitar estas im&aacute;genes, aunque sea por un instante. Si algo aqu&iacute; te tom&oacute; el pecho, esc&iacute;beme.
+          <p class="display font-light mt-8 leading-[1.45]" style="font-size:clamp(17px,1.3vw,20px); color:var(--ink-60); max-width:460px; padding-left:20px; border-left:1px solid var(--rule);">
+            Por habitar estas imágenes, aunque sea por un instante. Si algo aquí te tomó el pecho, escríbeme.
           </p>
         </div>
 
-        <!-- Bottom: editorial colophon details -->
-        <div class="relative z-10 reveal grid grid-cols-12 gap-6 mt-20 pt-10 border-t border-white/[0.08]">
-          <div class="col-span-3">
-            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; CONTACTO</p>
-            <a href="mailto:horebglez@gmail.com" class="display text-white/80 hover:text-white transition-colors block leading-tight" style="font-size:18px;">horebglez@gmail.com</a>
-            <a href="https://www.instagram.com/glezweddings/" target="_blank" class="display text-white/60 hover:text-white transition-colors block leading-tight mt-1" style="font-size:16px;">@glezweddings</a>
-          </div>
-          <div class="col-span-3">
-            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; ESTUDIO</p>
-            <p class="display text-white/70 leading-tight" style="font-size:16px;">Hermosillo, Sonora</p>
-            <p class="display text-white/50 leading-tight mt-1" style="font-size:14px;">M&eacute;xico &amp; el mundo</p>
-          </div>
-          <div class="col-span-3">
-            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; CREDITOS</p>
-            <p class="mono text-[11px] text-white/55 leading-[1.7]">Typesetting: Bricolage Gr.<br/>Inter Tight / Space Mono<br/>Impreso digitalmente</p>
-          </div>
-          <div class="col-span-3 text-right">
-            <p class="mono text-[9px] tracking-[0.3em] text-white/30 mb-3">&#167; COPYRIGHT</p>
-            <p class="mono text-[11px] text-white/55 leading-[1.7]">&copy; GLEZ. 2025<br/>Todos los derechos reservados<br/>Volumen 01</p>
+        <!-- Bottom: editorial colophon details — 4 equal columns -->
+        <div class="relative z-10 reveal mt-20 pt-10" style="border-top:1px solid var(--rule);">
+          <div class="grid grid-cols-4 gap-8">
+            <div class="flex flex-col gap-3">
+              <span class="eyebrow">§&nbsp;Contacto</span>
+              <div>
+                <a href="mailto:horebglez@gmail.com" class="display block leading-tight hover:text-white transition-colors" style="font-size:16px; color:var(--ink-78); letter-spacing:-0.01em;">horebglez@gmail.com</a>
+                <a href="https://www.instagram.com/glezweddings/" target="_blank" class="display block leading-tight hover:text-white transition-colors mt-1.5" style="font-size:14px; color:var(--ink-45);">@glezweddings</a>
+              </div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <span class="eyebrow">§&nbsp;Estudio</span>
+              <div>
+                <p class="display leading-tight" style="font-size:16px; color:var(--ink-78); letter-spacing:-0.01em;">Hermosillo, Sonora</p>
+                <p class="display leading-tight mt-1.5" style="font-size:14px; color:var(--ink-45);">México &amp; el mundo</p>
+              </div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <span class="eyebrow">§&nbsp;Créditos</span>
+              <p class="mono leading-[1.85]" style="font-size:10.5px; color:var(--ink-45); letter-spacing:0.02em;">Bricolage Grotesque<br/>Inter Tight · Space Mono<br/>Impreso digitalmente</p>
+            </div>
+            <div class="flex flex-col gap-3">
+              <span class="eyebrow">§&nbsp;Copyright</span>
+              <p class="mono leading-[1.85]" style="font-size:10.5px; color:var(--ink-45); letter-spacing:0.02em;">© GLEZ. 2025<br/>Todos los derechos reservados<br/>Volumen 01</p>
+            </div>
           </div>
         </div>
 
-        <!-- Giant signature sign-off -->
-        <div class="relative z-10 mt-24 reveal">
-          <p class="display text-white/15 leading-none lowercase" style="font-size:clamp(140px,22vw,360px); letter-spacing:-0.075em; font-weight:200; font-variation-settings:'wdth' 88;">glez.</p>
+        <!-- Giant signature sign-off — pushed to viewport edges for editorial drama -->
+        <div class="relative z-10 mt-20 reveal" style="margin-left:calc(var(--mx) * -1); margin-right:calc(var(--mx) * -1); padding:0 var(--mx);">
+          <p class="display leading-none lowercase" style="font-size:clamp(140px,22vw,360px); letter-spacing:-0.075em; font-weight:200; font-variation-settings:'wdth' 88; color:var(--ink-14);">glez.</p>
         </div>
       </section>
 
@@ -826,92 +1697,112 @@
     <div class="flex h-full overflow-hidden">
 
       <!-- Left metadata column -->
-      <aside class="shrink-0 flex flex-col border-r border-white/[0.06] overflow-y-auto" style="width:270px;">
-        <div class="p-10 flex flex-col gap-9">
+      <aside class="shrink-0 flex flex-col overflow-y-auto" style="width:280px; border-right:1px solid var(--rule);">
 
-          <!-- Back link -->
+        <!-- Top bar: back + nav -->
+        <div class="flex items-center justify-between px-8 py-5" style="border-bottom:1px solid var(--rule);">
           <button onclick="showPage('portfolio')"
-                  class="mono text-[11px] text-white/40 hover:text-white transition-colors text-left tracking-wide">
-            &larr; Back to projects
+                  class="mono hover:text-white transition-colors inline-flex items-center gap-2"
+                  style="font-size:10px; letter-spacing:var(--tr-wider); color:var(--ink-45); text-transform:uppercase;">
+            <span>&larr;</span> Índice
           </button>
+          <div class="flex items-center gap-2 mono" style="font-size:10px; letter-spacing:var(--tr-wide); color:var(--ink-45); text-transform:uppercase;">
+            <button onclick="navigateProject(-1)" class="hover:text-white transition-colors">Prev</button>
+            <span style="color:var(--ink-14);">/</span>
+            <button onclick="navigateProject(1)" class="hover:text-white transition-colors">Next</button>
+          </div>
+        </div>
 
-          <!-- Nav: Previous / Next -->
-          <div class="flex gap-4 mono text-[11px]">
-            <button onclick="navigateProject(-1)" class="text-white/30 hover:text-white transition-colors">Previous</button>
-            <span class="text-white/12">/</span>
-            <button onclick="navigateProject(1)" class="text-white/30 hover:text-white transition-colors">Next</button>
+        <!-- Body: stat stack with hair dividers -->
+        <div class="flex-1 px-8 py-10 flex flex-col gap-7">
+
+          <div class="stat">
+            <span class="stat-label">Proyecto</span>
+            <p id="projName" class="display" style="font-size:18px; color:var(--ink-90); letter-spacing:-0.02em; line-height:1.15; font-weight:400; font-variation-settings:'wdth' 95;"></p>
           </div>
 
-          <div class="h-[1px] bg-white/[0.06]"></div>
+          <div class="hair"></div>
 
-          <!-- Project name -->
-          <div>
-            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">PROYECTO</p>
-            <p id="projName" class="text-[14px] font-bold text-white/85 leading-snug"></p>
-          </div>
-
-          <!-- Date -->
-          <div>
-            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">FECHA</p>
-            <p id="projDate" class="text-[13px] text-white/70 mono"></p>
-          </div>
-
-          <!-- Item number -->
-          <div>
-            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">ITEM</p>
-            <p id="projItem" class="text-[13px] text-white/50 mono"></p>
-          </div>
-
-          <div class="h-[1px] bg-white/[0.06]"></div>
-
-          <!-- Location -->
-          <div>
-            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">LUGAR</p>
-            <p id="projLocation" class="text-[13px] font-bold text-white/80"></p>
-          </div>
-
-          <!-- Equipment -->
-          <div>
-            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">EQUIPO</p>
-            <div class="mono text-[10px] text-white/50 space-y-1">
-              <p>Camara: <span id="projCamera" class="text-white/65"></span></p>
-              <p>Lente: <span id="projLens" class="text-white/65"></span></p>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="stat">
+              <span class="stat-label">Fecha</span>
+              <p id="projDate" class="mono" style="font-size:11.5px; color:var(--ink-78); letter-spacing:0.05em;"></p>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Ítem</span>
+              <p id="projItem" class="mono" style="font-size:11.5px; color:var(--ink-45); letter-spacing:0.05em;"></p>
             </div>
           </div>
 
-          <div class="h-[1px] bg-white/[0.06]"></div>
+          <div class="hair"></div>
 
-          <!-- Keywords -->
-          <div>
-            <p class="mono text-[9px] text-white/28 tracking-[0.15em] mb-1.5">KEYWORDS</p>
-            <p id="projKeywords" class="text-[11px] text-white/40 leading-relaxed"></p>
+          <div class="stat">
+            <span class="stat-label">Lugar</span>
+            <p id="projLocation" class="display" style="font-size:15px; color:var(--ink-78); letter-spacing:-0.01em; line-height:1.3; font-weight:400; font-variation-settings:'wdth' 95;"></p>
+          </div>
+
+          <div class="hair"></div>
+
+          <div class="stat">
+            <span class="stat-label">Equipo</span>
+            <div class="mono" style="font-size:10.5px; color:var(--ink-60); line-height:1.8; letter-spacing:0.02em;">
+              <p><span style="color:var(--ink-32);">Cámara&nbsp;·&nbsp;</span><span id="projCamera" style="color:var(--ink-78);"></span></p>
+              <p><span style="color:var(--ink-32);">Lente&nbsp;&nbsp;&nbsp;·&nbsp;</span><span id="projLens" style="color:var(--ink-78);"></span></p>
+            </div>
+          </div>
+
+          <div class="hair"></div>
+
+          <div class="stat">
+            <span class="stat-label">Keywords</span>
+            <p id="projKeywords" class="mono" style="font-size:10px; color:var(--ink-45); letter-spacing:0.04em; line-height:1.7;"></p>
           </div>
 
         </div>
+
+        <!-- Footer: folio mark -->
+        <div class="px-8 py-4 flex items-center justify-between" style="border-top:1px solid var(--rule);">
+          <span class="eyebrow-tight" style="color:var(--ink-22);">GLEZ · Vol. 01</span>
+          <span class="plus-mark" style="color:var(--ink-22);"></span>
+        </div>
+
       </aside>
 
       <!-- Center: scrollable content -->
       <main class="flex-1 overflow-y-auto" id="projectScroller">
 
         <!-- Hero image section -->
-        <section class="flex items-center justify-center px-20 py-20 min-h-[calc(100vh-64px)]">
+        <section class="flex items-center justify-center min-h-[calc(100vh-64px)] relative"
+                 style="padding:clamp(48px,6vw,96px) clamp(40px,5vw,96px);">
           <img id="projHeroImg" src="" alt=""
                class="proj-hero-img max-h-[80vh] max-w-full object-contain" draggable="false" />
+          <!-- Corner ticks -->
+          <span class="folio-tick" style="top:24px; left:24px;"></span>
+          <span class="folio-tick tr" style="top:24px; right:24px;"></span>
+          <span class="folio-tick bl" style="bottom:24px; left:24px;"></span>
+          <span class="folio-tick br" style="bottom:24px; right:24px;"></span>
         </section>
 
         <!-- Article section (Inspiración) -->
-        <section class="px-24 pt-16 pb-32">
-          <div class="max-w-[680px] mx-auto">
+        <section style="padding:clamp(64px,8vw,120px) var(--mx) clamp(96px,12vw,160px);">
+          <div style="max-width:640px; margin:0 auto;">
 
-            <!-- Section title -->
-            <div class="flex items-center gap-5 mb-20">
-              <div class="flex-1 h-[1px] bg-white/[0.06]"></div>
-              <h2 class="mono text-[12px] text-white/45 tracking-[0.25em]">INSPIRACI&Oacute;N</h2>
-              <div class="flex-1 h-[1px] bg-white/[0.06]"></div>
+            <!-- Section title — symmetric grid -->
+            <div class="grid items-center mb-20" style="grid-template-columns:1fr auto 1fr; gap:24px;">
+              <span class="hair"></span>
+              <h2 class="eyebrow" style="font-size:11px; color:var(--ink-60);">§&nbsp;&nbsp;Inspiración</h2>
+              <span class="hair"></span>
             </div>
 
             <!-- Article text -->
-            <div id="projDescription" class="space-y-10 text-[13px] text-white/45 leading-[1.9] font-light">
+            <div id="projDescription" class="font-light" style="font-size:13.5px; color:var(--ink-60); line-height:2; letter-spacing:0.005em;">
+            </div>
+
+            <!-- Article footer ornament -->
+            <div class="flex items-center justify-center mt-16" style="gap:16px;">
+              <span style="width:40px; height:1px; background:var(--rule);"></span>
+              <span class="mono" style="font-size:9px; color:var(--ink-22); letter-spacing:0.8em; padding-left:0.8em;">×&nbsp;&nbsp;×&nbsp;&nbsp;×</span>
+              <span style="width:40px; height:1px; background:var(--rule);"></span>
             </div>
 
           </div>
@@ -919,12 +1810,16 @@
       </main>
 
       <!-- Right: thumbnail gallery -->
-      <aside class="shrink-0 border-l border-white/[0.06] overflow-y-auto flex flex-col" style="width:100px;">
-        <div id="projThumbnails" class="p-5 flex flex-col gap-5">
+      <aside class="shrink-0 flex flex-col overflow-hidden" style="width:112px; border-left:1px solid var(--rule);">
+        <div class="px-4 pt-5 pb-3 flex items-center justify-between" style="border-bottom:1px solid var(--rule);">
+          <span class="eyebrow-tight">Placas</span>
+          <span class="plus-mark" style="color:var(--ink-22);"></span>
         </div>
-        <div class="p-5 mt-auto border-t border-white/[0.06]">
-          <button class="mono text-[7.5px] text-white/30 hover:text-white/60 transition-colors tracking-[0.1em] w-full text-center py-2">
-            [View More]
+        <div id="projThumbnails" class="flex-1 overflow-y-auto p-3 flex flex-col gap-3"></div>
+        <div class="px-4 py-3 flex items-center justify-center" style="border-top:1px solid var(--rule);">
+          <button class="mono hover:text-white/60 transition-colors"
+                  style="font-size:8px; letter-spacing:var(--tr-wider); color:var(--ink-32); text-transform:uppercase;">
+            Ver más&nbsp;&darr;
           </button>
         </div>
       </aside>
@@ -936,70 +1831,137 @@
        PAGE 3: CONTACT — unchanged
   ═══════════════════════════════════════════════════════ -->
   <div id="page-contact" class="page" style="height:calc(100vh - 64px);">
-    <div class="flex h-full">
+    <div class="flex h-full relative">
 
-      <!-- Left: Photo + intro + info -->
-      <div class="flex-1 flex flex-col justify-center px-24 border-r border-white/[0.06] overflow-y-auto">
+      <!-- Corner registration ticks -->
+      <span class="folio-tick" style="top:14px; left:14px;"></span>
+      <span class="folio-tick tr" style="top:14px; right:14px;"></span>
+      <span class="folio-tick bl" style="bottom:14px; left:14px;"></span>
+      <span class="folio-tick br" style="bottom:14px; right:14px;"></span>
 
-        <!-- Profile photo -->
-        <div class="mb-12">
-          <img src="/Fotos/FotoHoreb.jpeg" alt="Horeb Glez"
-               class="w-[180px] h-[200px] object-cover" draggable="false" />
+      <!-- LEFT: Editorial masthead + bio -->
+      <div class="flex-1 flex flex-col overflow-y-auto relative" style="border-right:1px solid var(--rule);">
+
+        <!-- Top eyebrow strip -->
+        <div class="flex items-center justify-between" style="padding:24px var(--mx); border-bottom:1px solid var(--rule);">
+          <span class="eyebrow">§&nbsp;&nbsp;Contacto</span>
+          <span class="eyebrow" style="color:var(--ink-22);">Página 04 / 04</span>
         </div>
 
-        <!-- Name -->
-        <h1 class="display text-white mb-6 leading-[0.9] lowercase"
-            style="font-size:clamp(64px,7vw,108px); letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 92;">
-          i&rsquo;m horeb <span class="text-white/45">glez.</span>
-        </h1>
+        <!-- Body -->
+        <div class="flex-1 flex flex-col justify-center" style="padding:clamp(48px,6vw,96px) var(--mx);">
 
-        <!-- Description -->
-        <p class="mono text-[11px] text-white/35 leading-relaxed max-w-[380px] tracking-wide mb-12">
-          Gracias por llegar hasta aqu&iacute;. El acto de crear merece ser contado.
-          Retratos &iacute;ntimos para mentes que construyen sus propias realidades.
-        </p>
+          <!-- Portrait + label -->
+          <div class="mb-12 flex items-end gap-6">
+            <div style="width:168px; aspect-ratio:3/4; overflow:hidden; border:1px solid var(--rule);">
+              <img src="/Fotos/FotoHoreb.jpeg" alt="Horeb Glez"
+                   class="w-full h-full object-cover" style="filter:grayscale(0.1);" draggable="false" />
+            </div>
+            <div class="pb-2">
+              <span class="eyebrow">Retrato</span>
+              <p class="mono mt-2" style="font-size:10px; color:var(--ink-45); letter-spacing:0.08em;">Self-portrait, 2024</p>
+              <div class="mt-4 flex items-center gap-2">
+                <span style="width:22px; height:1px; background:var(--ink-22);"></span>
+                <span class="plus-mark" style="color:var(--ink-22);"></span>
+              </div>
+            </div>
+          </div>
 
-        <div class="mono text-[11px] text-white/30 space-y-1.5 mb-12">
-          <p class="tracking-[0.15em]">Available worldwide</p>
-          <p class="tracking-[0.15em]">Based in Hermosillo</p>
+          <!-- Name -->
+          <h1 class="display text-white leading-[0.9] lowercase mb-8"
+              style="font-size:clamp(64px,7vw,108px); letter-spacing:-0.055em; font-weight:200; font-variation-settings:'wdth' 92;">
+            i'm horeb <span style="color:var(--ink-45);">glez.</span>
+          </h1>
+
+          <!-- Lede -->
+          <p class="display font-light mb-10" style="font-size:16px; color:var(--ink-60); line-height:1.55; max-width:440px; letter-spacing:-0.005em; padding-left:20px; border-left:1px solid var(--rule);">
+            Gracias por llegar hasta aquí. El acto de crear merece ser contado. Retratos íntimos para mentes que construyen sus propias realidades.
+          </p>
+
+          <!-- Status line -->
+          <div class="grid mb-10" style="grid-template-columns:auto 1fr auto 1fr auto; gap:20px; align-items:center; max-width:480px;">
+            <span class="eyebrow">Disponible</span>
+            <span class="hair"></span>
+            <span class="eyebrow" style="color:var(--ink-60);">Worldwide</span>
+            <span class="hair"></span>
+            <span class="eyebrow">Hermosillo</span>
+          </div>
+
+          <!-- Contact links -->
+          <div class="flex items-center gap-8 mono" style="font-size:11px;">
+            <a href="mailto:horebglez@gmail.com"
+               class="hover:text-white transition-colors"
+               style="color:var(--ink-60); letter-spacing:0.04em; text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--ink-14);">
+              horebglez@gmail.com
+            </a>
+            <span style="color:var(--ink-14);">·</span>
+            <a href="https://www.instagram.com/glezweddings/" target="_blank"
+               class="hover:text-white transition-colors"
+               style="color:var(--ink-60); letter-spacing:0.04em; text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--ink-14);">
+              @glezweddings
+            </a>
+          </div>
+
         </div>
 
-        <div class="flex items-center gap-8 mono text-[11px]">
-          <a href="mailto:horebglez@gmail.com"
-             class="text-white/45 hover:text-white transition-colors tracking-[0.1em] underline underline-offset-4 decoration-white/15">
-            horebglez@gmail.com
-          </a>
-          <a href="https://www.instagram.com/glezweddings/" target="_blank"
-             class="text-white/45 hover:text-white transition-colors tracking-[0.1em] underline underline-offset-4 decoration-white/15">
-            Instagram
-          </a>
+        <!-- Footer folio -->
+        <div class="flex items-center justify-between" style="padding:16px var(--mx); border-top:1px solid var(--rule);">
+          <span class="eyebrow-tight" style="color:var(--ink-22);">© 2025 · GLEZ</span>
+          <span class="eyebrow-tight" style="color:var(--ink-22);">Volumen 01</span>
         </div>
+
       </div>
 
-      <!-- Right: Contact form -->
-      <div class="flex flex-col justify-center px-24" style="width:580px;">
+      <!-- RIGHT: Contact form -->
+      <div class="flex flex-col" style="width:560px;">
 
-        <form class="space-y-10" onsubmit="event.preventDefault();">
-          <div>
-            <label class="mono text-[10px] text-white/30 tracking-wider block mb-1">Name</label>
-            <input type="text" class="form-input" placeholder="Your name" />
-          </div>
-          <div>
-            <label class="mono text-[10px] text-white/30 tracking-wider block mb-1">Email</label>
-            <input type="email" class="form-input" placeholder="your@email.com" />
-          </div>
-          <div>
-            <label class="mono text-[10px] text-white/30 tracking-wider block mb-1">Message</label>
-            <textarea class="form-input resize-none" rows="4" placeholder="Tell me about your project..."></textarea>
-          </div>
-          <button type="submit"
-                  class="mt-4 mono text-[12px] tracking-[0.2em] text-white/70 border border-white/20 px-8 py-3 hover:bg-white/10 hover:border-white/40 transition-all magnetic"
-                  data-magnetic-strength="0.4" data-cursor="hover">
-            SEND MESSAGE
-          </button>
-        </form>
+        <!-- Top eyebrow strip (matches left) -->
+        <div class="flex items-center justify-between" style="padding:24px clamp(40px,4vw,64px); border-bottom:1px solid var(--rule);">
+          <span class="eyebrow">Correspondencia</span>
+          <span class="eyebrow" style="color:var(--ink-22);">F/04</span>
+        </div>
 
-        <p class="mono text-[9px] text-white/15 mt-16">&copy;2025 glez. All rights reserved.</p>
+        <!-- Form body -->
+        <div class="flex-1 flex flex-col justify-center" style="padding:clamp(48px,6vw,96px) clamp(40px,4vw,64px);">
+
+          <!-- Form heading -->
+          <div class="mb-12">
+            <span class="eyebrow" style="color:var(--ink-45);">Inicia la conversación</span>
+            <p class="display mt-3" style="font-size:28px; color:var(--ink-90); letter-spacing:-0.03em; line-height:1.1; font-weight:300; font-variation-settings:'wdth' 92;">
+              Escríbeme.
+            </p>
+          </div>
+
+          <form class="flex flex-col" style="gap:36px;" onsubmit="event.preventDefault();">
+            <div>
+              <label class="eyebrow block mb-2">Nombre</label>
+              <input type="text" class="form-input" placeholder="Tu nombre" />
+            </div>
+            <div>
+              <label class="eyebrow block mb-2">Correo</label>
+              <input type="email" class="form-input" placeholder="tu@correo.com" />
+            </div>
+            <div>
+              <label class="eyebrow block mb-2">Mensaje</label>
+              <textarea class="form-input resize-none" rows="4" placeholder="Cuéntame sobre tu proyecto..."></textarea>
+            </div>
+            <button type="submit"
+                    class="mono hover:bg-white/5 transition-all magnetic inline-flex items-center justify-center gap-4"
+                    data-magnetic-strength="0.4" data-cursor="hover"
+                    style="font-size:11px; letter-spacing:var(--tr-wider); color:var(--ink-78); text-transform:uppercase; border:1px solid var(--rule-strong); padding:16px 32px; margin-top:12px; align-self:flex-start;">
+              <span>Enviar mensaje</span>
+              <span>&rarr;</span>
+            </button>
+          </form>
+
+        </div>
+
+        <!-- Footer folio (matches left) -->
+        <div class="flex items-center justify-between" style="padding:16px clamp(40px,4vw,64px); border-top:1px solid var(--rule);">
+          <span class="eyebrow-tight" style="color:var(--ink-22);">Respondo en 48h</span>
+          <span class="eyebrow-tight" style="color:var(--ink-22);">Fin del volumen</span>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1015,21 +1977,29 @@
       if (target) target.classList.add('active');
       document.getElementById('menuOverlay').classList.remove('open');
 
-      // Re-trigger hero animation when switching to portfolio
+      // Re-trigger gallery reveal when switching to portfolio
       if (name === 'portfolio') {
-        const hero = document.getElementById('heroTitleWrap');
-        if (hero) {
-          hero.parentElement.parentElement.classList.remove('hero-loaded');
-          // Reset reveal elements
-          document.querySelectorAll('#page-portfolio .reveal').forEach(el => el.classList.remove('visible'));
-          // Trigger hero after brief delay
+        const scroller = document.getElementById('portfolioScroller');
+        if (scroller) scroller.scrollTop = 0;
+        // Reset reveal elements (both legacy + gallery)
+        document.querySelectorAll('#page-portfolio .reveal').forEach(el => el.classList.remove('visible'));
+        document.querySelectorAll('#page-portfolio .g-reveal').forEach(el => el.classList.remove('in'));
+        document.querySelectorAll('#page-portfolio .aperture-reveal').forEach(el => el.classList.remove('in'));
+        requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              hero.parentElement.parentElement.classList.add('hero-loaded');
-              initRevealObserver();
-            });
+            initRevealObserver();
+            // Re-observe gallery reveal targets
+            if ('IntersectionObserver' in window) {
+              const io = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+                });
+              }, { threshold: 0.12 });
+              document.querySelectorAll('#page-portfolio .g-reveal:not(.in)').forEach(el => io.observe(el));
+            }
+            if (typeof window.__rescanClipReveal === 'function') window.__rescanClipReveal();
           });
-        }
+        });
       }
     }
 
@@ -1160,101 +2130,159 @@
     activate(0);
 
     // ── Project data ───────────────────────────────
+    // Hero + galleries use real photos from /Fotos/ first, then curated
+    // editorial Unsplash photos (wedding / portrait aesthetic) to fill.
+    const UNSPLASH = (id, w = 1200) =>
+      `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
+
     const projects = [
       {
-        title: 'Film Project Alpha', category: 'Narrative', date: '15.01.26',
-        location: 'Los Angeles, CA', camera: 'ARRI Alexa Mini', lens: 'Cooke S4/i 32mm',
-        keywords: 'Narrative, Cinematic, Drama, Feature Film',
-        hero: 'https://picsum.photos/seed/filmA/900/1200',
-        gallery: ['filmA','filmA2','filmA3','filmA4','filmA5','filmA6'],
+        title: 'Valentina & Mateo', category: 'Boda Editorial', date: '15.03.26',
+        location: 'Hermosillo, Sonora', camera: 'Canon EOS R5', lens: 'RF 50mm f/1.2 L',
+        keywords: 'Boda, Editorial, \u00cdntimo, Analog Feel',
+        hero: '/Fotos/6F3A2084.jpg',
+        gallery: [
+          '/Fotos/6F3A2084.jpg',
+          '/Fotos/6F3A2362.jpg',
+          '/Fotos/BCR64925.jpg',
+          UNSPLASH('1519741497674-611481863552'),
+          UNSPLASH('1606800052052-a08af7148866'),
+          UNSPLASH('1583939003579-730e3918a45a')
+        ],
         description: [
-          'Un proyecto cinematogr\u00e1fico que explora las tensiones invisibles entre generaciones. La pel\u00edcula captura momentos de vulnerabilidad cruda, filmados en locaciones reales a lo largo de Los \u00c1ngeles.',
-          'La direcci\u00f3n de fotograf\u00eda busc\u00f3 crear una est\u00e9tica naturalista, utilizando luz disponible siempre que fue posible. Cada escena fue compuesta para reflejar el estado emocional de los personajes.',
-          'Seleccionado oficialmente en TIFF 2025, el proyecto representa una colaboraci\u00f3n \u00edntima entre director y equipo, donde cada cuadro fue cuidadosamente construido para servir a la narrativa.'
+          'Una boda contada como editorial. Valentina y Mateo se dieron el s\u00ed en una ceremonia \u00edntima donde cada gesto fue m\u00e1s importante que cualquier protocolo. El objetivo fue documentar la verdad del d\u00eda sin intervenirla.',
+          'La direcci\u00f3n visual se sostuvo en luz natural, retratos respirados y pausas largas entre escenas. Buscamos una narrativa pausada \u2014 pausas, miradas, manos \u2014 antes que la coreograf\u00eda tradicional.',
+          'Un archivo \u00edntimo pensado para perdurar como objeto impreso: papel mate, tonos fr\u00edos, y el silencio que s\u00f3lo existe entre dos personas cuando todo lo dem\u00e1s se detiene.'
         ]
       },
       {
-        title: 'Campaign Reel', category: 'Commercial', date: '03.02.26',
-        location: 'Ciudad de M\u00e9xico', camera: 'RED V-Raptor', lens: 'Sigma Cine 24-70mm',
-        keywords: 'Commercial, Fashion, Advertising, Brand',
-        hero: 'https://picsum.photos/seed/campaign1/900/1200',
-        gallery: ['campaign1','campaign2','campaign3','campaign4','campaign5'],
+        title: 'Atardecer Sagrado', category: 'Boda \u00cdntima', date: '03.02.26',
+        location: 'San Carlos, Sonora', camera: 'Sony Alpha 7 IV', lens: 'FE 85mm f/1.4 GM',
+        keywords: 'Sunset, Desierto, Editorial, Pareja',
+        hero: '/Fotos/BCR64968-Edit.jpg',
+        gallery: [
+          '/Fotos/BCR64968-Edit.jpg',
+          '/Fotos/BCR65082.jpg',
+          '/Fotos/BCR65090.jpg',
+          UNSPLASH('1464699908537-0954e50791ee'),
+          UNSPLASH('1549417229-aa67d3263c09')
+        ],
         description: [
-          'Una campa\u00f1a visual creada para Studio M, dise\u00f1ada para transmitir elegancia contempor\u00e1nea a trav\u00e9s de im\u00e1genes en movimiento.',
-          'El proyecto combin\u00f3 moda, arquitectura y narrativa visual en una serie de piezas que fueron distribuidas en plataformas digitales y televisivas a nivel internacional.',
-          'La paleta cromática fue cuidadosamente seleccionada para reflejar la identidad de la marca, manteniendo una coherencia visual a lo largo de toda la producci\u00f3n.'
+          'Una boda \u00edntima al borde del Mar de Cort\u00e9s. La hora dorada como \u00fanico set de iluminaci\u00f3n, la arena como altar improvisado, y el silencio del desierto como coro.',
+          'Cada imagen fue compuesta para dejar respirar al paisaje. Los cuerpos de los novios comparten cuadro con el horizonte; ninguno domina al otro.',
+          'Revelado en tonos c\u00e1lidos, grano suave, y una paleta restringida a ocres, rosas secos y negros profundos. Fotograf\u00eda de bodas entendida como pintura de paisaje.'
         ]
       },
       {
-        title: 'The Golden Hour', category: 'Narrative', date: '18.11.25',
-        location: 'Oaxaca, M\u00e9xico', camera: 'Sony Venice 2', lens: 'Zeiss Supreme Prime 35mm',
-        keywords: 'Narrative, Drama, Golden Hour, Portrait',
-        hero: 'https://picsum.photos/seed/golden1/900/1200',
-        gallery: ['golden1','golden2','golden3','golden4','golden5','golden6','golden7'],
+        title: 'Ceremonia en el Desierto', category: 'Elopement', date: '18.11.25',
+        location: 'Desierto de Altar, Sonora', camera: 'Fujifilm X-T5', lens: 'XF 35mm f/1.4 R',
+        keywords: 'Elopement, Desierto, Minimal, Contempor\u00e1neo',
+        hero: '/Fotos/DSCF3891.jpg',
+        gallery: [
+          '/Fotos/DSCF3891.jpg',
+          '/Fotos/DSCF3988.jpg',
+          '/Fotos/DSCF4319.jpg',
+          UNSPLASH('1537633552985-df8429e8048b'),
+          UNSPLASH('1511795409834-ef04bbd61622'),
+          UNSPLASH('1522673607200-164d1b6ce486'),
+          UNSPLASH('1529634597503-139d3726fed5')
+        ],
         description: [
-          'Una exploraci\u00f3n visual de la hora dorada en los valles de Oaxaca. Cada escena aprovecha la luz natural en su momento m\u00e1s expresivo.',
-          'El proyecto documenta historias personales de artesanos locales, capturando la intersecci\u00f3n entre tradici\u00f3n y modernidad en el M\u00e9xico contempor\u00e1neo.',
-          'La cinematograf\u00eda prioriza texturas y tonos c\u00e1lidos, creando un lenguaje visual que honra tanto a los sujetos como al paisaje que los rodea.'
+          'Dos personas, un oficiante, y una extensi\u00f3n infinita de arena. Una ceremonia reducida a lo esencial: pacto, presencia, y la luz cruda del mediod\u00eda.',
+          'El reportaje se movi\u00f3 alrededor de los novios como un testigo discreto. Sin direcci\u00f3n, sin iluminaci\u00f3n artificial, sin interrupciones \u2014 solo observaci\u00f3n pura.',
+          'El archivo final es una meditaci\u00f3n sobre el m\u00ednimo necesario para que algo sea sagrado: dos personas que eligen quedarse, y alguien lo suficientemente atento para registrarlo.'
         ]
       },
       {
-        title: 'Street Stories', category: 'Documentary', date: '07.09.25',
-        location: 'Hermosillo, Sonora', camera: 'Sony Alpha 7 IV', lens: 'Sony FE 24-70mm f/2.8 GM II',
-        keywords: 'Documentary, Street, Urban, Real',
-        hero: 'https://picsum.photos/seed/street1/900/1200',
-        gallery: ['street1','street2','street3','street4','street5'],
+        title: 'Silencios del Norte', category: 'Retrato Editorial', date: '07.09.25',
+        location: 'Hermosillo, Sonora', camera: 'Fujifilm X-T5', lens: 'XF 56mm f/1.2 R',
+        keywords: 'Portrait, Editorial, Monocromo, Autorretrato',
+        hero: '/Fotos/DSCF4369.jpg',
+        gallery: [
+          '/Fotos/DSCF4369.jpg',
+          '/Fotos/DSCF4443.jpg',
+          '/Fotos/DSCF4502.jpg',
+          UNSPLASH('1517824806704-9040b037703b'),
+          UNSPLASH('1546032996-6dfacbacbf3f')
+        ],
         description: [
-          'Un documental visual que captura la vida cotidiana en las calles de Hermosillo. Sin guiones, sin poses \u2014 solo momentos aut\u00e9nticos.',
-          'El proyecto se desarroll\u00f3 durante seis meses, visitando los mismos barrios repetidamente para construir confianza con la comunidad y capturar su esencia verdadera.',
-          'Cada imagen busca encontrar belleza en lo ordinario, revelando las historias que pasan desapercibidas en el ritmo diario de la ciudad.'
+          'Una serie de retratos construidos alrededor de una idea simple: la gente del norte habla menos, pero mira m\u00e1s. La c\u00e1mara se qued\u00f3 quieta esperando a que apareciera esa mirada.',
+          'El trabajo se desarroll\u00f3 en sesiones largas, sin maquillaje pesado, sin rebotes, sin artificios. Solo una ventana, una silla, y el tiempo necesario para que el sujeto dejara de posar.',
+          'La serie funciona como un archivo emocional. Retratos que no ilustran a una persona sino que la dejan aparecer \u2014 lentamente, en su propio tiempo.'
         ]
       },
       {
-        title: 'Neon Nights', category: 'Narrative', date: '22.06.25',
-        location: 'Tokyo, Japan', camera: 'ARRI Alexa 35', lens: 'Leica Summicron-C 29mm',
-        keywords: 'Narrative, Night, Neon, Urban, Asia',
-        hero: 'https://picsum.photos/seed/neon1/900/1200',
-        gallery: ['neon1','neon2','neon3','neon4','neon5','neon6'],
+        title: 'Primavera', category: 'Boda \u00cdntima', date: '22.06.25',
+        location: 'Oaxaca, M\u00e9xico', camera: 'Canon EOS R5', lens: 'RF 85mm f/1.2 L',
+        keywords: 'Boda, Flores, Oaxaca, Suave',
+        hero: '/Fotos/BCR65142.jpg',
+        gallery: [
+          '/Fotos/BCR65142.jpg',
+          '/Fotos/BCR65253-2.jpg',
+          '/Fotos/DSCF4503.jpg',
+          UNSPLASH('1465495976277-4387d4b0b4c6'),
+          UNSPLASH('1583939411023-4d2fa62e9d48'),
+          UNSPLASH('1478146059778-26028b07395a')
+        ],
         description: [
-          'Una pieza visual que explora la est\u00e9tica nocturna de Tokyo, donde la luz artificial crea paisajes surreales entre callejones y avenidas.',
-          'La direcci\u00f3n de fotograf\u00eda jug\u00f3 con reflejos, ne\u00f3n y sombras profundas para construir un mundo visual que existe solo despu\u00e9s del atardecer.',
-          'El resultado es una meditaci\u00f3n sobre la soledad urbana y la belleza que emerge cuando una ciudad entera se transforma con la ca\u00edda de la noche.'
+          'Una boda celebrada durante el inicio de la temporada de lluvias en Oaxaca. Patios coloniales, flores reci\u00e9n cortadas, y una humedad verde que envolvi\u00f3 todo el d\u00eda.',
+          'La paleta nace directamente del entorno: verdes saturados, blancos envejecidos, rojos de buganvilia. Todo se revel\u00f3 con fidelidad al color real del lugar.',
+          'El resultado es una boda documentada como si fuera una pintura botánica: cuidadosa, detallada, respetuosa con el lugar donde sucedi\u00f3.'
         ]
       },
       {
-        title: 'Quiet Moments', category: 'Short Film', date: '14.04.25',
-        location: 'San Carlos, Sonora', camera: 'Sony Alpha 7 IV', lens: 'Sony FE 85mm f/1.4 GM',
-        keywords: 'Short Film, Intimate, Portrait, Silence',
-        hero: 'https://picsum.photos/seed/quiet1/900/1200',
-        gallery: ['quiet1','quiet2','quiet3','quiet4','quiet5'],
+        title: 'Elopement Privado', category: 'Elopement', date: '14.04.25',
+        location: 'Baja California Sur', camera: 'Fujifilm X-T5', lens: 'XF 23mm f/1.4 R',
+        keywords: 'Elopement, Costa, Privado, Cinematic',
+        hero: '/Fotos/DSCF7938.jpg',
+        gallery: [
+          '/Fotos/DSCF7938.jpg',
+          '/Fotos/DSCF7959.jpg',
+          UNSPLASH('1519657337289-077653f724ed'),
+          UNSPLASH('1522413452208-996ff3f3e740'),
+          UNSPLASH('1525772764200-be829a350797')
+        ],
         description: [
-          'Un cortometraje que celebra los silencios \u2014 esos momentos entre palabras donde sucede lo m\u00e1s importante.',
-          'Filmado enteramente en San Carlos, el proyecto utiliza el paisaje des\u00e9rtico y costero como met\u00e1fora visual del mundo interior de los personajes.',
-          'La intimidad fue clave: equipos peque\u00f1os, luz natural, y la paciencia necesaria para esperar a que los momentos reales se manifiesten.'
+          'Dos personas, una promesa, y una costa vac\u00eda al amanecer. Este elopement fue deliberadamente peque\u00f1o: sin invitados, sin programa, sin anuncios.',
+          'La c\u00e1mara se comport\u00f3 como un tercer testigo silencioso. Lente angular para incluir el paisaje, aperturas abiertas para aislar gestos, y muchos espacios en blanco.',
+          'Un archivo hecho para ser mirado en privado \u2014 un objeto pensado para la pareja antes que para redes sociales. Fotograf\u00eda como memoria, no como performance.'
         ]
       },
       {
-        title: 'Urban Canvas', category: 'Commercial', date: '08.03.25',
-        location: 'Barcelona, Espa\u00f1a', camera: 'RED Komodo', lens: 'Canon CN-E 35mm T1.5',
-        keywords: 'Commercial, Urban, Art, Street Art',
-        hero: 'https://picsum.photos/seed/urban1/900/1200',
-        gallery: ['urban1','urban2','urban3','urban4','urban5','urban6'],
+        title: 'Retratos Analógicos', category: 'Serie de Retratos', date: '08.03.25',
+        location: 'Hermosillo, Sonora', camera: 'Contax T2', lens: 'Carl Zeiss 38mm f/2.8',
+        keywords: 'Film, 35mm, Retrato, Grano',
+        hero: '/Fotos/DSCF6338.jpg',
+        gallery: [
+          '/Fotos/DSCF6338.jpg',
+          '/Fotos/DSCF4530.jpg',
+          UNSPLASH('1519225421980-715cb0215aed'),
+          UNSPLASH('1519741347686-c1e0aadf4611'),
+          UNSPLASH('1511285560929-80b456fea0bc'),
+          UNSPLASH('1529636798458-92182e662485')
+        ],
         description: [
-          'Una campa\u00f1a para Adidas Originals que fusiona arte callejero, moda y cultura urbana en las calles de Barcelona.',
-          'El proyecto captura la energ\u00eda de artistas locales interactuando con el espacio p\u00fablico, transformando muros y plazas en lienzos vivos.',
-          'La paleta visual combina la calidez mediterr\u00e1nea con la crudeza del concreto, creando un contraste que define la identidad de la campa\u00f1a.'
+          'Una serie realizada en pel\u00edcula 35mm durante seis meses. Kodak Portra, Ilford HP5, Cinestill 800T. El rollo como disciplina: treinta y seis oportunidades, sin posibilidad de corregir en tiempo real.',
+          'El proceso oblig\u00f3 a pensar antes de disparar. Cada retrato es el resultado de una negociaci\u00f3n previa con el sujeto, no una captura incidental.',
+          'El archivo final mezcla grano, desenfoques suaves, y peque\u00f1os errores de exposici\u00f3n que terminaron por definir el car\u00e1cter visual de la serie. Pel\u00edcula como decisi\u00f3n est\u00e9tica, no como nostalgia.'
         ]
       },
       {
-        title: 'Afterglow', category: 'Narrative', date: '29.01.25',
-        location: 'Guanajuato, M\u00e9xico', camera: 'ARRI Alexa Mini LF', lens: 'Panavision Primo 40mm',
-        keywords: 'Narrative, Drama, Romance, Period',
-        hero: 'https://picsum.photos/seed/after1/900/1200',
-        gallery: ['after1','after2','after3','after4','after5'],
+        title: 'Familia V\u00e9lez', category: 'Retrato Familiar', date: '29.01.25',
+        location: 'Guadalajara, Jalisco', camera: 'Canon EOS R5', lens: 'RF 35mm f/1.4 L',
+        keywords: 'Familia, Editorial, Casa, Documentaci\u00f3n',
+        hero: '/Fotos/DSCF8754.jpg',
+        gallery: [
+          '/Fotos/DSCF8754.jpg',
+          '/Fotos/DSCF4504.jpg',
+          UNSPLASH('1519741497674-611481863552', 1100),
+          UNSPLASH('1583939003579-730e3918a45a', 1100),
+          UNSPLASH('1549417229-aa67d3263c09', 1100)
+        ],
         description: [
-          'Un drama visual ambientado en los callejones coloridos de Guanajuato, donde la arquitectura colonial se convierte en personaje.',
-          'La historia sigue los \u00faltimos d\u00edas de un verano que transform\u00f3 todo. La fotograf\u00eda busca capturar esa nostalgia anticipada \u2014 saber que algo hermoso est\u00e1 terminando.',
-          'Premiada en Apple TV+, la pieza representa la madurez visual del estudio, combinando t\u00e9cnica impecable con sensibilidad emocional profunda.'
+          'Una sesi\u00f3n familiar documentada a lo largo de un fin de semana completo en la casa de los V\u00e9lez. Cocinar, discutir, descansar, jugar. Ning\u00fan momento fue dirigido.',
+          'El enfoque fue claramente editorial: construir una narrativa visual continua sobre una familia contempor\u00e1nea, evitando los clichés de la fotograf\u00eda familiar tradicional.',
+          'El resultado es un archivo pensado para ser impreso y encuadernado. Un libro de fotograf\u00eda familiar que puede existir en la biblioteca de la casa con la misma dignidad que cualquier otro.'
         ]
       }
     ];
@@ -1280,16 +2308,20 @@
       heroImg.src = proj.hero;
       heroImg.onload = () => { heroImg.style.opacity = '1'; };
 
-      // Description paragraphs
+      // Description paragraphs — editorial rhythm with drop-cap first letter
       document.getElementById('projDescription').innerHTML =
-        proj.description.map(p => `<p>${p}</p>`).join('');
+        proj.description.map((p, idx) =>
+          `<p style="margin-top:${idx === 0 ? '0' : '32px'};">${p}</p>`
+        ).join('');
 
-      // Thumbnails
+      // Thumbnails (gallery items are direct URLs — real photos + Unsplash)
       const thumbContainer = document.getElementById('projThumbnails');
-      thumbContainer.innerHTML = proj.gallery.map((seed, i) =>
-        `<div class="proj-thumb ${i===0?'active':'opacity-50'}" onclick="changeProjImage(${index},${i})">
-          <img src="https://picsum.photos/seed/${seed}/200/116" class="w-full object-cover" draggable="false" alt="" />
-          <p class="mono text-[8px] text-white/22 mt-1 tracking-wide">(${String(index+1).padStart(3,'0')}-${String(i+1).padStart(2,'0')})</p>
+      thumbContainer.innerHTML = proj.gallery.map((url, i) =>
+        `<div class="proj-thumb ${i===0?'active':'opacity-45'}" onclick="changeProjImage(${index},${i})">
+          <div style="aspect-ratio:3/4; overflow:hidden;">
+            <img src="${url}" class="w-full h-full object-cover" draggable="false" alt="" />
+          </div>
+          <p class="mono mt-1.5" style="font-size:8px; color:var(--ink-22); letter-spacing:0.1em;">(${String(index+1).padStart(3,'0')}-${String(i+1).padStart(2,'0')})</p>
         </div>`
       ).join('');
 
@@ -1311,7 +2343,7 @@
       const heroImg = document.getElementById('projHeroImg');
       heroImg.style.opacity = '0';
       setTimeout(() => {
-        heroImg.src = `https://picsum.photos/seed/${proj.gallery[imgIdx]}/900/1200`;
+        heroImg.src = proj.gallery[imgIdx];
         heroImg.onload = () => { heroImg.style.opacity = '1'; };
       }, 200);
       document.querySelectorAll('.proj-thumb').forEach((t, i) => {
@@ -1327,233 +2359,437 @@
     }
 
     // ═══════════════════════════════════════════════════════
-    // PORTFOLIO — Editorial builders (index + spreads)
+    // GALLERY — "La Muestra" builders (foyer + catálogo + salas)
     // ═══════════════════════════════════════════════════════
     (function buildPortfolio() {
       const idxEl      = document.getElementById('projectIndex');
       const spreadsEl  = document.getElementById('projectSpreads');
+      const triptychEl = document.getElementById('triptych');
+      const floorPlanEl = document.getElementById('floorPlan');
+      const visitorEl  = document.getElementById('visitorIndicator');
       const preview    = document.getElementById('idxPreview');
       const previewImg = document.getElementById('idxPreviewImg');
       if (!idxEl || !spreadsEl) return;
 
-      // Counter + range updates
+      // ── Helpers ────────────────────────────────────────
+      const yearOf  = d => '20' + (d.split('.')[2] || '25');
+      const city    = loc => loc.split(',')[0].trim();
+      const romans  = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+      const toRoman = n => romans[n - 1] || String(n);
+      const salaNames = ['La Pared','La Vitrina','El Díptico','El Cuadro Mayor'];
+
+      // Counters / ranges
       const countStr = String(projects.length).padStart(2, '0');
       const counterEl = document.getElementById('heroCounter');
       const rangeEl   = document.getElementById('indexRange');
-      if (counterEl) counterEl.textContent = `(${countStr}) OBRAS`;
-      if (rangeEl)   rangeEl.textContent   = `01 \u2014 ${countStr}`;
+      if (counterEl) {
+        counterEl.innerHTML =
+          '(' + countStr + ')\u00a0Obras\u00a0seleccionadas';
+      }
+      if (rangeEl) {
+        const lastRoman = toRoman(projects.length);
+        rangeEl.innerHTML =
+          '<span style="width:28px; height:1px; background:var(--brass-mid); display:inline-block;"></span>' +
+          'Placas\u00a0I&ndash;' + lastRoman;
+      }
 
-      // Hero featured crop = first project
+      // Hidden featured (legacy compat)
       const feat = projects[0];
       const featImg   = document.getElementById('heroFeaturedImg');
       const featTitle = document.getElementById('heroFeaturedTitle');
       if (featImg)   featImg.src = feat.hero;
       if (featTitle) featTitle.textContent = feat.title;
 
-      // Preload all hero images so hover previews are instant
+      // Preload hero images
       projects.forEach(p => { const im = new Image(); im.src = p.hero; });
 
-      const yearOf = d => '20' + (d.split('.')[2] || '25');
-      const city   = loc => loc.split(',')[0].trim();
+      // ─────────────────────────────────────────────────────
+      // FOYER — Triptych hanging (first three works)
+      // ─────────────────────────────────────────────────────
+      if (triptychEl) {
+        const triptychProjects = projects.slice(0, 3);
+        triptychEl.innerHTML = triptychProjects.map((p, i) => {
+          const n = String(i + 1).padStart(2, '0');
+          return `
+            <figure class="triptych-work" data-open="${i}" data-cursor="img" data-cursor-label="Abrir">
+              <span class="hang"></span>
+              <div class="frame">
+                <div class="frame-inner aperture-reveal">
+                  <img src="${p.hero}" alt="${p.title}" draggable="false" />
+                </div>
+              </div>
+              <figcaption class="plate-card">
+                <span class="pc-no">Pl.&nbsp;${n}&nbsp;&middot;&nbsp;${toRoman(i + 1)}</span>
+                <span class="pc-title">${p.title}</span>
+              </figcaption>
+            </figure>`;
+        }).join('');
+        triptychEl.querySelectorAll('[data-open]').forEach(el => {
+          el.addEventListener('click', () => openProject(+el.dataset.open));
+        });
+      }
 
       // ─────────────────────────────────────────────────────
-      // INDEX — editorial list
+      // FOYER — Floor plan (mini room map)
       // ─────────────────────────────────────────────────────
+      if (floorPlanEl) {
+        const parts = [`<span class="fp-label">Planta</span>`];
+        projects.forEach((p, i) => {
+          if (i > 0) parts.push(`<span class="fp-sep"></span>`);
+          parts.push(
+            `<span class="fp-dot${i === 0 ? ' active' : ''}" ` +
+            `data-sala="${i}" title="${toRoman(i + 1)}. ${p.title}"></span>`
+          );
+        });
+        parts.push(`<span class="fp-label">${toRoman(projects.length)}</span>`);
+        floorPlanEl.innerHTML = parts.join('');
+
+        floorPlanEl.querySelectorAll('.fp-dot').forEach(dot => {
+          dot.addEventListener('click', () => {
+            const idx = +dot.dataset.sala;
+            const scroller = document.getElementById('portfolioScroller');
+            const target = document.querySelectorAll('#projectSpreads .sala')[idx];
+            if (target && scroller) {
+              const r = target.getBoundingClientRect();
+              const s = scroller.getBoundingClientRect();
+              scroller.scrollTo({
+                top: scroller.scrollTop + (r.top - s.top) - 20,
+                behavior: 'smooth'
+              });
+            }
+          });
+        });
+      }
+
+      // ─────────────────────────────────────────────────────
+      // CATÁLOGO — Plate wall with editorial rhythm
+      // ─────────────────────────────────────────────────────
+      // Span + offset patterns (12-col grid, 3 rows → 8 plates)
+      // Row 1: 4 · 5 · 3   (offset 0 · 1 · 2)
+      // Row 2: 6 · 6       (offset 0 · 2)
+      // Row 3: 3 · 4 · 5   (offset 1 · 0 · 2)
+      const plateLayout = [
+        { span: 4, off: 0, fmt: '' },
+        { span: 5, off: 1, fmt: '' },
+        { span: 3, off: 2, fmt: '' },
+        { span: 6, off: 0, fmt: 'landscape' },
+        { span: 6, off: 2, fmt: '' },
+        { span: 3, off: 1, fmt: '' },
+        { span: 4, off: 0, fmt: '' },
+        { span: 5, off: 2, fmt: 'landscape' }
+      ];
+
       idxEl.innerHTML = projects.map((p, i) => {
-        const n = String(i + 1).padStart(2, '0');
+        const n     = String(i + 1).padStart(2, '0');
+        const L     = plateLayout[i % plateLayout.length];
+        const offCl = L.off > 0 ? ` offset-${L.off}` : '';
+        const fmtCl = L.fmt ? ` format-${L.fmt}` : '';
         return `
-          <div class="idx-row" data-index="${i}">
-            <span class="idx-num">N.\u00ba ${n}</span>
-            <span class="idx-title">${p.title}</span>
-            <span class="idx-meta">${p.category} \u00b7 ${city(p.location)}</span>
-            <span class="idx-meta">${yearOf(p.date)}</span>
-            <span class="idx-arrow">\u2192</span>
-          </div>`;
+          <article class="plate span-${L.span}${offCl}${fmtCl} g-reveal"
+                   data-index="${i}" data-cursor="img" data-cursor-label="Ver placa">
+            <div class="plate-frame">
+              <span class="plate-tag">Pl.&nbsp;${n}&nbsp;·&nbsp;${toRoman(i + 1)}</span>
+              <div class="plate-frame-inner aperture-reveal">
+                <img src="${p.hero}" alt="${p.title}" draggable="false" />
+              </div>
+            </div>
+            <div class="plate-caption">
+              <h3 class="ct">${p.title}</h3>
+              <span class="cy">${yearOf(p.date)}</span>
+            </div>
+            <div class="plate-submeta">
+              <span>${p.category}</span>
+              <span class="sep">·</span>
+              <span>${city(p.location)}</span>
+            </div>
+          </article>`;
       }).join('');
 
-      // Hover preview + click-open
-      idxEl.querySelectorAll('.idx-row').forEach(row => {
-        const i = +row.dataset.index;
-        row.addEventListener('mouseenter', () => {
+      // Plate interactions: hover preview + click-open
+      idxEl.querySelectorAll('.plate').forEach(el => {
+        const i = +el.dataset.index;
+        el.addEventListener('mouseenter', () => {
+          if (!preview) return;
           previewImg.src = projects[i].hero;
           preview.classList.add('active');
         });
-        row.addEventListener('mouseleave', () => {
-          preview.classList.remove('active');
+        el.addEventListener('mouseleave', () => {
+          if (preview) preview.classList.remove('active');
         });
-        row.addEventListener('click', () => openProject(i));
+        el.addEventListener('click', () => openProject(i));
       });
 
-      // Cursor-following preview (viewport coords; #idxPreview is fixed)
+      // Cursor-following preview
       document.addEventListener('mousemove', (e) => {
-        if (!preview.classList.contains('active')) return;
-        // Offset so preview sits to the right of cursor and doesn't overlap rows
+        if (!preview || !preview.classList.contains('active')) return;
         preview.style.top  = e.clientY + 'px';
-        preview.style.left = (e.clientX + 180) + 'px';
+        preview.style.left = (e.clientX + 200) + 'px';
       }, { passive: true });
 
       // ─────────────────────────────────────────────────────
-      // SPREADS — 4 cycling editorial layouts
+      // SALAS — 4 cycling museum layouts
       // ─────────────────────────────────────────────────────
+      const buildPlaque = (p, n, roman, i, view) => `
+        <div class="plaque">
+          <div class="pl-no">№&nbsp;${n}&nbsp;·&nbsp;Sala&nbsp;${roman}</div>
+          <div class="pl-body">
+            <h4>${p.title}</h4>
+            <p class="artist">Horeb Glez., ${yearOf(p.date)}</p>
+            <dl>
+              <dt>Medio</dt><dd>${p.category}</dd>
+              <dt>Locación</dt><dd>${p.location}</dd>
+              <dt>Cámara</dt><dd>${p.camera}</dd>
+              <dt>Óptica</dt><dd>${p.lens}</dd>
+            </dl>
+            <button type="button" class="pl-view" data-open="${i}">
+              ${view || 'Entrar a la sala'} <span class="arr">→</span>
+            </button>
+          </div>
+        </div>`;
+
+      const buildCTA = (i, label) => `
+        <div class="sala-plus-cta">
+          <span class="line"></span>
+          <button type="button" class="cta" data-open="${i}">
+            ${label || 'Obra completa'} <span class="arr">→</span>
+          </button>
+          <span class="line"></span>
+        </div>`;
+
       const layouts = ['A', 'B', 'C', 'D'];
 
       spreadsEl.innerHTML = projects.map((p, i) => {
         const n      = String(i + 1).padStart(2, '0');
+        const roman  = toRoman(i + 1);
         const layout = layouts[i % 4];
+        const name   = salaNames[i % 4];
         const year   = yearOf(p.date);
-        const altSeed = p.gallery[1] || p.gallery[0];
-        const altImg  = `https://picsum.photos/seed/${altSeed}/700/900`;
+        const altImg = p.gallery[1] || p.gallery[0] || p.hero;
+        const altImg2 = p.gallery[2] || altImg;
 
-        // ─── LAYOUT A: text left, image right, number bleeds top-left
+        const header = `
+          <header class="sala-header">
+            <span class="tag">Sala&nbsp;${roman}&nbsp;·&nbsp;№&nbsp;${n}</span>
+            <span class="name">&laquo;${name}&raquo;</span>
+            <span class="meta">${year}&nbsp;·&nbsp;${city(p.location)}</span>
+          </header>`;
+
+        // ─── LAYOUT A — "La Pared" (gallery wall arrangement)
         if (layout === 'A') {
           return `
-          <section class="spread reveal" data-index="${i}">
+          <section class="sala g-reveal" data-index="${i}" data-sala-index="${i}">
             <div class="grain-overlay"></div>
-            <div class="spread-num" style="top:40px; left:30px;">${n}</div>
-            <div class="relative z-10 grid grid-cols-12 gap-10 items-center">
-              <div class="col-span-5 pr-4">
-                <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-8">FRAGMENTO &nbsp;/&nbsp; ${n}</p>
-                <h3 class="spread-title text-white" style="font-size:clamp(54px,6.4vw,96px);">${p.title}</h3>
-                <div class="mt-8 flex items-center gap-4">
-                  <div class="w-12 h-[1px] bg-white/30"></div>
-                  <span class="mono text-[10px] text-white/55 tracking-[0.22em] uppercase">${p.category}</span>
-                </div>
-                <p class="mt-10 text-white/55 leading-[1.85] font-light max-w-[380px]" style="font-size:13.5px;">${p.description[0]}</p>
-                <div class="mt-12 flex items-end justify-between max-w-[380px]">
-                  <div>
-                    <p class="mono text-[9px] text-white/25 tracking-[0.3em] mb-1.5">LOCACI\u00d3N</p>
-                    <p class="display text-white/80" style="font-size:17px;">${p.location}</p>
-                  </div>
-                  <span class="mono text-[11px] text-white/40 tracking-[0.25em]">${year}</span>
-                </div>
-                <button onclick="openProject(${i})"
-                        class="mt-14 group inline-flex items-center gap-4 mono text-[11px] text-white/55 hover:text-white transition-colors tracking-[0.22em]">
-                  <span class="w-10 h-[1px] bg-white/30 group-hover:bg-white group-hover:w-14 transition-all duration-500"></span>
-                  VER OBRA COMPLETA
-                </button>
-              </div>
-              <div class="col-span-1 flex justify-center">
-                <span class="marginalia">${p.title} \u00b7 ${year}</span>
-              </div>
-              <div class="col-span-6 spread-img-wrap" style="aspect-ratio:4/5;" onclick="openProject(${i})">
-                <img src="${p.hero}" alt="${p.title}" draggable="false" />
-              </div>
-            </div>
-          </section>`;
-        }
-
-        // ─── LAYOUT B: image left dominant, text right, number bleeds top-right
-        if (layout === 'B') {
-          return `
-          <section class="spread reveal" data-index="${i}">
-            <div class="grain-overlay"></div>
-            <div class="spread-num" style="top:40px; right:30px;">${n}</div>
-            <div class="relative z-10 grid grid-cols-12 gap-10 items-center">
-              <div class="col-span-7 spread-img-wrap" style="aspect-ratio:4/3;" onclick="openProject(${i})">
-                <img src="${p.hero}" alt="${p.title}" draggable="false" />
-              </div>
-              <div class="col-span-1 flex justify-center">
-                <span class="marginalia">${p.category} \u2014 ${city(p.location).toUpperCase()}</span>
-              </div>
-              <div class="col-span-4">
-                <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-8">FRAGMENTO &nbsp;/&nbsp; ${n}</p>
-                <h3 class="spread-title text-white" style="font-size:clamp(54px,6.4vw,96px);">${p.title}</h3>
-                <div class="mt-8 flex items-center gap-4">
-                  <div class="w-12 h-[1px] bg-white/30"></div>
-                  <span class="mono text-[10px] text-white/55 tracking-[0.22em] uppercase">${p.category}</span>
-                </div>
-                <p class="mt-10 text-white/55 leading-[1.85] font-light" style="font-size:13.5px;">${p.description[0]}</p>
-                <div class="mt-12 flex items-end justify-between">
-                  <div>
-                    <p class="mono text-[9px] text-white/25 tracking-[0.3em] mb-1.5">LOCACI\u00d3N</p>
-                    <p class="display text-white/80" style="font-size:17px;">${p.location}</p>
-                  </div>
-                  <span class="mono text-[11px] text-white/40 tracking-[0.25em]">${year}</span>
-                </div>
-                <button onclick="openProject(${i})"
-                        class="mt-14 group inline-flex items-center gap-4 mono text-[11px] text-white/55 hover:text-white transition-colors tracking-[0.22em]">
-                  <span class="w-10 h-[1px] bg-white/30 group-hover:bg-white group-hover:w-14 transition-all duration-500"></span>
-                  VER OBRA COMPLETA
-                </button>
-              </div>
-            </div>
-          </section>`;
-        }
-
-        // ─── LAYOUT C: editorial diptych (two portrait images flanking centered text)
-        if (layout === 'C') {
-          return `
-          <section class="spread reveal" data-index="${i}">
-            <div class="grain-overlay"></div>
-            <div class="spread-num" style="bottom:40px; left:50%; transform:translateX(-50%);">${n}</div>
-            <div class="relative z-10 grid grid-cols-12 gap-8">
-              <div class="col-span-4 pt-24">
-                <div class="spread-img-wrap" style="aspect-ratio:3/4;" onclick="openProject(${i})">
+            <span class="sala-roman" style="top:40px; left:calc(var(--mx) - 20px);">${roman}</span>
+            ${header}
+            <div class="sala-wall">
+              <figure class="wm work-frame" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar">
+                <span class="tag-corner">Obra principal</span>
+                <div class="work-frame-inner aperture-reveal" style="aspect-ratio:5/4;">
                   <img src="${p.hero}" alt="${p.title}" draggable="false" />
                 </div>
-                <p class="mono text-[9px] text-white/35 tracking-[0.25em] mt-3">PLACA \u2014 (${n}-a)</p>
-              </div>
-
-              <div class="col-span-4 flex flex-col justify-center items-center text-center px-4">
-                <p class="mono text-[10px] text-white/35 tracking-[0.3em] mb-8">FRAGMENTO &nbsp;/&nbsp; ${n}</p>
-                <h3 class="spread-title text-white" style="font-size:clamp(42px,5vw,76px);">${p.title}</h3>
-                <div class="mt-6 mono text-white/35 tracking-[0.5em]" style="font-size:11px;">&times;&nbsp;&times;&nbsp;&times;</div>
-                <p class="mt-6 display text-white/65 leading-[1.55] max-w-[320px]" style="font-size:16px;">${p.description[1] || p.description[0]}</p>
-                <div class="mt-10 flex items-center gap-4">
-                  <span class="mono text-[10px] text-white/50 tracking-[0.25em]">${year}</span>
-                  <span class="text-white/20">\u00b7</span>
-                  <span class="mono text-[10px] text-white/50 tracking-[0.25em]">${city(p.location).toUpperCase()}</span>
-                </div>
-                <button onclick="openProject(${i})"
-                        class="mt-12 group inline-flex items-center gap-4 mono text-[11px] text-white/55 hover:text-white transition-colors tracking-[0.22em]">
-                  <span class="w-10 h-[1px] bg-white/30 group-hover:bg-white group-hover:w-14 transition-all duration-500"></span>
-                  ABRIR LAMINARIO
-                </button>
-              </div>
-
-              <div class="col-span-4 pb-24 flex flex-col justify-end">
-                <div class="spread-img-wrap" style="aspect-ratio:3/4;" onclick="openProject(${i})">
+              </figure>
+              <figure class="wa work-frame" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar">
+                <span class="tag-corner">Placa&nbsp;B</span>
+                <div class="work-frame-inner aperture-reveal" style="aspect-ratio:3/4;">
                   <img src="${altImg}" alt="${p.title}" draggable="false" />
                 </div>
-                <p class="mono text-[9px] text-white/35 tracking-[0.25em] mt-3 text-right">PLACA \u2014 (${n}-b)</p>
+              </figure>
+              <div class="wp">${buildPlaque(p, n, roman, i, 'Entrar a la sala')}</div>
+              <p class="wn">${p.description[0]}</p>
+            </div>
+            ${buildCTA(i, 'Recorrer sala completa')}
+          </section>`;
+        }
+
+        // ─── LAYOUT B — "La Vitrina" (pedestal: vertical central)
+        if (layout === 'B') {
+          return `
+          <section class="sala g-reveal" data-index="${i}" data-sala-index="${i}">
+            <div class="grain-overlay"></div>
+            <span class="sala-roman" style="top:30px; right:calc(var(--mx) - 40px);">${roman}</span>
+            ${header}
+            <div class="sala-pedestal">
+              <div class="vit-col">
+                <div class="vit-marg">${p.keywords.split(',')[0].trim()} &mdash; ${year}</div>
+                <div style="flex:1;"></div>
+                <figure class="work-frame" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar">
+                  <div class="work-frame-inner aperture-reveal" style="aspect-ratio:1/1;">
+                    <img src="${altImg}" alt="${p.title}" draggable="false" />
+                  </div>
+                </figure>
+              </div>
+
+              <figure class="work-frame" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar" style="padding:clamp(16px,1.5vw,24px); background:var(--frame-bg);">
+                <span class="tag-corner">Obra capital</span>
+                <div class="work-frame-inner aperture-reveal" style="aspect-ratio:3/4;">
+                  <img src="${p.hero}" alt="${p.title}" draggable="false" />
+                </div>
+              </figure>
+
+              <div class="vit-col">
+                ${buildPlaque(p, n, roman, i, 'Ingresar a la sala')}
+                <p class="italic-serif" style="font-size:15px; color:var(--ink-60); line-height:1.65; padding-left:18px; border-left:1px solid var(--brass-hair);">
+                  ${p.description[1] || p.description[0]}
+                </p>
               </div>
             </div>
           </section>`;
         }
 
-        // ─── LAYOUT D: full-bleed cinematic spread
-        return `
-        <section class="spread reveal" style="padding:0;" data-index="${i}">
-          <div class="relative w-full overflow-hidden" style="min-height:95vh; cursor:pointer;" onclick="openProject(${i})">
-            <img src="${p.hero}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover" style="filter:grayscale(0.08) brightness(0.92);" draggable="false" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/40"></div>
-            <div class="grain-overlay" style="opacity:0.14;"></div>
-
-            <div class="absolute top-10 left-16 right-16 flex justify-between items-start z-10">
-              <span class="mono text-[10px] text-white/75 tracking-[0.32em]">FRAGMENTO &nbsp;/&nbsp; ${n}</span>
-              <span class="mono text-[10px] text-white/65 tracking-[0.3em]">${year}</span>
-            </div>
-
-            <div class="spread-num absolute" style="top:12%; right:4%; color:rgba(255,255,255,0.09);">${n}</div>
-
-            <div class="absolute bottom-14 left-16 right-16 z-10">
-              <div class="max-w-[720px]">
-                <h3 class="spread-title text-white" style="font-size:clamp(64px,7.4vw,120px);">${p.title}</h3>
-                <div class="mt-8 flex flex-wrap items-center gap-5">
-                  <div class="w-16 h-[1px] bg-white/70"></div>
-                  <span class="mono text-[11px] text-white/85 tracking-[0.25em] uppercase">${p.category}</span>
-                  <span class="text-white/40">\u00b7</span>
-                  <span class="display text-white/80" style="font-size:18px;">${p.location}</span>
+        // ─── LAYOUT C — "El Díptico" (paired panels)
+        if (layout === 'C') {
+          return `
+          <section class="sala g-reveal" data-index="${i}" data-sala-index="${i}">
+            <div class="grain-overlay"></div>
+            <span class="sala-roman" style="bottom:10%; left:50%; transform:translateX(-50%); color:rgba(196,160,110,0.045);">${roman}</span>
+            ${header}
+            <div class="sala-diptych">
+              <figure class="work-frame" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar">
+                <span class="tag-corner">Recto&nbsp;&middot;&nbsp;${n}a</span>
+                <div class="work-frame-inner aperture-reveal" style="aspect-ratio:4/5;">
+                  <img src="${p.hero}" alt="${p.title}" draggable="false" />
                 </div>
-                <p class="mt-8 text-white/85 leading-[1.65] max-w-[560px] font-light" style="font-size:15px;">${p.description[0]}</p>
+              </figure>
+              <figure class="work-frame" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar">
+                <span class="tag-corner">Verso&nbsp;&middot;&nbsp;${n}b</span>
+                <div class="work-frame-inner aperture-reveal" style="aspect-ratio:4/5;">
+                  <img src="${altImg}" alt="${p.title}" draggable="false" />
+                </div>
+              </figure>
+              <div class="dp-sep">
+                <span class="line"></span>
+                <span class="mark">&times;&nbsp;&nbsp;Díptico&nbsp;&nbsp;&times;</span>
+                <span class="line"></span>
+              </div>
+              <div class="dp-plaque">
+                ${buildPlaque(p, n, roman, i, 'Abrir sala completa')}
               </div>
             </div>
+          </section>`;
+        }
+
+        // ─── LAYOUT D — "El Cuadro Mayor" (cinematic)
+        return `
+        <section class="sala g-reveal" data-index="${i}" data-sala-index="${i}" style="padding:clamp(100px,10vw,140px) var(--mx);">
+          <div class="grain-overlay"></div>
+          <span class="sala-roman" style="top:10%; right:-4%;">${roman}</span>
+          ${header}
+          <figure class="sala-mural" data-open="${i}" data-cursor="img" data-cursor-label="Ampliar">
+            <div class="mur-inner aperture-reveal">
+              <img src="${p.hero}" alt="${p.title}" draggable="false" />
+            </div>
+            <div class="mur-overlay"></div>
+            <figcaption class="mur-caption">
+              <h4>${p.title}</h4>
+              <div class="mur-meta">
+                <span class="m1">Sala&nbsp;${roman}&nbsp;·&nbsp;${year}</span>
+                <span class="m2">${p.category}</span>
+                <span class="m2" style="color:rgba(255,255,255,0.5);">${p.location}</span>
+              </div>
+            </figcaption>
+          </figure>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,4vw,64px); margin-top:clamp(40px,5vw,64px); align-items:start;">
+            <p class="italic-serif" style="font-size:clamp(15px,1.2vw,18px); color:var(--ink-60); line-height:1.7; padding-left:20px; border-left:1px solid var(--brass-hair);">
+              ${p.description[0]}
+            </p>
+            ${buildPlaque(p, n, roman, i, 'Ingresar a la sala')}
           </div>
         </section>`;
       }).join('');
 
-      // Re-run reveal observer now that dynamic sections are in the DOM
+      // ── Delegate clicks for [data-open] buttons / figures / ctas ──
+      spreadsEl.querySelectorAll('[data-open]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          // avoid double-fire when clicking a button inside a figure
+          e.stopPropagation();
+          openProject(+el.dataset.open);
+        });
+      });
+
+      // ─────────────────────────────────────────────────────
+      // VISITOR INDICATOR — right-edge room tracker
+      // ─────────────────────────────────────────────────────
+      if (visitorEl) {
+        const viParts = [`<span class="vi-label">Sala</span>`];
+        projects.forEach((p, i) => {
+          viParts.push(
+            `<span class="vi-dot" data-sala="${i}">` +
+              `<span class="vi-tooltip">${toRoman(i + 1)} · ${p.title}</span>` +
+            `</span>`
+          );
+        });
+        viParts.push(`<span class="vi-label">${toRoman(projects.length)}</span>`);
+        visitorEl.innerHTML = viParts.join('');
+
+        visitorEl.querySelectorAll('.vi-dot').forEach(dot => {
+          dot.addEventListener('click', () => {
+            const idx = +dot.dataset.sala;
+            const scroller = document.getElementById('portfolioScroller');
+            const target = document.querySelectorAll('#projectSpreads .sala')[idx];
+            if (target && scroller) {
+              const r = target.getBoundingClientRect();
+              const s = scroller.getBoundingClientRect();
+              scroller.scrollTo({
+                top: scroller.scrollTop + (r.top - s.top) - 20,
+                behavior: 'smooth'
+              });
+            }
+          });
+        });
+
+        // Observe salas to highlight current dot + show indicator
+        const scroller = document.getElementById('portfolioScroller');
+        const dots = visitorEl.querySelectorAll('.vi-dot');
+        const fpDots = document.querySelectorAll('#floorPlan .fp-dot');
+        const salaEls = document.querySelectorAll('#projectSpreads .sala');
+
+        const activate = idx => {
+          dots.forEach((d, j) => d.classList.toggle('active', j === idx));
+          fpDots.forEach((d, j) => d.classList.toggle('active', j === idx));
+        };
+
+        if (scroller && 'IntersectionObserver' in window) {
+          const io = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const idx = +entry.target.dataset.salaIndex;
+                if (!isNaN(idx)) activate(idx);
+              }
+            });
+          }, { root: scroller, threshold: [0.35] });
+          salaEls.forEach(s => io.observe(s));
+        }
+
+        // Reveal visitor indicator once user scrolls past foyer
+        if (scroller) {
+          scroller.addEventListener('scroll', () => {
+            const foyer = document.getElementById('portfolioHero');
+            if (!foyer) return;
+            const passedFoyer = scroller.scrollTop > foyer.offsetHeight * 0.6;
+            const nearEnd = scroller.scrollTop + scroller.clientHeight > scroller.scrollHeight - 400;
+            visitorEl.classList.toggle('visible', passedFoyer && !nearEnd);
+          }, { passive: true });
+        }
+      }
+
+      // ── Reveal observer for g-reveal blocks ──
+      if ('IntersectionObserver' in window) {
+        const gObserver = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              gObserver.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.g-reveal').forEach(el => gObserver.observe(el));
+      } else {
+        document.querySelectorAll('.g-reveal').forEach(el => el.classList.add('in'));
+      }
+
+      // Re-run legacy reveal observer for backwards compat
       if (typeof initRevealObserver === 'function') initRevealObserver();
+      if (typeof window.__rescanClipReveal === 'function') window.__rescanClipReveal();
     })();
 
     // ═══════════════════════════════════════════════════════
@@ -1602,7 +2838,7 @@
         const explicit = e.target.closest('[data-cursor]');
         if (explicit) { setState(explicit.dataset.cursor, explicit.dataset.cursorLabel); return; }
         // Image-like
-        if (e.target.closest('.spread-img-wrap, .thumb, .proj-thumb, .project-card, #idxPreview')) {
+        if (e.target.closest('.spread-img-wrap, .work-frame, .plate, .triptych-work, .sala-mural, .thumb, .proj-thumb, .project-card, #idxPreview')) {
           setState('img', 'Abrir'); return;
         }
         // Inputs
@@ -1691,7 +2927,7 @@
       }, { threshold: 0.2 });
 
       function scan() {
-        document.querySelectorAll('.clip-reveal:not(.in), .spread-img-wrap:not(.in)').forEach(el => observer.observe(el));
+        document.querySelectorAll('.clip-reveal:not(.in), .spread-img-wrap:not(.in), .aperture-reveal:not(.in)').forEach(el => observer.observe(el));
       }
       scan();
       window.__rescanClipReveal = scan;
@@ -1704,14 +2940,15 @@
       const track = document.getElementById('marqueeTrack');
       if (!track) return;
       const items = [
-        'fotograf\u00eda',
-        'cinematograf\u00eda',
-        'bodas',
-        'retrato',
-        'direcci\u00f3n',
-        'hermosillo \u2014 m\u00e9xico',
-        'volumen 01',
-        'archivo 2024 \u2014 2025'
+        'la muestra',
+        'archivo \u00edntimo',
+        'ocho obras',
+        'bodas \u2014 retratos \u2014 elopement',
+        'hermosillo \u00b7 m\u00e9xico',
+        'curadur\u00eda editorial',
+        'papel mate \u00b7 grano suave',
+        'vol. i \u2014 2024 \u2014 2025',
+        '\u00d7\u00d7\u00d7'
       ];
       // Duplicate the set so the loop is seamless
       const set = items.map(t => `<span class="marquee-item">${t}</span>`).join('');
@@ -1751,10 +2988,10 @@
         requestAnimationFrame(() => {
           const sy = scroller.scrollTop;
           const vh = scroller.clientHeight;
-          scroller.querySelectorAll('.spread-img-wrap').forEach(el => {
+          scroller.querySelectorAll('.spread-img-wrap, .work-frame-inner, .plate-frame-inner, .mur-inner, .triptych-work .frame-inner').forEach(el => {
             const r = el.getBoundingClientRect();
             const center = r.top + r.height / 2 - 64; // 64 = header
-            const offset = (center - vh / 2) * -0.05;
+            const offset = (center - vh / 2) * -0.04;
             const img = el.querySelector('img');
             if (img) img.style.translate = `0 ${offset}px`;
           });
